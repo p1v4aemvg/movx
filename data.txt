@@ -1,0 +1,8 @@
+p1v4aemvg@gmail.com
+MovxVideo128
+
+Server: sql7.freemysqlhosting.net
+Name: sql7120120
+Username: sql7120120
+Password: 9KbsweuYUK
+Port number: 3306

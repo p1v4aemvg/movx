@@ -1,0 +1,39 @@
+SELECT * FROM film_actor fa
+
+group by fa.film_id, fa.actor_id
+
+having count(fa.id) > 1;
+
+ 
+
+-- join film f on f.id = fa.film_id;
+
+
+
+DELETE fa
+  FROM film_actor fa 
+JOIN 
+(
+  
+	SELECT film_id, actor_id, MAX(id) id1
+    
+	FROM film_actor
+   
+	GROUP BY film_id, actor_id
+     
+) d 
+   
+
+	ON
+ 
+	(
+		fa.film_id = d.film_id 
+
+		and fa.actor_id = d.actor_id
+  
+		AND fa.id <> d.id1
+	)
+
+
+	
+     where   fa.id > 0;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="636.0" prefWidth="1127.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.FDController">
+  <children>
+    <Label fx:id="filmName" layoutX="645.0" layoutY="75.0" prefHeight="67.11929321289062" prefWidth="414.0" text="Label">
+      <font>
+        <Font name="Arial Bold" size="14.0" />
+      </font>
+    </Label>
+    <TextArea fx:id="description" disable="false" editable="false" focusTraversable="false" layoutX="645.0" layoutY="143.0" pickOnBounds="false" prefHeight="156.0" prefWidth="464.0" wrapText="true" />
+    <CheckBox layoutX="619.0" layoutY="311.0" mnemonicParsing="false" onAction="#edit" text="Edit" />
+    <Button fx:id="save" disable="true" layoutX="1033.0" layoutY="306.0" mnemonicParsing="false" onAction="#save" prefWidth="76.0" text="Save" />
+    <Label fx:id="fileName" layoutX="312.0" layoutY="283.0" prefWidth="128.0" text="" />
+    <Slider fx:id="mark" blockIncrement="1.0" layoutX="319.0" layoutY="281.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="216.0" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
+    <TextArea fx:id="comment" disable="false" editable="false" layoutX="645.0" layoutY="362.0" prefHeight="219.0" prefWidth="464.0" wrapText="true" />
+    <ScrollPane id="ppp" layoutX="216.0" layoutY="458.0" prefHeight="156.0" prefWidth="396.9998779296875">
+      <content>
+        <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
+      </content>
+    </ScrollPane>
+    <TextField fx:id="actor" layoutX="216.0" layoutY="412.0" prefWidth="156.0" promptText="actor" />
+    <Button id="add" layoutX="609.0" layoutY="426.0" minWidth="25.0" mnemonicParsing="false" onAction="#add" prefWidth="30.0" text="+" />
+    <TextField fx:id="partName" layoutX="388.0" layoutY="412.0" prefWidth="156.0" promptText="part" />
+    <TableView fx:id="actors" layoutX="14.0" layoutY="42.0" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="572.0" prefWidth="170.0" />
+    <Slider fx:id="part" blockIncrement="1.0" layoutX="575.0" layoutY="377.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" orientation="VERTICAL" prefHeight="68.0" showTickLabels="true" showTickMarks="false" snapToTicks="true" />
+    <AnchorPane fx:id="paneL" layoutX="184.0" layoutY="42.0" prefHeight="526.0" prefWidth="30.0" />
+    <Label fx:id="markLabel" layoutX="549.0" layoutY="270.0" prefHeight="41.0" prefWidth="40.0" text="0">
+      <font>
+        <Font name="System Bold" size="30.0" fx:id="x1" />
+      </font>
+    </Label>
+    <ColorPicker fx:id="c1" layoutX="365.0" layoutY="84.0" minWidth="30.0" onAction="#onC1" prefWidth="40.0" />
+    <ColorPicker fx:id="c2" layoutX="427.0" layoutY="84.0" onAction="#onC2" prefWidth="40.0" />
+    <ColorPicker fx:id="c3" layoutX="365.0" layoutY="135.0" onAction="#onC3" prefWidth="40.0" />
+    <ColorPicker fx:id="c4" layoutX="427.0" layoutY="135.0" onAction="#onC4" prefWidth="40.0" />
+  </children>
+</AnchorPane>
