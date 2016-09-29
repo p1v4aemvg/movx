@@ -1,6 +1,8 @@
 package com.by.movx.ui;
 
+import com.by.movx.Common;
 import com.by.movx.entity.*;
+import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.repository.ActorRepository;
 import com.by.movx.repository.FilmActorRepository;
 import javafx.collections.FXCollections;
@@ -8,12 +10,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +60,9 @@ public class ActorController {
     @FXML
     TextField partName;
 
+    @FXML
+    ImageView img;
+
     public void init() {
         actors.setRowFactory(new Callback<TableView<Actor>, TableRow<Actor>>() {
             @Override
@@ -68,6 +76,7 @@ public class ActorController {
                 row.setOnMouseClicked(event -> {
                     Actor a = actors.getSelectionModel().getSelectedItem();
                     createLinks(a);
+                    setImg(a);
                 });
                 return row;
             }
@@ -86,7 +95,7 @@ public class ActorController {
         actors.getColumns().setAll(nameColumn);
         actors.setItems(data);
 
-        char chars[] = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯ".toCharArray();
+        char chars[] = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЭЮЯ".toCharArray();
         List<Hyperlink> letters = new ArrayList<>();
 
         int k = 0;
@@ -102,7 +111,6 @@ public class ActorController {
 
         paneL.getChildren().addAll(letters);
     }
-
 
     private void createLinks(Actor a) {
         final List<FilmActor> fff = filmActorRepository.findByActor(a);
@@ -122,6 +130,9 @@ public class ActorController {
                             break;
                         default:break;
                     }
+                    l.setOnAction(event -> {
+                        Common.getInstance().getEventBus().post(new FilmClickedEvent(fa.getFilm()));
+                    });
 
                     return l;
                 })
@@ -138,7 +149,7 @@ public class ActorController {
                 temp.setId(l.getId());
                 temp.setPrefHeight(15);
                 temp.setLayoutY(i1 * 20);
-                temp.setLayoutX(245);
+                temp.setLayoutX(345);
                 temp.setOnAction(event1 -> {
                     if (!temp.getText().isEmpty()) {
                         FilmActor fa = filmActorRepository.findOne(Long.valueOf(((TextField) event1.getSource()).getId()));
@@ -154,6 +165,11 @@ public class ActorController {
         pane.getChildren().clear();
         pane.getChildren().addAll(links);
         pane.setPrefHeight(20 * links.size());
+    }
+
+    private void setImg(Actor a) {
+        if(a.getImg() == null) return;
+        img.setImage(new Image(new ByteArrayInputStream(a.getImg())));
     }
 
 }

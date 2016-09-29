@@ -85,10 +85,12 @@ public class FilmActor {
     }
 
     public String film() {
-        return film.getName() + (partName == null ? "" : (repeat(65-film.getName().length() - partName.length()) + partName ));
+        return film.getYear().toString() + " " + film.getName() +
+                (partName == null ? "" : (repeat(66-film.getName().length() - partName.length()) + partName ));
     }
 
     private String repeat(int n) {
+        if(n <= 0) return " ";
         char arr[] = new char[n];
         Arrays.fill(arr, ' ');
         return new String(arr);

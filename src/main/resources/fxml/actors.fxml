@@ -8,14 +8,15 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="636.0" prefWidth="830.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.ActorController">
+<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="636.0" prefWidth="954.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.ActorController">
   <children>
-    <ScrollPane id="ppp" layoutX="299.0" layoutY="42.0" prefHeight="572.0" prefWidth="498.0">
+    <ScrollPane id="ppp" layoutX="270.0" layoutY="42.0" prefHeight="572.0" prefWidth="545.0">
       <content>
-        <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="483.0" />
+        <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="530.0" />
       </content>
     </ScrollPane>
     <TableView fx:id="actors" layoutX="14.0" layoutY="42.0" prefHeight="572.0" prefWidth="226.0" />
     <AnchorPane fx:id="paneL" layoutX="240.0" layoutY="36.0" prefHeight="572.0" prefWidth="30.0" />
+    <ImageView fx:id="img" fitHeight="90.0" fitWidth="90.0" layoutX="839.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" />
   </children>
 </AnchorPane>

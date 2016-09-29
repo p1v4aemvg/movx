@@ -21,9 +21,6 @@ public class Film {
     @Column(name = "mark")
     private Integer mark;
 
-    @Column(name = "duration")
-    private Integer duration;
-
     @Column(name = "comment")
     private String comment;
 
@@ -43,9 +40,6 @@ public class Film {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "film")
     FilmDescription description;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "film")
-    Set<FilmActor> fas;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "film_country",  joinColumns = {
@@ -130,14 +124,6 @@ public class Film {
         this.comment = comment;
     }
 
-    public Set<FilmActor> getFas() {
-        return fas;
-    }
-
-    public void setFas(Set<FilmActor> fas) {
-        this.fas = fas;
-    }
-
     public Director getDirector() {
         return director;
     }
@@ -194,11 +180,4 @@ public class Film {
         this.type = type;
     }
 
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
 }

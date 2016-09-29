@@ -37,6 +37,9 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f.* from film f order by rand() limit 1", nativeQuery = true)
     Film findRandomFilm();
 
+    @Query(value = "select f.* from film f where f.mark = 10 order by rand() limit 10", nativeQuery = true)
+    List<Film> findRandom10Film();
+
     @Query(value = "select f.mark, count(f.id) from film f " +
             "group by f.mark", nativeQuery = true)
     List<Object[]> markStats();
@@ -59,5 +62,9 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
 
     @Query(value = "select f from Film f where f.name like :letter% or f.enName like :letter% ")
     List<Film> getFilmsBy1stLetter(@Param(value = "letter") String letter);
+
+    @Query(value = "select f.* from film f where\n" +
+            "(select count(*) from film_actor fa where fa.film_id = f.id) = 0", nativeQuery = true)
+    List<Film> findWithoutActors();
 
 }

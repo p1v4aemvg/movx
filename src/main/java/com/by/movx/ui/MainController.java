@@ -1,7 +1,10 @@
 package com.by.movx.ui;
 
+import com.by.movx.Common;
 import com.by.movx.ConfigurationControllers;
 import com.by.movx.entity.*;
+import com.by.movx.event.ActorClickedEvent;
+import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.repository.*;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
 import javafx.beans.binding.Bindings;
@@ -20,8 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.PostConstruct;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.common.eventbus.Subscribe;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class MainController {
@@ -113,7 +115,7 @@ public class MainController {
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
-
+        Common.getInstance().getEventBus().register(this);
         table.setRowFactory(new Callback<TableView<Film>, TableRow<Film>>() {
             @Override
             public TableRow<Film> call(TableView<Film> tableView) {
@@ -155,14 +157,11 @@ public class MainController {
         TableColumn<Film, Integer> yearColumn = new TableColumn<>("Год");
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
 
-        TableColumn<Film, String> durColumn = new TableColumn<>("Durat");
-        durColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(time(c)));
-
         TableColumn<Film, HBox> colorColumn = new TableColumn<>("RGB");
         colorColumn.setCellValueFactory
                 (c -> new SimpleObjectProperty<>(color(c)));
 
-        table.getColumns().setAll(idColumn, markColumn, nameColumn, enNameColumn, yearColumn, durColumn, colorColumn);
+        table.getColumns().setAll(idColumn, markColumn, nameColumn, enNameColumn, yearColumn, colorColumn);
         table.setItems(data);
 
         comboCountry.setConverter(new StringConverter<Country>() {
@@ -217,6 +216,13 @@ public class MainController {
     }
 
     @FXML
+    public void rand10() {
+        List<Film> films = filmRepository.findRandom10Film();
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
+    }
+
+    @FXML
     public void onTag () {
         Tag tag = tagCombo.getSelectionModel().getSelectedItem();
         if(tag == null) return;
@@ -255,23 +261,8 @@ public class MainController {
 
     @FXML
     public void edit() throws Exception {
-
         Film film = table.getSelectionModel().getSelectedItem();
-        if (film == null) return;
-
-        fdController.setFilm(film);
-        fdController.init();
-
-        if (fdView.getView().getScene() != null)
-            fdView.getView().getScene().setRoot(new Button());
-
-        Stage stage = new Stage();
-        Scene scene = new Scene(fdView.getView());
-
-        stage.setScene(scene);
-        stage.setResizable(true);
-        stage.centerOnScreen();
-        stage.show();
+        openFilm(film);
     }
 
     @FXML
@@ -437,8 +428,10 @@ public class MainController {
     }
 
     @FXML
-    public void deleteRepeats() {
-        faRepository.deleteDuplicates();
+    public void noActors() {
+        List<Film> films = filmRepository.findWithoutActors();
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
     }
 
     @FXML
@@ -447,27 +440,6 @@ public class MainController {
         tagCombo.getSelectionModel().select(t);
     }
 
-    private String time(TableColumn.CellDataFeatures<Film, String> c) {
-//        SimpleObjectProperty formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        if (c.getValue().getDuration() == null)
-            return "";
-        Period period = new Period(c.getValue().getDuration() * 1000L);
-
-        PeriodFormatter fff = new PeriodFormatterBuilder()
-                .printZeroAlways()
-                .appendHours()
-                .appendSeparator(":")
-                .printZeroAlways()
-                .appendMinutes()
-                .appendSeparator(":")
-                .printZeroAlways()
-                .appendSeconds()
-                .toFormatter();
-
-        return fff.print(period);
-//        return c.getValue().getDuration() == null ? "" :
-//                formatter.format(new Date(c.getValue().getDuration() * 1000));
-    }
     private HBox group(TableColumn.CellDataFeatures<Film, HBox> c) {
         String cssBordering = "-fx-border-color:darkblue ; \n" //#090a0c
                 + "-fx-border-insets:3;\n"
@@ -495,29 +467,13 @@ public class MainController {
     }
 
     private HBox color(TableColumn.CellDataFeatures<Film, HBox> c) {
-
-
         HBox g = new HBox();
-
-//        g.setStyle("-fx-background-color: linear-gradient("
-//                + c.getValue().getC1().replace("0x", "#") + " 0%, "
-//                + c.getValue().getC2().replace("0x", "#") + " 33%, "
-//                + c.getValue().getC3().replace("0x", "#") + " 66%, "
-//                + c.getValue().getC4().replace("0x", "#") + " 100%)");
 
         g.setStyle("-fx-background-color: linear-gradient( to right,  "
                 + c.getValue().getC1().replace("0x", "#") + "  , "
                 + c.getValue().getC2().replace("0x", "#") + "  , "
                 + c.getValue().getC3().replace("0x", "#") + " , "
                 + c.getValue().getC4().replace("0x", "#") + " )");
-
-
-
-
-//        g.getChildren().add(createColor(c.getValue().getC1()));
-//        g.getChildren().add(createColor(c.getValue().getC2()));
-//        g.getChildren().add(createColor(c.getValue().getC3()));
-//        g.getChildren().add(createColor(c.getValue().getC4()));
 
         return g;
     }
@@ -542,8 +498,6 @@ public class MainController {
     }
 
     private void fillLetters() {
-
-
         char chars[] = "0123456789АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         List<Hyperlink> letters = new ArrayList<>();
 
@@ -560,4 +514,37 @@ public class MainController {
 
         letterBox.getChildren().addAll(letters);
     }
+
+    @Subscribe
+    public void filmClicked(FilmClickedEvent e) {
+        Film film = e.getData();
+        openFilm(film);
+    }
+
+    @Subscribe
+    public void actorClicked(ActorClickedEvent e) {
+        List<Film> films = faRepository.findByActor(e.getData().getActor())
+                .stream().map(FilmActor::getFilm).collect(Collectors.toList());
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
+    }
+
+    private void openFilm(Film film) {
+        if (film == null) return;
+
+        fdController.setFilm(film);
+        fdController.init();
+
+        if (fdView.getView().getScene() != null)
+            fdView.getView().getScene().setRoot(new Button());
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(fdView.getView());
+
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
 }

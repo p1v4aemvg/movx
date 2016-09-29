@@ -20,6 +20,9 @@ public class Actor {
     @Column(name = "en_name")
     private String enName;
 
+    @Column(name = "img")
+    private byte[] img;
+
     public Actor() {}
 
     public Actor(String name) {
@@ -48,5 +51,13 @@ public class Actor {
 
     public void setEnName(String enName) {
         this.enName = enName;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 }

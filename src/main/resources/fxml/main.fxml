@@ -46,7 +46,7 @@
                 <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="132.0" text="ADD" />
               </children>
             </HBox>
-            <Button id="deleteRepeats" mnemonicParsing="false" onAction="#deleteRepeats" prefWidth="190.0" text="DELETE REPEATS" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button id="noActors" mnemonicParsing="false" onAction="#noActors" prefWidth="190.0" text="NO ACTORS" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#onTag" prefWidth="92.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <ComboBox fx:id="tagCombo" prefHeight="21.0" prefWidth="205.0" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <Button mnemonicParsing="false" onAction="#addTag" prefWidth="101.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="5" />
@@ -71,6 +71,7 @@
             <Button mnemonicParsing="false" onAction="#diagBy1stLetter" prefWidth="96.0" text="Ă: В" GridPane.columnIndex="4" GridPane.rowIndex="4" />
             <Button mnemonicParsing="false" onAction="#randTag" text="R" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Button mnemonicParsing="false" onAction="#toWatchAll" prefWidth="96.0" text="WATCH ALL" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#rand10" prefWidth="96.0" text="RAND 10" GridPane.columnIndex="3" GridPane.rowIndex="0" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="205.0" />

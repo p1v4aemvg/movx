@@ -1,6 +1,8 @@
 package com.by.movx.ui;
 
+import com.by.movx.Common;
 import com.by.movx.entity.*;
+import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.repository.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +56,9 @@ public class FDController {
 
     @Inject
     CountryRepository countryRepository;
+
+    @Inject
+    FilmActorRepository faRepository;
 
     @FXML
     TextArea description;
@@ -103,7 +107,7 @@ public class FDController {
         actors.getColumns().setAll(nameColumn);
         actors.setItems(data);
 
-        char chars[] = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯ".toCharArray();
+        char chars[] = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЭЮЯ".toCharArray();
         List<Hyperlink> letters = new ArrayList<>();
 
         int k = 0;
@@ -157,24 +161,12 @@ public class FDController {
             a = new Actor(actor.getText());
             a = actorRepository.save(a);
         }
-
-        film.getFas().add(new FilmActor(film, a, new Part((long) (int) part.getValue()), partName.getText()));
-
-        Set<FilmActor> uq = film.getFas().stream()
-                .collect(Collectors.groupingBy(FilmActor::uq))
-                .entrySet().stream()
-                .map(e -> e.getValue().get(0))
-                .collect(Collectors.toSet());
-
-        film.setFas(uq);
-        filmRepository.save(film);
-
+        faRepository.save(new FilmActor(film, a, new Part((long) (int) part.getValue()), partName.getText()));
         createLinks();
     }
 
     private void createLinks() {
-        final List<FilmActor> fff = film.getFas().stream()
-                .sorted((f1, f2) -> f1.getPart().getId().compareTo(f2.getPart().getId())).collect(Collectors.toList());
+        final List<FilmActor> fff = faRepository.findByFilm(film);
         List<Hyperlink> links = fff.stream()
                 .map(fa -> {
 
@@ -189,11 +181,13 @@ public class FDController {
                             break;
                         case 3:
                             l.setTextFill(Paint.valueOf("#898585"));
-//                            l.setStyle("-fx-background-color: #898585;");
                             break;
                         default:
                             break;
                     }
+                    l.setOnAction(event -> {
+                        Common.getInstance().getEventBus().post(new ActorClickedEvent(fa));
+                    });
                     return l;
                 })
                 .collect(Collectors.toList());
@@ -210,9 +204,10 @@ public class FDController {
                 temp.setLayoutX(245);
                 temp.setOnAction(event1 -> {
                     if (!temp.getText().isEmpty()) {
-                        film.getFas().stream().filter(fa -> fa.equals(fff.get(i1))).findFirst().get().setPartName(temp.getText());
+                        FilmActor fa = fff.get(i1);
+                        fa.setPartName(temp.getText());
                         links.get(i1).setText(fff.get(i1).fullName());
-                        filmRepository.save(film);
+                        faRepository.save(fa);
                     }
                     pane.getChildren().remove(temp);
                 });
@@ -255,12 +250,11 @@ public class FDController {
             Actor a = actors.getSelectionModel().getSelectedItem();
             if (a != null) {
 
-                boolean exist = film.getFas().stream().anyMatch(fd -> fd.getActor().getName().equals(a.getName()));
+                boolean exist = faRepository.findTop1ByActorAndFilm(a, film) != null;
 
                 if (!exist) {
-                    film.getFas().add(new FilmActor(
+                    faRepository.save(new FilmActor(
                             film, a, new Part((long) (int) part.getValue()), partName.getText()));
-                    filmRepository.save(film);
                     createLinks();
                 }
             }
