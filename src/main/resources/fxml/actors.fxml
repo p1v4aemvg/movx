@@ -8,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="636.0" prefWidth="954.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.ActorController">
+<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="636.0" prefWidth="1058.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.ActorController">
   <children>
     <ScrollPane id="ppp" layoutX="270.0" layoutY="42.0" prefHeight="572.0" prefWidth="545.0">
       <content>
@@ -17,6 +17,24 @@
     </ScrollPane>
     <TableView fx:id="actors" layoutX="14.0" layoutY="42.0" prefHeight="572.0" prefWidth="226.0" />
     <AnchorPane fx:id="paneL" layoutX="240.0" layoutY="36.0" prefHeight="572.0" prefWidth="30.0" />
-    <ImageView fx:id="img" fitHeight="90.0" fitWidth="90.0" layoutX="839.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" />
+    <CheckBox fx:id="edit" layoutX="846.0" layoutY="42.0" mnemonicParsing="false" onAction="#edit" text="edit" />
+    <Button fx:id="plBtn" layoutX="955.0" layoutY="40.0" mnemonicParsing="false" onAction="#onPlus" prefWidth="30.0" text="+" visible="false" />
+    <Button fx:id="minBtn" layoutX="923.0" layoutY="40.0" mnemonicParsing="false" onAction="#onMinus" prefWidth="30.0" text="-" visible="false" />
+    <Button fx:id="captureBtn" layoutX="997.0" layoutY="40.0" mnemonicParsing="false" onAction="#capture" prefWidth="30.0" text="C" visible="false" />
+    <TextField fx:id="textUrl" layoutX="846.0" layoutY="65.0" prefWidth="139.0" promptText="url" visible="false" />
+    <Button fx:id="getBtn" layoutX="986.0" layoutY="66.0" mnemonicParsing="false" onAction="#onGet" text="GET" visible="false" />
+    <AnchorPane fx:id="imgPane" layoutX="846.0" layoutY="108.0" minWidth="181.0" prefHeight="181.0" prefWidth="181.0">
+      <children>
+        <ImageView fx:id="img" fitHeight="181.0" fitWidth="181.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
+      </children>
+    </AnchorPane>
+    <Button layoutX="14.0" layoutY="16.0" mnemonicParsing="false" onAction="#onAll" prefWidth="60.0" text="☷" />
+    <Button fx:id="rand" layoutX="74.0" layoutY="16.0" mnemonicParsing="false" onAction="#onRand" prefWidth="60.0" text="♘" />
+    <Button fx:id="spec" layoutX="134.0" layoutY="16.0" minHeight="21.0" mnemonicParsing="false" onAction="#special" prefWidth="80.0" text="☀">
+      <font>
+        <Font size="12.0" />
+      </font>
+    </Button>
+    <CheckBox fx:id="specBox" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" onAction="#onSpec" text="" />
   </children>
 </AnchorPane>

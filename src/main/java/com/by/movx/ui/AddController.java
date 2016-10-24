@@ -3,7 +3,6 @@ package com.by.movx.ui;
 import com.by.movx.entity.*;
 import com.by.movx.repository.CountryRepository;
 import com.by.movx.repository.FilmRepository;
-import com.by.movx.repository.TypeRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,7 +33,7 @@ public class AddController {
     private ComboBox<Country> country;
 
     @FXML
-    private ChoiceBox<Type> type;
+    private ChoiceBox<Film.Type> type;
 
     @Inject
     FilmRepository filmRepository;
@@ -42,11 +41,7 @@ public class AddController {
     @Inject
     CountryRepository countryRepository;
 
-    @Inject
-    TypeRepository typeRepository;
-
     private Film film;
-
 
     public void init() {
         film = new Film();
@@ -68,15 +63,15 @@ public class AddController {
             }
         });
 
-        ObservableList<Type> types = FXCollections.observableArrayList((List<Type>) typeRepository.findAll());
-        type.setConverter(new StringConverter<Type>() {
+        ObservableList<Film.Type> types = FXCollections.observableArrayList(Film.Type.values());
+        type.setConverter(new StringConverter<Film.Type>() {
             @Override
-            public String toString(Type object) {
+            public String toString(Film.Type object) {
                 return object.getName();
             }
 
             @Override
-            public Type fromString(String string) {
+            public Film.Type fromString(String string) {
                 return null;
             }
         });

@@ -46,15 +46,13 @@
                 <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="132.0" text="ADD" />
               </children>
             </HBox>
-            <Button id="noActors" mnemonicParsing="false" onAction="#noActors" prefWidth="190.0" text="NO ACTORS" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="noActors" mnemonicParsing="false" onAction="#noActors" prefWidth="190.0" text="NO ACTORS" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#onTag" prefWidth="92.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <ComboBox fx:id="tagCombo" prefHeight="21.0" prefWidth="205.0" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <Button mnemonicParsing="false" onAction="#addTag" prefWidth="101.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="5" />
             <Button fx:id="rand" mnemonicParsing="false" onAction="#onRand" prefWidth="147.0" text="RAND" GridPane.columnIndex="4" GridPane.rowIndex="0" />
-            <Button mnemonicParsing="false" onAction="#diagByYear" prefWidth="147.0" text="Ӱ: 1975" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" onAction="#diagByMark" prefWidth="147.0" text="Ӎ: 10" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#diag" prefWidth="147.0" text="☈" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#findByYear" prefWidth="87.0" text="Найти" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Button mnemonicParsing="false" onAction="#diagByCountry" prefWidth="147.0" text="Ϲ: USSR" GridPane.columnIndex="4" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" onAction="#addCountry" prefWidth="96.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="3" />
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <children>
@@ -68,9 +66,8 @@
                 <TextField fx:id="txtYearFrom" onKeyReleased="#copyYearFrom" prefWidth="161.0" promptText="С" />
               </children>
             </HBox>
-            <Button mnemonicParsing="false" onAction="#diagBy1stLetter" prefWidth="96.0" text="Ă: В" GridPane.columnIndex="4" GridPane.rowIndex="4" />
             <Button mnemonicParsing="false" onAction="#randTag" text="R" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Button mnemonicParsing="false" onAction="#toWatchAll" prefWidth="96.0" text="WATCH ALL" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button fx:id="watchAll" mnemonicParsing="false" onAction="#toWatchAll" prefWidth="96.0" text="WATCH ALL" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#rand10" prefWidth="96.0" text="RAND 10" GridPane.columnIndex="3" GridPane.rowIndex="0" />
           </children>
           <columnConstraints>

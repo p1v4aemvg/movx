@@ -34,13 +34,10 @@ public class FDController {
     private TableView<Actor> actors;
 
     @FXML
-    AnchorPane pane;
+    AnchorPane pane, paneL, mainPane;
 
     @FXML
-    AnchorPane paneL;
-
-    @FXML
-    Slider mark;
+    Slider mark, part;
 
     @FXML
     Label markLabel;
@@ -61,10 +58,7 @@ public class FDController {
     FilmActorRepository faRepository;
 
     @FXML
-    TextArea description;
-
-    @FXML
-    TextArea comment;
+    TextArea description, comment;
 
     @FXML
     Button save;
@@ -73,25 +67,10 @@ public class FDController {
     Label fileName;
 
     @FXML
-    TextField actor;
+    TextField actor, partName;
 
     @FXML
-    Slider part;
-
-    @FXML
-    TextField partName;
-
-    @FXML
-    ColorPicker c1;
-
-    @FXML
-    ColorPicker c2;
-
-    @FXML
-    ColorPicker c3;
-
-    @FXML
-    ColorPicker c4;
+    ColorPicker c1, c2, c3, c4;
 
     public void init() {
 
@@ -136,6 +115,8 @@ public class FDController {
         c2.setValue(Color.valueOf(film.getC2()));
         c3.setValue(Color.valueOf(film.getC3()));
         c4.setValue(Color.valueOf(film.getC4()));
+
+        mainPane.setStyle(generateStyleStr(film));
     }
 
     @FXML
@@ -291,6 +272,14 @@ public class FDController {
     public void onC4() {
         film.setC4(c4.getValue().toString());
         filmRepository.save(film);
+    }
+
+    private String generateStyleStr(Film f) {
+        return "-fx-background-color: linear-gradient( to bottom right,  "
+                + f.getC1().replace("0x", "#") + "  , "
+                + f.getC2().replace("0x", "#") + "  , "
+                + f.getC3().replace("0x", "#") + " , "
+                + f.getC4().replace("0x", "#") + " )";
     }
 
 }

@@ -23,6 +23,9 @@ public class Actor {
     @Column(name = "img")
     private byte[] img;
 
+    @Column(name = "special")
+    private boolean special;
+
     public Actor() {}
 
     public Actor(String name) {
@@ -59,5 +62,13 @@ public class Actor {
 
     public void setImg(byte[] img) {
         this.img = img;
+    }
+
+    public boolean isSpecial() {
+        return special;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
     }
 }

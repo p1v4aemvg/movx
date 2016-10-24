@@ -7,8 +7,6 @@ import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.repository.*;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,14 +19,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
-import org.joda.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,10 +81,7 @@ public class MainController {
     private TableView<Film> table;
 
     @FXML
-    private TextField txtYearFrom;
-
-    @FXML
-    private TextField txtYearTo;
+    private TextField txtYearFrom, txtYearTo;
 
     @FXML
     private ComboBox<Country> comboCountry;
@@ -97,8 +90,6 @@ public class MainController {
     private ComboBox<Director> director;
 
     private ObservableList<Film> data;
-    private ObservableList<Country> countries;
-    private ObservableList<Director> directors;
 
     @FXML
     public ComboBox<Tag> tagCombo;
@@ -112,33 +103,19 @@ public class MainController {
     @Inject
     TagRepository tagRepository;
 
+    @FXML
+    Button watchAll, noActors;
+
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
         Common.getInstance().getEventBus().register(this);
-        table.setRowFactory(new Callback<TableView<Film>, TableRow<Film>>() {
-            @Override
-            public TableRow<Film> call(TableView<Film> tableView) {
-                final TableRow<Film> row = new TableRow<Film>() {
-                    @Override
-                    protected void updateItem(Film film, boolean empty) {
-                        super.updateItem(film, empty);
-                        if (!empty) {
-                            styleProperty().bind(Bindings.when(new SimpleBooleanProperty(film.getDirector() != null))
-                                    .then("-fx-font-weight: bold;")
-                                    .otherwise(""));
-                        }
-                    }
-                };
-                return row;
-            }
-        });
 
         count.setText(String.valueOf(filmRepository.count()));
 
         data = FXCollections.observableArrayList();
-        countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
-        directors = FXCollections.observableArrayList((List<Director>) directorRepository.findAll());
+        ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
+        ObservableList<Director> directors = FXCollections.observableArrayList((List<Director>) directorRepository.findAll());
 
         TableColumn<Film, HBox> idColumn = new TableColumn<>("Country");
         idColumn.setCellValueFactory
@@ -147,9 +124,9 @@ public class MainController {
         TableColumn<Film, String> nameColumn = new TableColumn<>("Нахвание");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Film, Integer> markColumn = new TableColumn<>("Mark");
+        TableColumn<Film, Integer> markColumn = new TableColumn<>("Оценка");
         markColumn.setCellValueFactory(new PropertyValueFactory<>("mark"));
-        markColumn.setPrefWidth(10);
+
 
         TableColumn<Film, String> enNameColumn = new TableColumn<>("Оригинальное название");
         enNameColumn.setCellValueFactory(new PropertyValueFactory<>("enName"));
@@ -157,11 +134,10 @@ public class MainController {
         TableColumn<Film, Integer> yearColumn = new TableColumn<>("Год");
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
 
-        TableColumn<Film, HBox> colorColumn = new TableColumn<>("RGB");
-        colorColumn.setCellValueFactory
-                (c -> new SimpleObjectProperty<>(color(c)));
+        TableColumn<Film, String> folderColumn = new TableColumn<>("Папка");
+        folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(folder(c)));
 
-        table.getColumns().setAll(idColumn, markColumn, nameColumn, enNameColumn, yearColumn, colorColumn);
+        table.getColumns().setAll(idColumn, markColumn, nameColumn, enNameColumn, yearColumn, folderColumn);
         table.setItems(data);
 
         comboCountry.setConverter(new StringConverter<Country>() {
@@ -204,7 +180,6 @@ public class MainController {
         tagCombo.setItems(FXCollections.observableArrayList());
         new TagAutoCompleteComboBoxListener(tagCombo, tagRepository);
 
-
         fillLetters();
     }
 
@@ -239,7 +214,6 @@ public class MainController {
         if (c == null) return;
 
         film.getCountries().add(c);
-
         filmRepository.save(film);
     }
 
@@ -256,7 +230,6 @@ public class MainController {
         ft.setTag(tag);
 
         filmTagRepository.save(ft);
-
     }
 
     @FXML
@@ -267,7 +240,6 @@ public class MainController {
 
     @FXML
     public void findByYear() {
-
         int from = Integer.valueOf(txtYearFrom.getText());
         int to = Integer.valueOf(txtYearTo.getText());
 
@@ -279,7 +251,6 @@ public class MainController {
 
     @FXML
     public void inc() {
-
         int from = Integer.valueOf(txtYearFrom.getText());
         txtYearFrom.setText(String.valueOf(from + 1));
         txtYearTo.setText(String.valueOf(from + 1));
@@ -304,7 +275,6 @@ public class MainController {
 
     @FXML
     public void onActor() {
-
         actorController.init();
 
         if (actorView.getView().getScene() != null)
@@ -332,6 +302,7 @@ public class MainController {
         List<Film> films = filmRepository.findByMark(0);
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
+        watchAll.setText("WATCH " + films.size());
     }
 
     @FXML
@@ -343,13 +314,11 @@ public class MainController {
     @FXML
     public void reload() {
         count.setText(String.valueOf(filmRepository.count()));
-
     }
 
     @FXML
     public void findByCountry() {
         Country c = comboCountry.getSelectionModel().getSelectedItem();
-
         List<Film> films = filmRepository.findByCountry(c);
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
@@ -362,27 +331,11 @@ public class MainController {
         List<Film> films = filmRepository.findByDirector(d);
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
-
     }
 
     @FXML
-    public void diagByYear() throws Exception {
-        startDiag(filmRepository.yearStats());
-    }
-
-    @FXML
-    public void diagByMark() throws Exception {
-        startDiag(filmRepository.markStats());
-    }
-
-    @FXML
-    public void diagByCountry() throws Exception {
-        startDiag(countryRepository.loadCountryStat());
-    }
-
-    @FXML
-    public void diagBy1stLetter() throws Exception {
-        startDiag(filmRepository.filmsBy1stLetter());
+    public void diag() throws Exception {
+        startDiag();
     }
 
     @FXML
@@ -396,10 +349,9 @@ public class MainController {
         }
     }
 
-    private void startDiag(List<Object[]> stats) throws Exception {
-
-        diagController.setStats(stats);
-        diagController.init();
+    private void startDiag() throws Exception {
+//        diagController.diagController(stats);
+//        diagController.init();
 
         if (diagView.getView().getScene() != null)
             diagView.getView().getScene().setRoot(new Button());
@@ -432,6 +384,7 @@ public class MainController {
         List<Film> films = filmRepository.findWithoutActors();
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
+        noActors.setText("NO ACTORS " + films.size());
     }
 
     @FXML
@@ -466,35 +419,8 @@ public class MainController {
         return g;
     }
 
-    private HBox color(TableColumn.CellDataFeatures<Film, HBox> c) {
-        HBox g = new HBox();
-
-        g.setStyle("-fx-background-color: linear-gradient( to right,  "
-                + c.getValue().getC1().replace("0x", "#") + "  , "
-                + c.getValue().getC2().replace("0x", "#") + "  , "
-                + c.getValue().getC3().replace("0x", "#") + " , "
-                + c.getValue().getC4().replace("0x", "#") + " )");
-
-        return g;
-    }
-
-    private BorderPane createColor(String color) {
-        String cssBordering = String.format("-fx-border-color:black ; \n"
-                + "-fx-border-insets:2;\n"
-                + "-fx-border-radius:5;\n"
-                + "-fx-border-width:0.7;\n"
-                + "-fx-background-color: %s ;", color);
-
-        BorderPane p = new BorderPane();
-
-        p.setMaxHeight(14);
-        p.setMaxWidth(21);
-
-//        p.setPrefHeight(14);
-        p.setPrefSize(14, 21);
-
-        p.setStyle(cssBordering);
-        return p;
+    private String folder(TableColumn.CellDataFeatures<Film, String> c) {
+        return c.getValue().getType().getName();
     }
 
     private void fillLetters() {
@@ -546,5 +472,4 @@ public class MainController {
         stage.centerOnScreen();
         stage.show();
     }
-
 }

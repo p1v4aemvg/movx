@@ -34,8 +34,8 @@ public class Film {
     @JoinColumn(name = "director_id")
     Director director;
 
-    @ManyToOne
-    @JoinColumn(name = "type")
+    @Column(name = "type")
+    @Enumerated
     Type type;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "film")
@@ -178,6 +178,34 @@ public class Film {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public enum Type {
+        UNKNOWN("UNKNOWN"),
+        FILM("Фильм"),
+        SHORT("Короткометражка"),
+        MULT("Мультфильм"),
+        PLAY("Спектакль"),
+        TV_PLAY("Телеспектакль"),
+        SERIAL("Сериал"),
+        ALMANAH("Киноальманах"),
+        DOCUMENTARY("Документальный"),
+        OPERA("Опера"),
+        BALET("Балет"),
+        AUDIO("Аудиокнига"),
+        FILM_OPERA("Фильм-опера"),
+        CONCERT("Концерт"),
+        FILM_BALET("Фильм-балет");
+
+        private String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
 }

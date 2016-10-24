@@ -1,18 +1,34 @@
 package com.by.movx.ui;
 
+import com.by.movx.repository.ActorRepository;
+import com.by.movx.repository.CountryRepository;
+import com.by.movx.repository.FilmRepository;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import org.springframework.data.domain.PageRequest;
 
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.util.List;
 
 
 public class DiagController {
+
+    @Inject
+    private ActorRepository actorRepository;
+
+
+    @Inject
+    private FilmRepository filmRepository;
+
+
+    @Inject
+    private CountryRepository countryRepository;
 
     @FXML
     LineChart<String, Integer> bar;
@@ -21,6 +37,8 @@ public class DiagController {
     Label count;
 
     List<Object[]> stats;
+
+    int offset = 0, limit = 10;
 
     public void init() {
 
@@ -31,21 +49,12 @@ public class DiagController {
         series.setName("Wanderlust");
         stats.stream().forEach(e -> {
             String x = e[0].toString();
-            Integer y = ((BigInteger)e[1]).intValue();
-            series.getData().add(new XYChart.Data<String, Integer>(x, y));
+            Integer y = Integer.valueOf(e[1].toString());
+            series.getData().add(new XYChart.Data<>(x, y));
         });
 
         bar.getData().clear();
         bar.setData(FXCollections.observableArrayList(series));
-
-//        for (XYChart.Series<String,Integer> serie: bar.getData()){
-//            for (XYChart.Data<String, Integer> item: serie.getData()){
-//                item.getNode().setOnMousePressed((MouseEvent event) -> {
-//                    System.out.println("you clicked "+item.toString());
-//                    count.setText(item.getYValue().toString());
-//                });
-//            }
-//        }
 
         for (final XYChart.Series<String, Integer> serie : bar.getData()) {
             for (final XYChart.Data<String, Integer> data : serie.getData()) {
@@ -66,5 +75,50 @@ public class DiagController {
 
     public void setStats(List<Object[]> stats) {
         this.stats = stats;
+    }
+
+    @FXML
+    public void diagByYear() throws Exception {
+        setStats(filmRepository.yearStats());
+        init();
+    }
+
+    @FXML
+    public void diagByMark() throws Exception {
+        setStats(filmRepository.markStats());
+        init();
+    }
+
+    @FXML
+    public void diagByCountry() throws Exception {
+        setStats(countryRepository.loadCountryStat());
+        init();
+    }
+
+    @FXML
+    public void diagBy1stLetter() throws Exception {
+        setStats(filmRepository.filmsBy1stLetter());
+        init();
+    }
+
+    @FXML
+    public void diagByActor() throws Exception {
+        offset = 0;
+        setStats(actorRepository.actorsByRoles(new PageRequest(offset, limit)));
+        init();
+    }
+
+    @FXML
+    public void onPrev() {
+        offset--;
+        setStats(actorRepository.actorsByRoles(new PageRequest(offset, limit)));
+        init();
+    }
+
+    @FXML
+    public void onNext() {
+        offset++;
+        setStats(actorRepository.actorsByRoles(new PageRequest(offset, limit)));
+        init();
     }
 }
