@@ -3,6 +3,7 @@ package com.by.movx.ui;
 import com.by.movx.Common;
 import com.by.movx.entity.*;
 import com.by.movx.event.ActorClickedEvent;
+import com.by.movx.event.AddSubFilmEvent;
 import com.by.movx.repository.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,11 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by movx
@@ -34,16 +37,13 @@ public class FDController {
     private TableView<Actor> actors;
 
     @FXML
-    AnchorPane pane, paneL, mainPane;
+    AnchorPane pane, paneL, mainPane, parentPanel;
 
     @FXML
     Slider mark, part;
 
     @FXML
-    Label markLabel;
-
-    @FXML
-    Label filmName;
+    Label markLabel, filmName, fileName;
 
     @Inject
     FilmRepository filmRepository;
@@ -62,9 +62,6 @@ public class FDController {
 
     @FXML
     Button save;
-
-    @FXML
-    Label fileName;
 
     @FXML
     TextField actor, partName;
@@ -110,6 +107,7 @@ public class FDController {
         description.setText(film.getDescription().getDescription() == null ? "" : film.getDescription().getDescription());
         markLabel.setText(film.getMark().toString());
         createLinks();
+        createParents();
 
         c1.setValue(Color.valueOf(film.getC1()));
         c2.setValue(Color.valueOf(film.getC2()));
@@ -148,57 +146,108 @@ public class FDController {
 
     private void createLinks() {
         final List<FilmActor> fff = faRepository.findByFilm(film);
-        List<Hyperlink> links = fff.stream()
-                .map(fa -> {
+        final List<FilmActor> parentFFF = film.getParent() == null ? new ArrayList() : faRepository.findByFilm(film.getParent());
 
-                    Hyperlink l = new Hyperlink(fa.fullName());
+        List<Hyperlink> links = Stream.concat(
+                parentFFF.stream().map(fa -> {
 
-                    switch (fa.getPart().getId().intValue()) {
-                        case 1:
-                            l.setTextFill(Paint.valueOf("#091a9c"));
-                            break;
-                        case 2:
-                            l.setTextFill(Paint.valueOf("#0d69ff"));
-                            break;
-                        case 3:
-                            l.setTextFill(Paint.valueOf("#898585"));
-                            break;
-                        default:
-                            break;
-                    }
+                    Hyperlink l = createLnk(fa, "#8b0201", "#8b4834", "#8b6c2b");
                     l.setOnAction(event -> {
                         Common.getInstance().getEventBus().post(new ActorClickedEvent(fa));
                     });
+                    l.setOnContextMenuRequested(event -> {
+                        fa.setFilm(film);
+                        faRepository.save(fa);
+                        createLinks();
+                    });
+
                     return l;
-                })
+                }),
+                fff.stream().map(fa -> {
+
+                    Hyperlink l = createLnk(fa, "#091a9c", "#0d69ff", "#898585");
+                    l.setOnAction(event -> {
+                        Common.getInstance().getEventBus().post(new ActorClickedEvent(fa));
+                    });
+                    l.setOnContextMenuRequested(event -> {
+                        TextField temp = new TextField();
+                        temp.setPrefHeight(15);
+                        temp.setLayoutY(l.getLayoutY());
+                        temp.setLayoutX(245);
+                        temp.setOnAction(event1 -> {
+                            if (!temp.getText().isEmpty()) {
+                                fa.setPartName(temp.getText());
+                                l.setText(fa.fullName());
+                                faRepository.save(fa);
+                            }
+                            pane.getChildren().remove(temp);
+                        });
+                        pane.getChildren().add(temp);
+                    });
+
+                    return l;
+                }))
                 .collect(Collectors.toList());
 
         for (int i = 0; i < links.size(); i++) {
             links.get(i).setLayoutY(20 * i);
             links.get(i).setFont(new Font("Courier New", 12));
-
-            final int i1 = i;
-            links.get(i).setOnContextMenuRequested(event -> {
-                TextField temp = new TextField();
-                temp.setPrefHeight(15);
-                temp.setLayoutY(i1 * 20);
-                temp.setLayoutX(245);
-                temp.setOnAction(event1 -> {
-                    if (!temp.getText().isEmpty()) {
-                        FilmActor fa = fff.get(i1);
-                        fa.setPartName(temp.getText());
-                        links.get(i1).setText(fff.get(i1).fullName());
-                        faRepository.save(fa);
-                    }
-                    pane.getChildren().remove(temp);
-                });
-                pane.getChildren().add(temp);
-            });
         }
+
         pane.getChildren().clear();
         pane.getChildren().addAll(links);
         pane.setPrefHeight(20 * links.size());
     }
+
+    private Hyperlink createLnk(FilmActor fa, String color1, String color2, String color3) {
+        Hyperlink l = new Hyperlink(fa.fullName());
+
+        switch (fa.getPart().getId().intValue()) {
+            case 1:
+                l.setTextFill(Paint.valueOf(color1));
+                break;
+            case 2:
+                l.setTextFill(Paint.valueOf(color2));
+                break;
+            case 3:
+                l.setTextFill(Paint.valueOf(color3));
+                break;
+            default:
+                break;
+        }
+        return l;
+    }
+
+    private void createParents() {
+        parentPanel.getChildren().clear();
+        int i = 0;
+        if(film.getParent()!=null) {
+            Hyperlink l = createParent(i, film.getParent());
+            parentPanel.getChildren().add(l);
+            i++;
+        }
+        if(!CollectionUtils.isEmpty(film.getChildren())) {
+            for(Film f : film.getChildren() ) {
+                Hyperlink l = createParent(i, f);
+                parentPanel.getChildren().add(l);
+                i++;
+            }
+        }
+    }
+
+    private Hyperlink createParent(int i, Film f) {
+        Hyperlink l = new Hyperlink(f.getYear() + " " + f.getName());
+        l.setLayoutY(20 * i);
+        l.setFont(new Font("Courier New", 12));
+
+        l.setOnAction(event -> {
+            this.film = f;
+            init();
+        });
+
+        return l;
+    }
+
 
     @FXML
     private void onDragDetected(MouseEvent event) { //drag
@@ -248,6 +297,11 @@ public class FDController {
 
     public void setFilm(Film film) {
         this.film = film;
+    }
+
+    @FXML
+    public void sub() {
+        Common.getInstance().getEventBus().post(new AddSubFilmEvent(film));
     }
 
     @FXML

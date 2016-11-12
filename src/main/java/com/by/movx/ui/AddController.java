@@ -12,6 +12,7 @@ import javafx.util.StringConverter;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by movx
@@ -21,13 +22,10 @@ import java.util.List;
 public class AddController {
 
     @FXML
-    TextField name;
+    TextField name, enname, year;
 
     @FXML
-    TextField enname;
-
-    @FXML
-    TextField year;
+    Slider duration;
 
     @FXML
     private ComboBox<Country> country;
@@ -41,7 +39,7 @@ public class AddController {
     @Inject
     CountryRepository countryRepository;
 
-    private Film film;
+    private Film film, parent;
 
     public void init() {
         film = new Film();
@@ -49,6 +47,7 @@ public class AddController {
         name.clear();
         enname.clear();
         year.clear();
+
 
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
         country.setConverter(new StringConverter<Country>() {
@@ -78,6 +77,25 @@ public class AddController {
 
         country.setItems(countries);
         type.setItems(types);
+
+
+        checkParent();
+    }
+
+    private void checkParent() {
+        if(parent != null) {
+            film.setType(parent.getType());
+            type.setValue(parent.getType());
+
+            film.setDuration(parent.getDuration());
+            duration.setValue((double)parent.getDuration().ordinal());
+
+            film.setCountries(parent.getCountries().stream().map(c -> {
+                Country newC = new Country();
+                newC.setId(c.getId());
+                return newC;
+            }).collect(Collectors.toSet()));
+        }
     }
 
     @FXML
@@ -87,16 +105,23 @@ public class AddController {
         film.setYear(Integer.valueOf(year.getText()));
         film.setType(type.getSelectionModel().getSelectedItem());
         film.setMark(0);
+        film.setDuration(Film.Duration.of((int) duration.getValue()));
+        film.setParent(parent);
         film = filmRepository.save(film);
         film.setDescription(new FilmDescription(film));
         filmRepository.save(film);
+
+        parent = null;
     }
 
     @FXML
     public void countryAdded() {
         Country c = country.getSelectionModel().getSelectedItem();
-        if(c != null)
+        if (c != null)
             film.getCountries().add(c);
     }
 
+    public void setParent(Film parent) {
+        this.parent = parent;
+    }
 }

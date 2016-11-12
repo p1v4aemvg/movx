@@ -1,6 +1,9 @@
 package com.by.movx.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,21 +34,32 @@ public class Film {
     private Integer year;
 
     @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Film parent;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "parent")
+    private Set<Film> children = new HashSet<>();
+
+    @ManyToOne
     @JoinColumn(name = "director_id")
-    Director director;
+    private Director director;
 
     @Column(name = "type")
     @Enumerated
-    Type type;
+    private Type type;
+
+    @Column(name = "duration")
+    @Enumerated
+    private Duration duration;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "film")
-    FilmDescription description;
+    private FilmDescription description;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "film_country",  joinColumns = {
-            @JoinColumn(name = "film_id", nullable = false, updatable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "country_id",
-                    nullable = false, updatable = false) })
+    @JoinTable(name = "film_country", joinColumns = {
+            @JoinColumn(name = "film_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "country_id",
+                    nullable = false, updatable = false)})
     Set<Country> countries;
 
     @Column(name = "c1")
@@ -60,7 +74,8 @@ public class Film {
     @Column(name = "c4")
     private String c4 = "0xffffffff";
 
-    public Film() {}
+    public Film() {
+    }
 
     public Film(String name, String enName, Integer year) {
         this.name = name;
@@ -180,15 +195,36 @@ public class Film {
         this.type = type;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Film getParent() {
+        return parent;
+    }
+
+    public void setParent(Film parent) {
+        this.parent = parent;
+    }
+
+    public Set<Film> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Film> children) {
+        this.children = children;
+    }
+
     public enum Type {
         UNKNOWN("UNKNOWN"),
         FILM("Фильм"),
-        SHORT("Короткометражка"),
         MULT("Мультфильм"),
         PLAY("Спектакль"),
         TV_PLAY("Телеспектакль"),
-        SERIAL("Сериал"),
-        ALMANAH("Киноальманах"),
         DOCUMENTARY("Документальный"),
         OPERA("Опера"),
         BALET("Балет"),
@@ -205,6 +241,29 @@ public class Film {
 
         public String getName() {
             return name;
+        }
+    }
+
+    public enum Duration {
+        UNKNOWN("UNKNOWN"),
+        SHORT("☀"),
+        FILM("☀☀"),
+        SERIAL("☀☀☀");
+
+        private String name;
+
+        Duration(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static Duration of(int index) {
+            if (index < 0 || index >= values().length)
+                return Duration.UNKNOWN;
+            return values()[index];
         }
     }
 

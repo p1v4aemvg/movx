@@ -4,6 +4,7 @@ import com.by.movx.Common;
 import com.by.movx.ConfigurationControllers;
 import com.by.movx.entity.*;
 import com.by.movx.event.ActorClickedEvent;
+import com.by.movx.event.AddSubFilmEvent;
 import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.repository.*;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
@@ -111,7 +112,7 @@ public class MainController {
     public void init() {
         Common.getInstance().getEventBus().register(this);
 
-        count.setText(String.valueOf(filmRepository.count()));
+        count.setText(String.valueOf(filmRepository.countFilms()));
 
         data = FXCollections.observableArrayList();
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
@@ -121,15 +122,12 @@ public class MainController {
         idColumn.setCellValueFactory
                 (c -> new SimpleObjectProperty<>(group(c)));
 
+
+        TableColumn<Film, String> generalName = new TableColumn<>("Общее название");
+        generalName.setCellValueFactory(c -> new SimpleObjectProperty<>(parent(c)));
+
         TableColumn<Film, String> nameColumn = new TableColumn<>("Нахвание");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Film, Integer> markColumn = new TableColumn<>("Оценка");
-        markColumn.setCellValueFactory(new PropertyValueFactory<>("mark"));
-
-
-        TableColumn<Film, String> enNameColumn = new TableColumn<>("Оригинальное название");
-        enNameColumn.setCellValueFactory(new PropertyValueFactory<>("enName"));
 
         TableColumn<Film, Integer> yearColumn = new TableColumn<>("Год");
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
@@ -137,7 +135,10 @@ public class MainController {
         TableColumn<Film, String> folderColumn = new TableColumn<>("Папка");
         folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(folder(c)));
 
-        table.getColumns().setAll(idColumn, markColumn, nameColumn, enNameColumn, yearColumn, folderColumn);
+        TableColumn<Film, String> durationColumn = new TableColumn<>("Тип");
+        durationColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(duration(c)));
+
+        table.getColumns().setAll(idColumn, generalName, nameColumn, yearColumn, folderColumn, durationColumn);
         table.setItems(data);
 
         comboCountry.setConverter(new StringConverter<Country>() {
@@ -313,7 +314,7 @@ public class MainController {
 
     @FXML
     public void reload() {
-        count.setText(String.valueOf(filmRepository.count()));
+        count.setText(String.valueOf(filmRepository.countFilms()));
     }
 
     @FXML
@@ -423,6 +424,16 @@ public class MainController {
         return c.getValue().getType().getName();
     }
 
+
+    private String duration(TableColumn.CellDataFeatures<Film, String> c) {
+        return c.getValue().getDuration().getName();
+    }
+
+
+    private String parent(TableColumn.CellDataFeatures<Film, String> c) {
+        return c.getValue().getParent() == null ? "" : c.getValue().getParent().getName();
+    }
+
     private void fillLetters() {
         char chars[] = "0123456789АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         List<Hyperlink> letters = new ArrayList<>();
@@ -453,6 +464,12 @@ public class MainController {
                 .stream().map(FilmActor::getFilm).collect(Collectors.toList());
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
+    }
+
+    @Subscribe
+    public void subFilmAdded(AddSubFilmEvent e) {
+        addController.setParent(e.getData());
+        add();
     }
 
     private void openFilm(Film film) {

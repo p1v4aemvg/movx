@@ -67,4 +67,7 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
             "(select count(*) from film_actor fa where fa.film_id = f.id) = 0", nativeQuery = true)
     List<Film> findWithoutActors();
 
+    @Query(value = "select count(f) from Film f where f.parent is null")
+    Long countFilms();
+
 }

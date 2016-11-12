@@ -3,24 +3,25 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="mainPane" id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="636.0" prefWidth="1127.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.FDController">
+<AnchorPane id="AnchorPane" fx:id="mainPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="636.0" prefWidth="1127.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.FDController">
   <children>
     <Label fx:id="filmName" layoutX="645.0" layoutY="75.0" prefHeight="67.11929321289062" prefWidth="414.0" text="Label">
       <font>
-        <Font name="Arial Bold" size="14.0" />
+        <Font name="Arial Bold" size="14.0" fx:id="x2" />
       </font>
     </Label>
     <TextArea fx:id="description" disable="false" editable="false" focusTraversable="false" layoutX="645.0" layoutY="143.0" pickOnBounds="false" prefHeight="156.0" prefWidth="464.0" wrapText="true" />
     <CheckBox layoutX="619.0" layoutY="311.0" mnemonicParsing="false" onAction="#edit" text="Edit" />
     <Button fx:id="save" disable="true" layoutX="1033.0" layoutY="306.0" mnemonicParsing="false" onAction="#save" prefWidth="76.0" text="Save" />
-    <Label fx:id="fileName" layoutX="312.0" layoutY="283.0" prefWidth="128.0" text="" />
-    <Slider fx:id="mark" blockIncrement="1.0" layoutX="319.0" layoutY="281.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="216.0" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
+    <Label fx:id="fileName" layoutX="209.0" layoutY="346.0" prefWidth="128.0" text="" />
+    <Slider fx:id="mark" blockIncrement="1.0" layoutX="216.0" layoutY="344.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="216.0" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
     <TextArea fx:id="comment" disable="false" editable="false" layoutX="645.0" layoutY="362.0" prefHeight="219.0" prefWidth="464.0" wrapText="true" />
     <ScrollPane id="ppp" layoutX="216.0" layoutY="458.0" prefHeight="156.0" prefWidth="396.9998779296875">
       <content>
@@ -33,14 +34,24 @@
     <TableView fx:id="actors" layoutX="14.0" layoutY="42.0" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="572.0" prefWidth="170.0" />
     <Slider fx:id="part" blockIncrement="1.0" layoutX="575.0" layoutY="377.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" orientation="VERTICAL" prefHeight="68.0" showTickLabels="true" showTickMarks="false" snapToTicks="true" />
     <AnchorPane fx:id="paneL" layoutX="184.0" layoutY="42.0" prefHeight="526.0" prefWidth="30.0" />
-    <Label fx:id="markLabel" layoutX="549.0" layoutY="270.0" prefHeight="41.0" prefWidth="40.0" text="0">
+    <Label fx:id="markLabel" layoutX="446.0" layoutY="333.0" prefHeight="41.0" prefWidth="40.0" text="0">
       <font>
         <Font name="System Bold" size="30.0" fx:id="x1" />
       </font>
     </Label>
-    <ColorPicker fx:id="c1" layoutX="365.0" layoutY="84.0" minWidth="30.0" onAction="#onC1" prefWidth="40.0" />
-    <ColorPicker fx:id="c2" layoutX="427.0" layoutY="84.0" onAction="#onC2" prefWidth="40.0" />
-    <ColorPicker fx:id="c3" layoutX="365.0" layoutY="135.0" onAction="#onC3" prefWidth="40.0" />
-    <ColorPicker fx:id="c4" layoutX="427.0" layoutY="135.0" onAction="#onC4" prefWidth="40.0" />
+    <ColorPicker fx:id="c1" layoutX="488.0" layoutY="266.0" minWidth="30.0" onAction="#onC1" prefWidth="40.0" />
+    <ColorPicker fx:id="c2" layoutX="550.0" layoutY="266.0" onAction="#onC2" prefWidth="40.0" />
+    <ColorPicker fx:id="c3" layoutX="488.0" layoutY="317.0" onAction="#onC3" prefWidth="40.0" />
+    <ColorPicker fx:id="c4" layoutX="550.0" layoutY="317.0" onAction="#onC4" prefWidth="40.0" />
+    <Button layoutX="432.0" layoutY="266.0" mnemonicParsing="false" onAction="#sub" text="+" />
+    <ScrollPane layoutX="216.0" layoutY="43.0" prefHeight="200.0" prefWidth="374.0">
+      <content>
+        <AnchorPane id="Content" fx:id="parentPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="360.0">
+          <padding>
+            <Insets right="5.0" />
+          </padding>
+        </AnchorPane>
+      </content>
+    </ScrollPane>
   </children>
 </AnchorPane>
