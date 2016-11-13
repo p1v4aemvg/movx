@@ -10,5 +10,7 @@ hs_err_pid*
 .idea
 *.exe
 *.iml
+db.bat
+*.gitignore
 
 git.txt
