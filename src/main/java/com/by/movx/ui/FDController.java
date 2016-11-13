@@ -4,6 +4,7 @@ import com.by.movx.Common;
 import com.by.movx.entity.*;
 import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.AddSubFilmEvent;
+import com.by.movx.event.TagClickedEvent;
 import com.by.movx.repository.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,7 +38,7 @@ public class FDController {
     private TableView<Actor> actors;
 
     @FXML
-    AnchorPane pane, paneL, mainPane, parentPanel;
+    AnchorPane pane, paneL, mainPane, parentPanel, tagPanel;
 
     @FXML
     Slider mark, part;
@@ -56,6 +57,9 @@ public class FDController {
 
     @Inject
     FilmActorRepository faRepository;
+
+    @Inject
+    FilmTagRepository ftRepository;
 
     @FXML
     TextArea description, comment;
@@ -103,11 +107,11 @@ public class FDController {
         filmName.setText(film.getName() + " " + film.getYear());
 
         mark.setValue(film.getMark());
-        comment.setText(film.getComment());
         description.setText(film.getDescription().getDescription() == null ? "" : film.getDescription().getDescription());
         markLabel.setText(film.getMark().toString());
         createLinks();
         createParents();
+        createTags();
 
         c1.setValue(Color.valueOf(film.getC1()));
         c2.setValue(Color.valueOf(film.getC2()));
@@ -128,7 +132,6 @@ public class FDController {
     public void save() throws Exception {
         film.getDescription().setDescription(description.getText());
         film.setMark((int) mark.getValue());
-        film.setComment(comment.getText());
         filmRepository.save(film);
     }
 
@@ -233,6 +236,8 @@ public class FDController {
                 i++;
             }
         }
+
+        parentPanel.setPrefHeight(20 * i);
     }
 
     private Hyperlink createParent(int i, Film f) {
@@ -248,6 +253,33 @@ public class FDController {
         return l;
     }
 
+    private void createTags() {
+        tagPanel.getChildren().clear();
+        List<FilmTag> tags = ftRepository.findByFilm(film);
+        int i = 0;
+        if(!CollectionUtils.isEmpty(tags)) {
+            for(FilmTag ft : tags ) {
+                Hyperlink l = createTagLink(i, ft);
+                tagPanel.getChildren().add(l);
+                i++;
+            }
+        }
+        tagPanel.setPrefHeight(20 * i);
+    }
+
+
+    private Hyperlink createTagLink(int i, FilmTag ft) {
+        Hyperlink l = new Hyperlink(ft.getTag().getName());
+        l.setLayoutY(20 * i);
+        l.setFont(new Font("Courier New", 12));
+
+        l.setOnAction(event -> {
+            Common.getInstance().getEventBus().post(new TagClickedEvent(ft));
+
+        });
+
+        return l;
+    }
 
     @FXML
     private void onDragDetected(MouseEvent event) { //drag

@@ -6,6 +6,7 @@ import com.by.movx.entity.*;
 import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.AddSubFilmEvent;
 import com.by.movx.event.FilmClickedEvent;
+import com.by.movx.event.TagClickedEvent;
 import com.by.movx.repository.*;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
 import javafx.beans.property.SimpleObjectProperty;
@@ -70,9 +71,6 @@ public class MainController {
     private CountryRepository countryRepository;
 
     @Inject
-    private DirectorRepository directorRepository;
-
-    @Inject
     private FilmActorRepository faRepository;
 
     @FXML
@@ -86,9 +84,6 @@ public class MainController {
 
     @FXML
     private ComboBox<Country> comboCountry;
-
-    @FXML
-    private ComboBox<Director> director;
 
     private ObservableList<Film> data;
 
@@ -116,7 +111,6 @@ public class MainController {
 
         data = FXCollections.observableArrayList();
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
-        ObservableList<Director> directors = FXCollections.observableArrayList((List<Director>) directorRepository.findAll());
 
         TableColumn<Film, HBox> idColumn = new TableColumn<>("Country");
         idColumn.setCellValueFactory
@@ -153,19 +147,6 @@ public class MainController {
             }
         });
         comboCountry.setItems(countries);
-
-        director.setConverter(new StringConverter<Director>() {
-            @Override
-            public String toString(Director object) {
-                return object.getName();
-            }
-
-            @Override
-            public Director fromString(String string) {
-                return null;
-            }
-        });
-        director.setItems(directors);
 
         tagCombo.setConverter(new StringConverter<Tag>() {
             @Override
@@ -326,33 +307,11 @@ public class MainController {
     }
 
     @FXML
-    public void findByDirector() {
-        Director d = director.getSelectionModel().getSelectedItem();
-
-        List<Film> films = filmRepository.findByDirector(d);
-        data = FXCollections.observableArrayList(films);
-        table.setItems(data);
-    }
-
-    @FXML
     public void diag() throws Exception {
         startDiag();
     }
 
-    @FXML
-    public void setDirector() throws Exception {
-        Director d = director.getSelectionModel().getSelectedItem();
-        Film film = table.getSelectionModel().getSelectedItem();
-
-        if (film != null && d != null) {
-            film.setDirector(d);
-            filmRepository.save(film);
-        }
-    }
-
     private void startDiag() throws Exception {
-//        diagController.diagController(stats);
-//        diagController.init();
 
         if (diagView.getView().getScene() != null)
             diagView.getView().getScene().setRoot(new Button());
@@ -464,6 +423,13 @@ public class MainController {
                 .stream().map(FilmActor::getFilm).collect(Collectors.toList());
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
+    }
+
+    @Subscribe
+    public void tagClicked(TagClickedEvent e) {
+        Tag t = e.getData().getTag();
+        tagCombo.getSelectionModel().select(t);
+        onTag();
     }
 
     @Subscribe

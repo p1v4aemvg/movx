@@ -1,7 +1,6 @@
 package com.by.movx.repository;
 
 import com.by.movx.entity.Country;
-import com.by.movx.entity.Director;
 import com.by.movx.entity.Film;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -27,8 +26,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
 
     @Query("select f from Film f where :country member f.countries")
     List<Film> findByCountry (@Param(value = "country") Country country);
-
-    List<Film> findByDirector (Director director);
 
     List<Film> findFirst10ByMarkOrderByIdDesc (Integer mark);
 

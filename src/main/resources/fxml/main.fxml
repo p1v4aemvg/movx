@@ -28,17 +28,6 @@
                 <Font name="System Bold" size="16.0" />
               </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#findByDirector" prefWidth="147.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Button mnemonicParsing="false" onAction="#setDirector" prefWidth="153.0" text="SET" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-            <ComboBox fx:id="director" prefHeight="21.0" prefWidth="205.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
-              <items>
-                <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="Item 1" />
-                  <String fx:value="Item 2" />
-                  <String fx:value="Item 3" />
-                </FXCollections>
-              </items>
-            </ComboBox>
             <Button fx:id="actor" mnemonicParsing="false" onAction="#onActor" prefWidth="205.0" text="ACTORS" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <HBox prefHeight="22.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
               <children>

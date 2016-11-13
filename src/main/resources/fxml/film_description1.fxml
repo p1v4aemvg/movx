@@ -22,7 +22,6 @@
     <Button fx:id="save" disable="true" layoutX="1033.0" layoutY="306.0" mnemonicParsing="false" onAction="#save" prefWidth="76.0" text="Save" />
     <Label fx:id="fileName" layoutX="209.0" layoutY="346.0" prefWidth="128.0" text="" />
     <Slider fx:id="mark" blockIncrement="1.0" layoutX="216.0" layoutY="344.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="216.0" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
-    <TextArea fx:id="comment" disable="false" editable="false" layoutX="645.0" layoutY="362.0" prefHeight="219.0" prefWidth="464.0" wrapText="true" />
     <ScrollPane id="ppp" layoutX="216.0" layoutY="458.0" prefHeight="156.0" prefWidth="396.9998779296875">
       <content>
         <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
@@ -46,11 +45,16 @@
     <Button layoutX="432.0" layoutY="266.0" mnemonicParsing="false" onAction="#sub" text="+" />
     <ScrollPane layoutX="216.0" layoutY="43.0" prefHeight="200.0" prefWidth="374.0">
       <content>
-        <AnchorPane id="Content" fx:id="parentPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="360.0">
+        <AnchorPane id="Content" fx:id="parentPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="250.0">
           <padding>
             <Insets right="5.0" />
           </padding>
         </AnchorPane>
+      </content>
+    </ScrollPane>
+    <ScrollPane layoutX="662.0" layoutY="459.0" prefHeight="156.0" prefWidth="396.9998779296875">
+      <content>
+        <AnchorPane id="pane" fx:id="tagPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
   </children>

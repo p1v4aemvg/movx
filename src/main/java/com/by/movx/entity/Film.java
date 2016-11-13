@@ -24,8 +24,6 @@ public class Film {
     @Column(name = "mark")
     private Integer mark;
 
-    @Column(name = "comment")
-    private String comment;
 
     @Column(name = "en_name")
     private String enName;
@@ -39,10 +37,6 @@ public class Film {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "parent")
     private Set<Film> children = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "director_id")
-    private Director director;
 
     @Column(name = "type")
     @Enumerated
@@ -129,22 +123,6 @@ public class Film {
 
     public void setDescription(FilmDescription description) {
         this.description = description;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Director getDirector() {
-        return director;
-    }
-
-    public void setDirector(Director director) {
-        this.director = director;
     }
 
     public Set<Country> getCountries() {
