@@ -9,6 +9,8 @@ import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.event.TagClickedEvent;
 import com.by.movx.repository.*;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.eventbus.Subscribe;
+import org.springframework.util.CollectionUtils;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class MainController {
@@ -106,6 +110,24 @@ public class MainController {
     @PostConstruct
     public void init() {
         Common.getInstance().getEventBus().register(this);
+
+        table.setRowFactory(new Callback<TableView<Film>, TableRow<Film>>() {
+            @Override
+            public TableRow<Film> call(TableView<Film> tableView) {
+                final TableRow<Film> row = new TableRow<Film>() {
+                    @Override
+                    protected void updateItem(Film film, boolean empty) {
+                        super.updateItem(film, empty);
+                        if (!empty) {
+                            styleProperty().bind(Bindings.when(new SimpleBooleanProperty(film.isCountInStat()))
+                                    .then("-fx-font-weight: bold;")
+                                    .otherwise(""));
+                        }
+                    }
+                };
+                return row;
+            }
+        });
 
         count.setText(String.valueOf(filmRepository.countFilms()));
 
@@ -351,6 +373,26 @@ public class MainController {
     public void randTag() {
         Tag t = tagRepository.findRand();
         tagCombo.getSelectionModel().select(t);
+    }
+
+    @FXML
+    public void turnCount() {
+        Film film = table.getSelectionModel().getSelectedItem();
+        if(film.getParent() == null && CollectionUtils.isEmpty(film.getChildren()))
+            return;
+        if(film.getParent() == null) {
+           turn(film);
+        } else {
+            turn(film.getParent());
+        }
+
+    }
+
+    private void turn(Film film) {
+        boolean value = film.isCountInStat();
+        film.setCountInStat(!value);
+        film.getChildren().forEach(f -> f.setCountInStat(value));
+        filmRepository.save(film);
     }
 
     private HBox group(TableColumn.CellDataFeatures<Film, HBox> c) {

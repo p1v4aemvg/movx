@@ -68,6 +68,9 @@ public class Film {
     @Column(name = "c4")
     private String c4 = "0xffffffff";
 
+    @Column(name = "count_in_stat")
+    private boolean countInStat;
+
     public Film() {
     }
 
@@ -195,6 +198,14 @@ public class Film {
 
     public void setChildren(Set<Film> children) {
         this.children = children;
+    }
+
+    public boolean isCountInStat() {
+        return countInStat;
+    }
+
+    public void setCountInStat(boolean countInStat) {
+        this.countInStat = countInStat;
     }
 
     public enum Type {

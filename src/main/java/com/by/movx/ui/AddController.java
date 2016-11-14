@@ -41,6 +41,9 @@ public class AddController {
 
     private Film film, parent;
 
+    @FXML
+    private CheckBox countInStats;
+
     public void init() {
         film = new Film();
         film.setCountries(new HashSet<>());
@@ -107,6 +110,7 @@ public class AddController {
         film.setMark(0);
         film.setDuration(Film.Duration.of((int) duration.getValue()));
         film.setParent(parent);
+        film.setCountInStat(countInStats.isSelected());
         film = filmRepository.save(film);
         film.setDescription(new FilmDescription(film));
         filmRepository.save(film);
