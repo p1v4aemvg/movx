@@ -230,7 +230,14 @@ public class FDController {
             i++;
         }
         if(!CollectionUtils.isEmpty(film.getChildren())) {
-            for(Film f : film.getChildren() ) {
+            List<Film> children = film.getChildren().stream()
+                    .sorted((f1, f2) -> {
+                        int res = f1.getYear().compareTo(f2.getYear());
+                        return res != 0 ? res :
+                                f1.getId().compareTo(f2.getId());
+                    }).collect(Collectors.toList());
+
+            for(Film f : children) {
                 Hyperlink l = createParent(i, f);
                 parentPanel.getChildren().add(l);
                 i++;

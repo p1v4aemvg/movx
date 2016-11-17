@@ -376,6 +376,13 @@ public class MainController {
     }
 
     @FXML
+    public void onParent() {
+        List<Film> films = filmRepository.findParents();
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
+    }
+
+    @FXML
     public void turnCount() {
         Film film = table.getSelectionModel().getSelectedItem();
         if(film.getParent() == null && CollectionUtils.isEmpty(film.getChildren()))

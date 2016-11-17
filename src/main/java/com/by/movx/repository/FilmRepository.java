@@ -37,6 +37,9 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f.* from film f where f.mark = 10 order by rand() limit 10", nativeQuery = true)
     List<Film> findRandom10Film();
 
+    @Query(value = "select f from Film f where f.children is not empty")
+    List<Film> findParents();
+
     @Query(value = "select f.mark, count(f.id) from film f " +
             "group by f.mark", nativeQuery = true)
     List<Object[]> markStats();
