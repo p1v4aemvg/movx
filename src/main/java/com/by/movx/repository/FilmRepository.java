@@ -31,6 +31,11 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
 
     List<Film> findByMark (Integer mark);
 
+    List<Film> findByType(@Param(value = "type") Film.Type type);
+
+    @Query("select f from Film f where f.createdAt is null")
+    List<Film> filmsWithoutDate();
+
     @Query(value = "select f.* from film f order by rand() limit 1", nativeQuery = true)
     Film findRandomFilm();
 
@@ -43,6 +48,13 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f.mark, count(f.id) from film f " +
             "group by f.mark", nativeQuery = true)
     List<Object[]> markStats();
+
+    @Query(value = "select concat(monthname(created_at), \" \",  year(created_at)), count(distinct(created_at)) from film " +
+            "where created_at is not null " +
+            "and year(created_at) >= 2014 " +
+            "group by year(created_at), month(created_at) " +
+            "order by year(created_at), month(created_at) ", nativeQuery = true)
+    List<Object[]> periodStats();
 
     @Query(value = "select f.year, count(f.id) from film f where f.count_in_stat = 1 " +
             "group by f.year", nativeQuery = true)

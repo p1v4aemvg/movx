@@ -62,7 +62,7 @@ public class FDController {
     FilmTagRepository ftRepository;
 
     @FXML
-    TextArea description, comment;
+    TextArea description;
 
     @FXML
     Button save;
@@ -125,7 +125,6 @@ public class FDController {
     public void edit() {
         description.setEditable(!description.isEditable());
         save.setDisable(!save.isDisable());
-        comment.setEditable(!comment.isEditable());
     }
 
     @FXML

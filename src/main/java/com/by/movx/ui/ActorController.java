@@ -46,7 +46,7 @@ public class ActorController {
     AnchorPane pane, paneL;
 
     @FXML
-    Label markLabel, filmName;
+    Label markLabel;
 
     @Inject
     FilmActorRepository filmActorRepository;
@@ -102,14 +102,18 @@ public class ActorController {
                 };
                 row.setOnMouseClicked(event -> {
                     Actor a = actors.getSelectionModel().getSelectedItem();
-                    createLinks(a);
-                    setImg(a);
-                    current = a;
-                    specBox.setSelected(current.isSpecial());
+                    selectActor(a);
+
+
                 });
                 return row;
             }
         });
+
+        if(current != null) {
+            actors.getSelectionModel().select(current);
+            selectActor(current);
+        }
 
         dataAll = ((List<Actor>) actorRepository.findAll()).stream()
                 .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
@@ -137,6 +141,13 @@ public class ActorController {
         }
 
         paneL.getChildren().addAll(letters);
+    }
+
+    private void selectActor(Actor a) {
+        createLinks(a);
+        setImg(a);
+        current = a;
+        specBox.setSelected(current.isSpecial());
     }
 
     private void createLinks(Actor a) {
@@ -192,6 +203,18 @@ public class ActorController {
         pane.getChildren().clear();
         pane.getChildren().addAll(links);
         pane.setPrefHeight(20 * links.size());
+
+        double x = fff.stream()
+                .map(fa -> fa.getFilm().getMark() * (4 - fa.getPart().getId()))
+                .reduce((i1, i2) -> i1 + i2).get();
+
+        double y = fff.stream()
+                .map(fa -> (4 - fa.getPart().getId()))
+                .reduce((i1, i2) -> i1 + i2).get();
+
+        double mark = x / y;
+
+        markLabel.setText(String.format("%.3f", mark));
     }
 
     private void setImg(Actor a) {
@@ -317,5 +340,9 @@ public class ActorController {
     private void setData(List<Actor> dbData) {
         ObservableList<Actor> data = FXCollections.observableArrayList(dbData);
         actors.setItems(data);
+    }
+
+    public void setCurrent(Actor current) {
+        this.current = current;
     }
 }

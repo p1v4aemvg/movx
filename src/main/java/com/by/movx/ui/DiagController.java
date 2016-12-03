@@ -101,6 +101,13 @@ public class DiagController {
         init();
     }
 
+
+    @FXML
+    public void diagByPeriods() throws Exception {
+        setStats(filmRepository.periodStats());
+        init();
+    }
+
     @FXML
     public void diagByActor() throws Exception {
         offset = 0;

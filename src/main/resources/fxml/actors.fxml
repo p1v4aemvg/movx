@@ -36,5 +36,10 @@
       </font>
     </Button>
     <CheckBox fx:id="specBox" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" onAction="#onSpec" text="" />
+    <Label fx:id="markLabel" layoutX="846.0" layoutY="352.0" prefWidth="167.0" text="">
+      <font>
+        <Font name="System Bold" size="20.0" />
+      </font>
+    </Label>
   </children>
 </AnchorPane>

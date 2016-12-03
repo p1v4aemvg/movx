@@ -1,10 +1,8 @@
 package com.by.movx.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * Created by movx
@@ -70,6 +68,9 @@ public class Film {
 
     @Column(name = "count_in_stat")
     private boolean countInStat;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 
     public Film() {
     }
@@ -208,19 +209,27 @@ public class Film {
         this.countInStat = countInStat;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public enum Type {
         UNKNOWN("UNKNOWN"),
-        FILM("Фильм"),
-        MULT("Мультфильм"),
-        PLAY("Спектакль"),
-        TV_PLAY("Телеспектакль"),
-        DOCUMENTARY("Документальный"),
-        OPERA("Опера"),
+        FILM("Худ фильмы"),
+        MULT("Мультфильмы"),
+        PLAY("Спектакли"),
+        TV_PLAY("Телеспектакли"),
+        DOCUMENTARY("Документальные"),
+        OPERA("Оперы"),
         BALET("Балет"),
-        AUDIO("Аудиокнига"),
-        FILM_OPERA("Фильм-опера"),
-        CONCERT("Концерт"),
-        FILM_BALET("Фильм-балет");
+        AUDIO("Аудиоспектакли"),
+        FILM_OPERA("Фильм-оперы"),
+        CONCERT("Концерты"),
+        FILM_BALET("Фильм-балеты");
 
         private String name;
 
@@ -234,19 +243,25 @@ public class Film {
     }
 
     public enum Duration {
-        UNKNOWN("UNKNOWN"),
-        SHORT("☀"),
-        FILM("☀☀"),
-        SERIAL("☀☀☀");
+        UNKNOWN("UNKNOWN", ""),
+        SHORT("☀", "Короткометражки"),
+        FILM("☀☀", "Фильмы"),
+        SERIAL("☀☀☀", "Сериалы");
 
         private String name;
+        private String description;
 
-        Duration(String name) {
+        Duration(String name, String description) {
             this.name = name;
+            this.description = description;
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         public static Duration of(int index) {

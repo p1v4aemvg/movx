@@ -60,6 +60,22 @@
             <Button mnemonicParsing="false" onAction="#rand10" prefWidth="96.0" text="RAND 10" GridPane.columnIndex="3" GridPane.rowIndex="0" />
             <Button mnemonicParsing="false" onAction="#turnCount" prefWidth="96.0" text="=&gt;" GridPane.columnIndex="4" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" onAction="#onParent" prefWidth="96.0" text="╣▓╠" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#findByType" prefWidth="87.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboType" prefHeight="21.0" prefWidth="199.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
+              <children>
+                <Button mnemonicParsing="false" onAction="#withoutDate" prefWidth="50.0" text="╳" />
+                <Button mnemonicParsing="false" onAction="#getCreatedAt" prefWidth="50.0" text="⌛" />
+              </children>
+            </HBox>
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="205.0" />
