@@ -150,24 +150,28 @@ public class ActorController {
         specBox.setSelected(current.isSpecial());
     }
 
+    private String color(int role, int mark) {
+        switch (role) {
+            case 1:
+                return mark > 0 ? "#091a9c" : "#8b0201";
+
+            case 2:
+                return mark > 0 ? "#0d69ff" : "#8b4834";
+
+            case 3:
+                return mark > 0 ?  "#898585" :  "#8b6c2b";
+
+            default: return "#000000";
+        }
+    }
     private void createLinks(Actor a) {
         final List<FilmActor> fff = filmActorRepository.findByActor(a);
         List<Hyperlink> links = fff.stream()
                 .map(fa -> {
                     Hyperlink l = new Hyperlink(fa.film());
                     l.setId(fa.getId().toString());
-                    switch (fa.getPart().getId().intValue()) {
-                        case 1:
-                            l.setTextFill(Paint.valueOf("#091a9c"));
-                            break;
-                        case 2:
-                            l.setTextFill(Paint.valueOf("#0d69ff"));
-                            break;
-                        case 3:
-                            l.setTextFill(Paint.valueOf("#898585"));
-                            break;
-                        default: break;
-                    }
+                    l.setTextFill(Paint.valueOf(color(fa.getPart().getId().intValue(), fa.getFilm().getMark())));
+
                     l.setOnAction(event -> {
                         Common.getInstance().getEventBus().post(new FilmClickedEvent(fa.getFilm()));
                     });

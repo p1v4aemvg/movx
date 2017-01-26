@@ -63,8 +63,8 @@ public class AddController {
         name.clear();
         enname.clear();
         year.clear();
-        cBox.getChildren().clear();
-
+        selectedCountries.clear();
+        reloadCountries();
 
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
         country.setConverter(new StringConverter<Country>() {
@@ -95,7 +95,6 @@ public class AddController {
         country.setItems(countries);
         type.setItems(types);
 
-
         checkParent();
     }
 
@@ -107,14 +106,7 @@ public class AddController {
             film.setDuration(parent.getDuration());
             duration.setValue((double) parent.getDuration().ordinal());
 
-            film.setCountries(parent.getCountries().stream().map(c -> {
-                Country newC = new Country();
-                newC.setId(c.getId());
-                return newC;
-            }).collect(Collectors.toSet()));
-
-            selectedCountries.clear();
-            selectedCountries.addAll(film.getCountries());
+            selectedCountries.addAll(parent.getCountries());
             reloadCountries();
         }
     }
@@ -143,9 +135,7 @@ public class AddController {
     @FXML
     public void countryAdded() {
         Country c = country.getSelectionModel().getSelectedItem();
-        if (c != null)
-//            film.getCountries().add(c);
-        selectedCountries.add(c);
+        if (c != null) selectedCountries.add(c);
         reloadCountries();
     }
 

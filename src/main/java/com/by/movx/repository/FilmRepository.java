@@ -75,8 +75,11 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f from Film f where f.name like :letter% or f.enName like :letter% ")
     List<Film> getFilmsBy1stLetter(@Param(value = "letter") String letter);
 
-    @Query(value = "select f.* from film f where\n" +
-            "(select count(*) from film_actor fa where fa.film_id = f.id) = 0", nativeQuery = true)
+    @Query(value = "select distinct f.* from film f " +
+            "left join film f1 on f.id = f1.parent_id " +
+            "where not exists (select * from film_actor fa where fa.film_id in (f.id, f.parent_id)) " +
+            "and not exists(select * from film_tag ft where ft.film_id = f.id and ft.tag_id = 78) " +
+            "and f1.id is null", nativeQuery = true)
     List<Film> findWithoutActors();
 
     @Query(value = "select count(f) from Film f where f.countInStat = 1")

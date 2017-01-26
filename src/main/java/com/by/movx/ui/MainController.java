@@ -71,6 +71,10 @@ public class MainController {
     @Inject
     private FilmRepository filmRepository;
 
+
+    @Inject
+    private FilmActorRepository filmActorRepository;
+
     @Inject
     private CountryRepository countryRepository;
 
@@ -390,6 +394,11 @@ public class MainController {
         stage.setResizable(true);
         stage.centerOnScreen();
         stage.show();
+
+        stage.setOnCloseRequest(event -> {
+            addController.setParent(null);
+            System.out.println("xxx");
+        });
     }
 
     @FXML
@@ -411,6 +420,19 @@ public class MainController {
         List<Film> films = filmRepository.findParents();
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
+    }
+
+    @FXML
+    public void delete() {
+        Film film = table.getSelectionModel().getSelectedItem();
+
+        List<FilmActor> fas = filmActorRepository.findByFilm(film);
+        if(!fas.isEmpty()) filmActorRepository.delete(fas);
+
+        List<FilmTag> tags = filmTagRepository.findByFilm(film);
+        if(!tags.isEmpty()) filmTagRepository.delete(tags);
+
+        filmRepository.delete(film);
     }
 
     @FXML
@@ -492,11 +514,9 @@ public class MainController {
         return c.getValue().getType().getName();
     }
 
-
     private String duration(TableColumn.CellDataFeatures<Film, String> c) {
         return c.getValue().getDuration().getName();
     }
-
 
     private String parent(TableColumn.CellDataFeatures<Film, String> c) {
         return c.getValue().getParent() == null ? "" : c.getValue().getParent().getName();
