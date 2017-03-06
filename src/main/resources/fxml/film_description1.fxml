@@ -42,7 +42,7 @@
     <ColorPicker fx:id="c2" layoutX="550.0" layoutY="266.0" onAction="#onC2" prefWidth="40.0" />
     <ColorPicker fx:id="c3" layoutX="488.0" layoutY="317.0" onAction="#onC3" prefWidth="40.0" />
     <ColorPicker fx:id="c4" layoutX="550.0" layoutY="317.0" onAction="#onC4" prefWidth="40.0" />
-    <Button layoutX="432.0" layoutY="266.0" mnemonicParsing="false" onAction="#sub" text="+" />
+    <Button layoutX="453.0" layoutY="266.0" mnemonicParsing="false" onAction="#sub" text="+" />
     <ScrollPane layoutX="216.0" layoutY="43.0" prefHeight="200.0" prefWidth="374.0">
       <content>
         <AnchorPane id="Content" fx:id="parentPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="250.0">
@@ -57,5 +57,15 @@
         <AnchorPane id="pane" fx:id="tagPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
+    <ComboBox id="linl" fx:id="linkCombo" layoutX="214.0" layoutY="267.0" prefHeight="21.0" prefWidth="170.0">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <Button layoutX="384.0" layoutY="267.0" mnemonicParsing="false" onAction="#linkFilm" prefWidth="40.0" text="=&gt;" />
   </children>
 </AnchorPane>

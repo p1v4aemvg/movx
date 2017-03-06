@@ -22,7 +22,6 @@ public class Film {
     @Column(name = "mark")
     private Integer mark;
 
-
     @Column(name = "en_name")
     private String enName;
 
@@ -54,17 +53,8 @@ public class Film {
                     nullable = false, updatable = false)})
     Set<Country> countries;
 
-    @Column(name = "c1")
-    private String c1 = "0xffffffff";
-
-    @Column(name = "c2")
-    private String c2 = "0xffffffff";
-
-    @Column(name = "c3")
-    private String c3 = "0xffffffff";
-
-    @Column(name = "c4")
-    private String c4 = "0xffffffff";
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "film")
+    private FilmColor color;
 
     @Column(name = "count_in_stat")
     private boolean countInStat;
@@ -137,38 +127,6 @@ public class Film {
         this.countries = countries;
     }
 
-    public String getC1() {
-        return c1;
-    }
-
-    public void setC1(String c1) {
-        this.c1 = c1;
-    }
-
-    public String getC2() {
-        return c2;
-    }
-
-    public void setC2(String c2) {
-        this.c2 = c2;
-    }
-
-    public String getC3() {
-        return c3;
-    }
-
-    public void setC3(String c3) {
-        this.c3 = c3;
-    }
-
-    public String getC4() {
-        return c4;
-    }
-
-    public void setC4(String c4) {
-        this.c4 = c4;
-    }
-
     public Type getType() {
         return type;
     }
@@ -215,6 +173,14 @@ public class Film {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public FilmColor getColor() {
+        return color;
+    }
+
+    public void setColor(FilmColor color) {
+        this.color = color;
     }
 
     public enum Type {

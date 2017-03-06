@@ -6,6 +6,7 @@ import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.AddSubFilmEvent;
 import com.by.movx.event.TagClickedEvent;
 import com.by.movx.repository.*;
+import com.by.movx.ui.common.FilmLinkAutoCompleteComboBoxListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.util.StringConverter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -61,6 +63,9 @@ public class FDController {
     @Inject
     FilmTagRepository ftRepository;
 
+    @Inject
+    FilmLinkRepository filmLinkRepository;
+
     @FXML
     TextArea description;
 
@@ -72,6 +77,9 @@ public class FDController {
 
     @FXML
     ColorPicker c1, c2, c3, c4;
+
+    @FXML
+    ComboBox<Film> linkCombo;
 
     public void init() {
 
@@ -113,12 +121,31 @@ public class FDController {
         createParents();
         createTags();
 
-        c1.setValue(Color.valueOf(film.getC1()));
-        c2.setValue(Color.valueOf(film.getC2()));
-        c3.setValue(Color.valueOf(film.getC3()));
-        c4.setValue(Color.valueOf(film.getC4()));
+        FilmColor color = film.getColor();
+        if (color != null) {
+            c1.setValue(Color.valueOf(color.getC1()));
+            c2.setValue(Color.valueOf(color.getC2()));
+            c3.setValue(Color.valueOf(color.getC3()));
+            c4.setValue(Color.valueOf(color.getC4()));
+        }
 
         mainPane.setStyle(generateStyleStr(film));
+
+        linkCombo.setConverter(new StringConverter<Film>() {
+            @Override
+            public String toString(Film object) {
+                return object == null ? null :
+                        object.getYear() + " " + object.getName();
+            }
+
+            @Override
+            public Film fromString(String string) {
+                return null;
+            }
+        });
+
+        linkCombo.setItems(FXCollections.observableArrayList());
+        new FilmLinkAutoCompleteComboBoxListener(linkCombo, filmRepository);
     }
 
     @FXML
@@ -150,6 +177,7 @@ public class FDController {
         final List<FilmActor> fff = faRepository.findByFilm(film);
         final List<FilmActor> parentFFF = film.getParent() == null ? new ArrayList() : faRepository.findByFilm(film.getParent());
 
+        List<Hyperlink> removed = new ArrayList<>();
         List<Hyperlink> links = Stream.concat(
                 parentFFF.stream().map(fa -> {
 
@@ -163,9 +191,13 @@ public class FDController {
                         createLinks();
                     });
 
+                    Hyperlink removeLink = new Hyperlink("-");
+                    removed.add(removeLink);
+
                     return l;
                 }),
                 fff.stream().map(fa -> {
+
 
                     Hyperlink l = createLnk(fa, "#091a9c", "#0d69ff", "#898585");
                     l.setOnAction(event -> {
@@ -187,17 +219,31 @@ public class FDController {
                         pane.getChildren().add(temp);
                     });
 
+                    Hyperlink removeLink = new Hyperlink("╳");
+                    removeLink.setOnAction(event -> {
+                        faRepository.delete(fa);
+                        createLinks();
+                    });
+                    removed.add(removeLink);
+
                     return l;
                 }))
                 .collect(Collectors.toList());
 
         for (int i = 0; i < links.size(); i++) {
             links.get(i).setLayoutY(20 * i);
+            links.get(i).setLayoutX(12);
             links.get(i).setFont(new Font("Courier New", 12));
+        }
+
+        for (int i = 0; i < removed.size(); i++) {
+            removed.get(i).setLayoutY(20 * i);
+            removed.get(i).setFont(new Font("Courier New", 12));
         }
 
         pane.getChildren().clear();
         pane.getChildren().addAll(links);
+        pane.getChildren().addAll(removed);
         pane.setPrefHeight(20 * links.size());
     }
 
@@ -223,12 +269,12 @@ public class FDController {
     private void createParents() {
         parentPanel.getChildren().clear();
         int i = 0;
-        if(film.getParent()!=null) {
+        if (film.getParent() != null) {
             Hyperlink l = createParent(i, film.getParent());
             parentPanel.getChildren().add(l);
             i++;
         }
-        if(!CollectionUtils.isEmpty(film.getChildren())) {
+        if (!CollectionUtils.isEmpty(film.getChildren())) {
             List<Film> children = film.getChildren().stream()
                     .sorted((f1, f2) -> {
                         int res = f1.getYear().compareTo(f2.getYear());
@@ -236,7 +282,19 @@ public class FDController {
                                 f1.getId().compareTo(f2.getId());
                     }).collect(Collectors.toList());
 
-            for(Film f : children) {
+            for (Film f : children) {
+                Hyperlink l = createParent(i, f);
+                parentPanel.getChildren().add(l);
+                i++;
+            }
+        }
+
+        List<Film> otherLinks =
+                filmLinkRepository.findByDest(this.film).stream()
+                        .map(FilmLink::getSource).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(otherLinks)) {
+            i++;
+            for (Film f : otherLinks) {
                 Hyperlink l = createParent(i, f);
                 parentPanel.getChildren().add(l);
                 i++;
@@ -261,10 +319,21 @@ public class FDController {
 
     private void createTags() {
         tagPanel.getChildren().clear();
-        List<FilmTag> tags = ftRepository.findByFilm(film);
+
         int i = 0;
-        if(!CollectionUtils.isEmpty(tags)) {
-            for(FilmTag ft : tags ) {
+        if (film.getParent() != null) {
+            List<FilmTag> parentTags = ftRepository.findByFilm(film.getParent());
+            if (!CollectionUtils.isEmpty(parentTags)) {
+                for (FilmTag ft : parentTags) {
+                    Hyperlink l = createTagLink(i, ft);
+                    tagPanel.getChildren().add(l);
+                    i++;
+                }
+            }
+        }
+        List<FilmTag> tags = ftRepository.findByFilm(film);
+        if (!CollectionUtils.isEmpty(tags)) {
+            for (FilmTag ft : tags) {
                 Hyperlink l = createTagLink(i, ft);
                 tagPanel.getChildren().add(l);
                 i++;
@@ -272,7 +341,6 @@ public class FDController {
         }
         tagPanel.setPrefHeight(20 * i);
     }
-
 
     private Hyperlink createTagLink(int i, FilmTag ft) {
         Hyperlink l = new Hyperlink(ft.getTag().getName());
@@ -344,34 +412,64 @@ public class FDController {
 
     @FXML
     public void onC1() {
-        film.setC1(c1.getValue().toString());
+        FilmColor color = film.getColor();
+        if (color == null) {
+            color = new FilmColor(film);
+            film.setColor(color);
+        }
+        color.setC1(c1.getValue().toString());
         filmRepository.save(film);
     }
 
     @FXML
     public void onC2() {
-        film.setC2(c2.getValue().toString());
+        FilmColor color = film.getColor();
+        if (color == null) {
+            color = new FilmColor(film);
+            film.setColor(color);
+        }
+        color.setC2(c2.getValue().toString());
         filmRepository.save(film);
     }
 
     @FXML
     public void onC3() {
-        film.setC3(c3.getValue().toString());
+        FilmColor color = film.getColor();
+        if (color == null) {
+            color = new FilmColor(film);
+            film.setColor(color);
+        }
+        color.setC3(c3.getValue().toString());
         filmRepository.save(film);
     }
 
     @FXML
     public void onC4() {
-        film.setC4(c4.getValue().toString());
+        FilmColor color = film.getColor();
+        if (color == null) {
+            color = new FilmColor(film);
+            film.setColor(color);
+        }
+        color.setC4(c4.getValue().toString());
         filmRepository.save(film);
     }
 
     private String generateStyleStr(Film f) {
+        FilmColor color = f.getColor() != null ? f.getColor() : new FilmColor();
         return "-fx-background-color: linear-gradient( to bottom right,  "
-                + f.getC1().replace("0x", "#") + "  , "
-                + f.getC2().replace("0x", "#") + "  , "
-                + f.getC3().replace("0x", "#") + " , "
-                + f.getC4().replace("0x", "#") + " )";
+                + color.getC1().replace("0x", "#") + "  , "
+                + color.getC2().replace("0x", "#") + "  , "
+                + color.getC3().replace("0x", "#") + " , "
+                + color.getC4().replace("0x", "#") + " )";
+    }
+
+    @FXML
+    public void linkFilm() {
+        Film f = linkCombo.getSelectionModel().getSelectedItem();
+        if (f == null) return;
+
+        filmLinkRepository.save(new FilmLink(this.film, f));
+        createParents();
     }
 
 }

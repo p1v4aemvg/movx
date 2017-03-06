@@ -81,22 +81,22 @@ public class FilmActor {
     }
 
     public String fullName() {
-        return actor.getName() + (partName == null ? "" : (repeat(52-actor.getName().length() - partName.length()) + partName ));
+        return actor.getName() + (partName == null ? "" : (repeat(50 - actor.getName().length() - partName.length()) + partName));
     }
 
     public String film() {
         return film.getYear().toString() + " " + film.getName() +
-                (partName == null ? "" : (repeat(66-film.getName().length() - partName.length()) + partName ));
+                (partName == null ? "" : (repeat(66 - film.getName().length() - partName.length()) + partName));
     }
 
     private String repeat(int n) {
-        if(n <= 0) return " ";
+        if (n <= 0) return " ";
         char arr[] = new char[n];
         Arrays.fill(arr, ' ');
         return new String(arr);
     }
 
-    public String uq () {
-        return film.getId() + " " + actor.getName() ;
+    public String uq() {
+        return film.getId() + " " + actor.getName();
     }
 }

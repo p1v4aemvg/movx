@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -308,7 +309,7 @@ public class MainController {
         actorController.init();
 
         if (actorView.getView().getScene() != null)
-            actorView.getView().getScene().setRoot(new Button());
+            actorView.getView().getScene().setRoot(anyButton());
 
         Stage stage = new Stage();
         Scene scene = new Scene(actorView.getView());
@@ -432,6 +433,7 @@ public class MainController {
         List<FilmTag> tags = filmTagRepository.findByFilm(film);
         if(!tags.isEmpty()) filmTagRepository.delete(tags);
 
+        film.setParent(null);
         filmRepository.delete(film);
     }
 
@@ -580,7 +582,7 @@ public class MainController {
         fdController.init();
 
         if (fdView.getView().getScene() != null)
-            fdView.getView().getScene().setRoot(new Button());
+            fdView.getView().getScene().setRoot(anyButton());
 
         Stage stage = new Stage();
         Scene scene = new Scene(fdView.getView());
@@ -589,5 +591,14 @@ public class MainController {
         stage.setResizable(true);
         stage.centerOnScreen();
         stage.show();
+    }
+
+    private Button anyButton() {
+        Button b = new Button();
+
+        b.setOnMouseClicked(e -> {
+            ((Node)(e.getSource())).getScene().getWindow().hide();
+        });
+        return b;
     }
 }
