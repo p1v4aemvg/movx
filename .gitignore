@@ -11,6 +11,7 @@ hs_err_pid*
 *.exe
 *.iml
 db.bat
+git1.bat
 *.gitignore
 
 git.txt
