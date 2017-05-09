@@ -77,10 +77,22 @@ public class CreatedDateCalculator {
         File f = new File(folder);
         if (f.listFiles() == null) return null;
 
-        return Stream.of(f.listFiles())
+        File itself = Stream.of(f.listFiles())
                 .filter(a -> prepare(a.getName()).contains(prepare(film.getName())) ||
                         (film.getEnName() != null && prepare(a.getName()).contains(prepare(film.getEnName()))))
                 .findFirst().orElse(null);
+        if (itself != null) return itself;
+
+        File season = Stream.of(f.listFiles())
+                .filter(File::isDirectory)
+                .filter(a -> (a.getName().contains(film.getYear().toString())) &&
+                        (prepare(a.getName()).contains("season") || prepare(f.getName()).contains("сезон")))
+                .findFirst().orElse(null);
+        if (season != null) {
+            return findInDirectFolder(folder + "\\" + season.getName(), film);
+        }
+
+        return null;
     }
 
     private static String prepare(String name) {
