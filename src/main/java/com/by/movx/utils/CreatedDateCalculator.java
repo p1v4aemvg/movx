@@ -86,7 +86,7 @@ public class CreatedDateCalculator {
         File season = Stream.of(f.listFiles())
                 .filter(File::isDirectory)
                 .filter(a -> (a.getName().contains(film.getYear().toString())) &&
-                        (prepare(a.getName()).contains("season") || prepare(f.getName()).contains("сезон")))
+                        (prepare(a.getName()).contains("season") || prepare(a.getName()).contains("сезон")))
                 .findFirst().orElse(null);
         if (season != null) {
             return findInDirectFolder(folder + "\\" + season.getName(), film);

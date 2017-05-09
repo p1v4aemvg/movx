@@ -22,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -282,9 +281,15 @@ public class FDController {
                                 f1.getId().compareTo(f2.getId());
                     }).collect(Collectors.toList());
 
-            for (Film f : children) {
-                Hyperlink l = createParent(i, f);
-                parentPanel.getChildren().add(l);
+            Map<Integer, List<Film>> map = children.stream().collect(Collectors.groupingBy(Film::getYear));
+            SortedSet<Integer> keys = new TreeSet<Integer>(map.keySet());
+            for (Integer key : keys) {
+                for (Film f : map.get(key)) {
+                    Hyperlink l = createParent(i, f);
+                    parentPanel.getChildren().add(l);
+                    i++;
+                }
+                createEmptyLink(i);
                 i++;
             }
         }
@@ -313,6 +318,14 @@ public class FDController {
             this.film = f;
             init();
         });
+
+        return l;
+    }
+
+    private Hyperlink createEmptyLink(int i) {
+        Hyperlink l = new Hyperlink("-------------------------------------");
+        l.setLayoutY(20 * i);
+        l.setFont(new Font("Courier New", 12));
 
         return l;
     }
