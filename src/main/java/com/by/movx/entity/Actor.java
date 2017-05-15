@@ -17,9 +17,6 @@ public class Actor {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "en_name")
-    private String enName;
-
     @Column(name = "img")
     private byte[] img;
 
@@ -46,14 +43,6 @@ public class Actor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEnName() {
-        return enName;
-    }
-
-    public void setEnName(String enName) {
-        this.enName = enName;
     }
 
     public byte[] getImg() {
