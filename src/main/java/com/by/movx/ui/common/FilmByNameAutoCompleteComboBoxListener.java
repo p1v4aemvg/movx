@@ -12,10 +12,10 @@ import java.util.List;
  * Created by Администратор
  * on 02.06.2016.
  */
-public class FilmLinkAutoCompleteComboBoxListener extends AutoCompleteComboBoxListener<Film> {
+public class FilmByNameAutoCompleteComboBoxListener extends AutoCompleteComboBoxListener<Film> {
     private FilmRepository filmRepository;
 
-    public FilmLinkAutoCompleteComboBoxListener(ComboBox comboBox, FilmRepository filmRepository) {
+    public FilmByNameAutoCompleteComboBoxListener(ComboBox comboBox, FilmRepository filmRepository) {
         super(comboBox);
         this.filmRepository = filmRepository;
     }

@@ -57,15 +57,5 @@
         <AnchorPane id="pane" fx:id="tagPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
-    <ComboBox id="linl" fx:id="linkCombo" layoutX="214.0" layoutY="267.0" prefHeight="21.0" prefWidth="170.0">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ComboBox>
-    <Button layoutX="384.0" layoutY="267.0" mnemonicParsing="false" onAction="#linkFilm" prefWidth="40.0" text="=&gt;" />
   </children>
 </AnchorPane>

@@ -6,7 +6,6 @@ import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.AddSubFilmEvent;
 import com.by.movx.event.TagClickedEvent;
 import com.by.movx.repository.*;
-import com.by.movx.ui.common.FilmLinkAutoCompleteComboBoxListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +16,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.util.StringConverter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -62,9 +60,6 @@ public class FDController {
     @Inject
     FilmTagRepository ftRepository;
 
-    @Inject
-    FilmLinkRepository filmLinkRepository;
-
     @FXML
     TextArea description;
 
@@ -76,9 +71,6 @@ public class FDController {
 
     @FXML
     ColorPicker c1, c2, c3, c4;
-
-    @FXML
-    ComboBox<Film> linkCombo;
 
     public void init() {
 
@@ -129,22 +121,6 @@ public class FDController {
         }
 
         mainPane.setStyle(generateStyleStr(film));
-
-        linkCombo.setConverter(new StringConverter<Film>() {
-            @Override
-            public String toString(Film object) {
-                return object == null ? null :
-                        object.getYear() + " " + object.getName();
-            }
-
-            @Override
-            public Film fromString(String string) {
-                return null;
-            }
-        });
-
-        linkCombo.setItems(FXCollections.observableArrayList());
-        new FilmLinkAutoCompleteComboBoxListener(linkCombo, filmRepository);
     }
 
     @FXML
@@ -290,18 +266,6 @@ public class FDController {
                     i++;
                 }
                 createEmptyLink(i);
-                i++;
-            }
-        }
-
-        List<Film> otherLinks =
-                filmLinkRepository.findByDest(this.film).stream()
-                        .map(FilmLink::getSource).collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(otherLinks)) {
-            i++;
-            for (Film f : otherLinks) {
-                Hyperlink l = createParent(i, f);
-                parentPanel.getChildren().add(l);
                 i++;
             }
         }
@@ -474,15 +438,6 @@ public class FDController {
                 + color.getC2().replace("0x", "#") + "  , "
                 + color.getC3().replace("0x", "#") + " , "
                 + color.getC4().replace("0x", "#") + " )";
-    }
-
-    @FXML
-    public void linkFilm() {
-        Film f = linkCombo.getSelectionModel().getSelectedItem();
-        if (f == null) return;
-
-        filmLinkRepository.save(new FilmLink(this.film, f));
-        createParents();
     }
 
 }

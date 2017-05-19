@@ -5,6 +5,7 @@ import com.by.movx.ConfigurationControllers;
 import com.by.movx.entity.*;
 import com.by.movx.event.*;
 import com.by.movx.repository.*;
+import com.by.movx.ui.common.FilmByNameAutoCompleteComboBoxListener;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
 import com.by.movx.utils.CreatedDateCalculator;
 import javafx.beans.binding.Bindings;
@@ -114,6 +115,9 @@ public class MainController {
     @FXML
     Button watchAll, noActors;
 
+    @FXML
+    ComboBox<Film> filmByNameCombo;
+
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
@@ -210,6 +214,29 @@ public class MainController {
         });
         tagCombo.setItems(FXCollections.observableArrayList());
         new TagAutoCompleteComboBoxListener(tagCombo, tagRepository);
+
+        filmByNameCombo.setConverter(new StringConverter<Film>() {
+            @Override
+            public String toString(Film object) {
+                return object == null ? null :
+                        object.getYear() + " " + object.getName();
+            }
+
+            @Override
+            public Film fromString(String string) {
+                return null;
+            }
+        });
+        filmByNameCombo.setOnAction( e -> {
+            Film f = filmByNameCombo.getSelectionModel().getSelectedItem();
+            if( f != null) {
+                data = FXCollections.observableArrayList(f);
+                table.setItems(data);
+            }
+        });
+
+        filmByNameCombo.setItems(FXCollections.observableArrayList());
+        new FilmByNameAutoCompleteComboBoxListener(filmByNameCombo, filmRepository);
 
         fillLetters();
     }
