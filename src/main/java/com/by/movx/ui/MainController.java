@@ -265,7 +265,7 @@ public class MainController {
 
     @FXML
     public void addCountry() {
-        Film film = table.getSelectionModel().getSelectedItem();
+        Film film = firstOrSelected();
         if (film == null) return;
 
         Country c = comboCountry.getSelectionModel().getSelectedItem();
@@ -277,7 +277,7 @@ public class MainController {
 
     @FXML
     public void addTag() {
-        Film film = table.getSelectionModel().getSelectedItem();
+        Film film = firstOrSelected();
         if (film == null) return;
 
         Tag tag = tagCombo.getSelectionModel().getSelectedItem();
@@ -292,7 +292,7 @@ public class MainController {
 
     @FXML
     public void edit() throws Exception {
-        Film film = table.getSelectionModel().getSelectedItem();
+        Film film = firstOrSelected();
         openFilm(film);
     }
 
@@ -452,7 +452,8 @@ public class MainController {
 
     @FXML
     public void delete() {
-        Film film = table.getSelectionModel().getSelectedItem();
+        Film film = firstOrSelected();
+        if(film == null) return;
 
         List<FilmActor> fas = filmActorRepository.findByFilm(film);
         if(!fas.isEmpty()) filmActorRepository.delete(fas);
@@ -466,7 +467,9 @@ public class MainController {
 
     @FXML
     public void turnCount() {
-        Film film = table.getSelectionModel().getSelectedItem();
+        Film film = firstOrSelected();
+        if(film == null) return;
+
         if (film.getParent() == null && CollectionUtils.isEmpty(film.getChildren()))
             return;
         if (film.getParent() == null) {
@@ -479,7 +482,7 @@ public class MainController {
 
     @FXML
     public void getCreatedAt() throws Exception {
-        Film film = table.getSelectionModel().getSelectedItem();
+        Film film = firstOrSelected();
         if (film == null) return;
 
         Long date = CreatedDateCalculator.getCreatedAt(film);
@@ -627,5 +630,15 @@ public class MainController {
             ((Node)(e.getSource())).getScene().getWindow().hide();
         });
         return b;
+    }
+
+    private Film firstOrSelected() {
+        Film film = null;
+        if (table.getItems().size() == 1) {
+            film = table.getItems().get(0);
+        } else if (table.getItems().size() > 1) {
+            film = table.getSelectionModel().getSelectedItem();
+        }
+        return film;
     }
 }

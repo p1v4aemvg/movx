@@ -23,6 +23,9 @@ public class FilmDescription {
     @Column(name = "image_url")
     private String url;
 
+    @Column(name = "external_link")
+    private String externalLink;
+
     public FilmDescription() {}
 
     public FilmDescription(Film film) {
@@ -52,5 +55,13 @@ public class FilmDescription {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getExternalLink() {
+        return externalLink;
+    }
+
+    public void setExternalLink(String externalLink) {
+        this.externalLink = externalLink;
     }
 }

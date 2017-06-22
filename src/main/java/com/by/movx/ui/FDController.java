@@ -10,6 +10,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,10 +72,11 @@ public class FDController {
     Button save;
 
     @FXML
-    TextField actor, partName;
+    TextField actor, partName, extLink;
 
     @FXML
     ColorPicker c1, c2, c3, c4;
+
 
     public void init() {
 
@@ -121,12 +127,8 @@ public class FDController {
         }
 
         mainPane.setStyle(generateStyleStr(film));
-    }
 
-    @FXML
-    public void edit() {
-        description.setEditable(!description.isEditable());
-        save.setDisable(!save.isDisable());
+        autoSaveText();
     }
 
     @FXML
@@ -438,6 +440,54 @@ public class FDController {
                 + color.getC2().replace("0x", "#") + "  , "
                 + color.getC3().replace("0x", "#") + " , "
                 + color.getC4().replace("0x", "#") + " )";
+    }
+
+    @FXML
+    public void onExternalLink() {
+        String url = film.getDescription().getExternalLink();
+        if (url == null) return;
+        try {
+            new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", url).start();
+        } catch (java.io.IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    private void autoSaveText() {
+        extLink.clear();
+        extLink.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!eq(film.getDescription().getExternalLink(), newValue)) {
+                film.getDescription().setExternalLink(newValue);
+                filmRepository.save(film);
+            }
+        });
+
+        description.setEditable(true);
+        description.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!eq(film.getDescription().getDescription(), newValue)) {
+                film.getDescription().setDescription(newValue);
+                filmRepository.save(film);
+            }
+        });
+
+        mark.blockIncrementProperty().addListener((obs, oldV, newV) -> {
+            if(!eq(film.getMark(), newV.intValue())) {
+                film.setMark(newV.intValue());
+                filmRepository.save(film);
+            }
+        });
+
+    }
+
+    private boolean eq(String s1, String s2) {
+        if(s1 == null) return s2 == null;
+        return s2 != null && s1.equals(s2);
+    }
+
+    private boolean eq(Integer s1, Integer s2) {
+        if(s1 == null) return s2 == null;
+        return s2 != null && s1.equals(s2);
     }
 
 }
