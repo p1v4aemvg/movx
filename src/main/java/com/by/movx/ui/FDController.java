@@ -20,6 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -457,6 +458,7 @@ public class FDController {
     private void autoSaveText() {
         extLink.clear();
         extLink.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(StringUtils.isBlank(newValue)) return;
             if(!eq(film.getDescription().getExternalLink(), newValue)) {
                 film.getDescription().setExternalLink(newValue);
                 filmRepository.save(film);
@@ -465,13 +467,14 @@ public class FDController {
 
         description.setEditable(true);
         description.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(StringUtils.isBlank(newValue)) return;
             if(!eq(film.getDescription().getDescription(), newValue)) {
                 film.getDescription().setDescription(newValue);
                 filmRepository.save(film);
             }
         });
 
-        mark.blockIncrementProperty().addListener((obs, oldV, newV) -> {
+        mark.valueProperty().addListener((obs, oldV, newV) -> {
             if(!eq(film.getMark(), newV.intValue())) {
                 film.setMark(newV.intValue());
                 filmRepository.save(film);
