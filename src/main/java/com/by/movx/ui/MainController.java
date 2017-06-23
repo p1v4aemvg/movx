@@ -509,6 +509,13 @@ public class MainController {
         table.setItems(data);
     }
 
+    @FXML
+    public void onRandNoLink() {
+        Film f = filmRepository.findRandomFilmWithoutLink();
+        data = FXCollections.observableArrayList(f);
+        table.setItems(data);
+    }
+
     private void turn(Film film) {
         boolean value = film.isCountInStat();
         film.setCountInStat(!value);

@@ -78,6 +78,9 @@ public class FDController {
     @FXML
     ColorPicker c1, c2, c3, c4;
 
+    @FXML
+    Hyperlink extHyperLink;
+
 
     public void init() {
 
@@ -454,8 +457,12 @@ public class FDController {
         }
     }
 
-
     private void autoSaveText() {
+        if(film.getDescription().getExternalLink() == null) {
+            extHyperLink.setTextFill(Paint.valueOf("#ff0000"));
+        } else {
+            extHyperLink.setTextFill(Paint.valueOf("#038b47"));
+        }
         extLink.clear();
         extLink.textProperty().addListener((observable, oldValue, newValue) -> {
             if(StringUtils.isBlank(newValue)) return;

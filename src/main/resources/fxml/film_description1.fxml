@@ -55,7 +55,7 @@
         <AnchorPane id="pane" fx:id="tagPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
-    <Hyperlink layoutX="658.0" layoutY="53.0" onAction="#onExternalLink" prefWidth="201.0" text="Описание" />
+    <Hyperlink fx:id="extHyperLink" layoutX="658.0" layoutY="53.0" onAction="#onExternalLink" prefWidth="201.0" text="Описание" />
     <TextField fx:id="extLink" layoutX="215.0" layoutY="265.0" prefWidth="200.0" />
   </children>
 </AnchorPane>
