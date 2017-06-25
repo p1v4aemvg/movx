@@ -516,6 +516,24 @@ public class MainController {
         table.setItems(data);
     }
 
+    @FXML
+    public void google() {
+        Film f = firstOrSelected();
+        if (f == null) return;
+        try {
+            new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+                    googleQ(f.getName() + " " + f.getYear())).start();
+        } catch (java.io.IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private String googleQ(String s) {
+        s = s.replaceAll("[^0-9a-zA-Zа-яА-Я\\s]", "");
+        s = s.replaceAll("\\s", "+");
+        return "https://www.google.by/search?q=" + s;
+    }
+
     private void turn(Film film) {
         boolean value = film.isCountInStat();
         film.setCountInStat(!value);
