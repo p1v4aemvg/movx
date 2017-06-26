@@ -73,7 +73,6 @@ public class MainController {
     @Inject
     private FilmRepository filmRepository;
 
-
     @Inject
     private FilmActorRepository filmActorRepository;
 
@@ -113,7 +112,7 @@ public class MainController {
     TagRepository tagRepository;
 
     @FXML
-    Button watchAll, noActors;
+    Button watchAll, noActors, randNoLink;
 
     @FXML
     ComboBox<Film> filmByNameCombo;
@@ -514,6 +513,9 @@ public class MainController {
         Film f = filmRepository.findRandomFilmWithoutLink();
         data = FXCollections.observableArrayList(f);
         table.setItems(data);
+
+        Long count = filmRepository.filmWithoutLinkCount();
+        randNoLink.setText("RAND ◊ " + count);
     }
 
     @FXML

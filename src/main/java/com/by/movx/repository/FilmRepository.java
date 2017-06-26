@@ -45,6 +45,11 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
             "order by rand() limit 1", nativeQuery = true)
     Film findRandomFilmWithoutLink();
 
+    @Query(value = "select count(*) from film f " +
+            "join film_description fd on f.id = fd.film_id " +
+            "where fd.external_link is null", nativeQuery = true)
+    Long filmWithoutLinkCount();
+
     @Query(value = "select f.* from film f where f.mark = 10 order by rand() limit 10", nativeQuery = true)
     List<Film> findRandom10Film();
 

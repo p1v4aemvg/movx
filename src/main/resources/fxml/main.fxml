@@ -90,7 +90,7 @@
                 </ComboBox>
               </children>
             </HBox>
-            <Button mnemonicParsing="false" onAction="#onRandNoLink" prefWidth="131.0" text="RAND ◊" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="randNoLink" mnemonicParsing="false" onAction="#onRandNoLink" prefWidth="131.0" text="RAND ◊" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Button mnemonicParsing="false" onAction="#google" prefWidth="131.0" text="G" GridPane.columnIndex="3" GridPane.rowIndex="4" />
           </children>
           <columnConstraints>
