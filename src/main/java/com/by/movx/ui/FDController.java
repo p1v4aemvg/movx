@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.inject.Inject;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -467,8 +468,13 @@ public class FDController {
         extLink.textProperty().addListener((observable, oldValue, newValue) -> {
             if(StringUtils.isBlank(newValue)) return;
             if(!eq(film.getDescription().getExternalLink(), newValue)) {
-                film.getDescription().setExternalLink(newValue);
-                filmRepository.save(film);
+                try {
+                    String decoded = URLDecoder.decode(newValue, "UTF-8");
+                    film.getDescription().setExternalLink(decoded);
+                    filmRepository.save(film);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 

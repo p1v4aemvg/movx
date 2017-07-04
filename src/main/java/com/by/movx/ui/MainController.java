@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -518,6 +519,20 @@ public class MainController {
         randNoLink.setText("RAND ◊ " + count);
     }
 
+    private void decodeUrls() {
+        filmRepository.findAll().forEach(ff -> {
+            if (ff.getDescription().getExternalLink() != null) {
+                try {
+                    ff.getDescription().setExternalLink(
+                            URLDecoder.decode(ff.getDescription().getExternalLink(), "UTF-8"));
+                    filmRepository.save(ff);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
     @FXML
     public void google() {
         Film f = firstOrSelected();
@@ -531,7 +546,7 @@ public class MainController {
     }
 
     private String googleQ(String s) {
-        s = s.replaceAll("[^0-9a-zA-Zа-яА-Я\\s]", "");
+        s = s.replaceAll("[^0-9a-zA-Zа-яА-ЯёЁ\\s]", "");
         s = s.replaceAll("\\s", "+");
         return "https://www.google.by/search?q=" + s;
     }
