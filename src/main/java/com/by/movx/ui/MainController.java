@@ -17,6 +17,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,7 +32,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -543,6 +548,15 @@ public class MainController {
         } catch (java.io.IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    public void explorer() throws Exception {
+        Film f = firstOrSelected();
+        if (f == null) return;
+        File file = CreatedDateCalculator.getFile(f);
+        if(file == null) return;
+        Runtime.getRuntime().exec("explorer.exe /select," + file);
     }
 
     private String googleQ(String s) {

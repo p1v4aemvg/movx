@@ -27,7 +27,7 @@ public class CreatedDateCalculator {
         return attr.creationTime().toMillis();
     }
 
-    private static File getFile(Film film) {
+    public static File getFile(Film film) {
 
         Film where = film.getParent() != null ?  film.getParent() : film;
 
