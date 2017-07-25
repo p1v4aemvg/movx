@@ -556,7 +556,7 @@ public class MainController {
         if (f == null) return;
         File file = CreatedDateCalculator.getFile(f);
         if(file == null) return;
-        Runtime.getRuntime().exec("explorer.exe /select," + file);
+        Runtime.getRuntime().exec("explorer.exe /select,\"" + file + "\"");
     }
 
     private String googleQ(String s) {
