@@ -5,6 +5,7 @@ import com.by.movx.ConfigurationControllers;
 import com.by.movx.entity.*;
 import com.by.movx.event.*;
 import com.by.movx.repository.*;
+import com.by.movx.service.QueryEvaluator;
 import com.by.movx.ui.common.FilmByNameAutoCompleteComboBoxListener;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
 import com.by.movx.utils.CreatedDateCalculator;
@@ -103,6 +104,9 @@ public class MainController {
     @FXML
     private ComboBox<Film.Type> comboType;
 
+    @FXML
+    private ComboBox<CustomQuery> customQuery;
+
     private ObservableList<Film> data;
 
     @FXML
@@ -117,11 +121,17 @@ public class MainController {
     @Inject
     TagRepository tagRepository;
 
+    @Inject
+    CustomQueryRepository customQueryRepository;
+
     @FXML
     Button watchAll, noActors, randNoLink;
 
     @FXML
     ComboBox<Film> filmByNameCombo;
+
+    @Inject
+    QueryEvaluator queryEvaluator;
 
     @SuppressWarnings("unchecked")
     @PostConstruct
@@ -242,6 +252,20 @@ public class MainController {
 
         filmByNameCombo.setItems(FXCollections.observableArrayList());
         new FilmByNameAutoCompleteComboBoxListener(filmByNameCombo, filmRepository);
+
+
+        customQuery.setConverter(new StringConverter<CustomQuery>() {
+            @Override
+            public String toString(CustomQuery object) {
+                return object.getName();
+            }
+
+            @Override
+            public CustomQuery fromString(String string) {
+                return null;
+            }
+        });
+        customQuery.setItems(FXCollections.observableArrayList((List<CustomQuery>)customQueryRepository.findAll()));
 
         fillLetters();
     }
@@ -557,6 +581,15 @@ public class MainController {
         File file = CreatedDateCalculator.getFile(f);
         if(file == null) return;
         Runtime.getRuntime().exec("explorer.exe /select,\"" + file + "\"");
+    }
+
+    @FXML
+    public void query() {
+        CustomQuery q = customQuery.getSelectionModel().getSelectedItem();
+        if(q == null) return;
+        List<Film> films = queryEvaluator.getFilms(q);
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
     }
 
     private String googleQ(String s) {

@@ -14,6 +14,8 @@ import java.util.List;
  * on 04.02.2016.
  */
 public interface FilmRepository extends CrudRepository<Film, Long> {
+    List<Film> findByIdIn(List<Long> idList);
+
     List<Film> findByYear (Integer year, Pageable pageable);
 
     @Query(value = "select f from FilmActor fa " +
