@@ -33,10 +33,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,9 +84,6 @@ public class MainController {
     @Inject
     private CountryRepository countryRepository;
 
-    @Inject
-    private FilmActorRepository faRepository;
-
     @FXML
     Label count;
 
@@ -125,7 +120,7 @@ public class MainController {
     CustomQueryRepository customQueryRepository;
 
     @FXML
-    Button watchAll, noActors, randNoLink;
+    Button randNoLink, query;
 
     @FXML
     ComboBox<Film> filmByNameCombo;
@@ -242,6 +237,7 @@ public class MainController {
                 return null;
             }
         });
+
         filmByNameCombo.setOnAction( e -> {
             Film f = filmByNameCombo.getSelectionModel().getSelectedItem();
             if( f != null) {
@@ -274,13 +270,6 @@ public class MainController {
     public void onRand() {
         Film f = filmRepository.findRandomFilm();
         data = FXCollections.observableArrayList(f);
-        table.setItems(data);
-    }
-
-    @FXML
-    public void rand10() {
-        List<Film> films = filmRepository.findRandom10Film();
-        data = FXCollections.observableArrayList(films);
         table.setItems(data);
     }
 
@@ -385,14 +374,6 @@ public class MainController {
     }
 
     @FXML
-    public void toWatchAll() {
-        List<Film> films = filmRepository.findByMark(0);
-        data = FXCollections.observableArrayList(films);
-        table.setItems(data);
-        watchAll.setText("WATCH " + films.size());
-    }
-
-    @FXML
     public void copyYearFrom() {
         String s = txtYearFrom.getText();
         txtYearTo.setText(s);
@@ -459,24 +440,9 @@ public class MainController {
     }
 
     @FXML
-    public void noActors() {
-        List<Film> films = filmRepository.findWithoutActors();
-        data = FXCollections.observableArrayList(films);
-        table.setItems(data);
-        noActors.setText("NO ACTORS " + films.size());
-    }
-
-    @FXML
     public void randTag() {
         Tag t = tagRepository.findRand();
         tagCombo.getSelectionModel().select(t);
-    }
-
-    @FXML
-    public void onParent() {
-        List<Film> films = filmRepository.findParents();
-        data = FXCollections.observableArrayList(films);
-        table.setItems(data);
     }
 
     @FXML
@@ -548,20 +514,6 @@ public class MainController {
         randNoLink.setText("RAND ◊ " + count);
     }
 
-    private void decodeUrls() {
-        filmRepository.findAll().forEach(ff -> {
-            if (ff.getDescription().getExternalLink() != null) {
-                try {
-                    ff.getDescription().setExternalLink(
-                            URLDecoder.decode(ff.getDescription().getExternalLink(), "UTF-8"));
-                    filmRepository.save(ff);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-
     @FXML
     public void google() {
         Film f = firstOrSelected();
@@ -590,6 +542,7 @@ public class MainController {
         List<Film> films = queryEvaluator.getFilms(q);
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
+        query.setText("QUERY " + data.size());
     }
 
     private String googleQ(String s) {

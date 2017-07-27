@@ -31,8 +31,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
 
     List<Film> findFirst10ByMarkOrderByIdDesc (Integer mark);
 
-    List<Film> findByMark (Integer mark);
-
     List<Film> findByType(@Param(value = "type") Film.Type type);
 
     @Query("select f from Film f where f.createdAt is null")
@@ -51,12 +49,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
             "join film_description fd on f.id = fd.film_id " +
             "where fd.external_link is null", nativeQuery = true)
     Long filmWithoutLinkCount();
-
-    @Query(value = "select f.* from film f where f.mark = 10 order by rand() limit 10", nativeQuery = true)
-    List<Film> findRandom10Film();
-
-    @Query(value = "select f from Film f where f.children is not empty")
-    List<Film> findParents();
 
     @Query(value = "select f.mark, count(f.id) from film f " +
             "group by f.mark", nativeQuery = true)
@@ -87,13 +79,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
 
     @Query(value = "select f from Film f where f.name like :letter% or f.enName like :letter% ")
     List<Film> getFilmsBy1stLetter(@Param(value = "letter") String letter);
-
-    @Query(value = "select distinct f.* from film f " +
-            "left join film f1 on f.id = f1.parent_id " +
-            "where not exists (select * from film_actor fa where fa.film_id in (f.id, f.parent_id)) " +
-            "and not exists(select * from film_tag ft where ft.film_id in (f.id, f.parent_id) and ft.tag_id = 78) " +
-            "and f1.id is null", nativeQuery = true)
-    List<Film> findWithoutActors();
 
     @Query(value = "select count(f) from Film f where f.countInStat = 1")
     Long countFilms();

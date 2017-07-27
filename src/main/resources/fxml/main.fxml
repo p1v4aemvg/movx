@@ -30,7 +30,6 @@
                 <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="160.0" text="ADD" />
               </children>
             </HBox>
-            <Button fx:id="noActors" mnemonicParsing="false" onAction="#noActors" prefWidth="221.0" text="NO ACTORS" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#onTag" prefWidth="122.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <ComboBox fx:id="tagCombo" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <Button mnemonicParsing="false" onAction="#addTag" prefWidth="131.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="5" />
@@ -50,10 +49,7 @@
                 <TextField fx:id="txtYearFrom" onKeyReleased="#copyYearFrom" prefWidth="193.0" promptText="С" />
               </children>
             </HBox>
-            <Button fx:id="watchAll" mnemonicParsing="false" onAction="#toWatchAll" prefWidth="138.0" text="WATCH ALL" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" onAction="#rand10" prefWidth="131.0" text="RAND 10" GridPane.columnIndex="3" GridPane.rowIndex="0" />
             <Button mnemonicParsing="false" onAction="#turnCount" prefWidth="131.0" text="=&gt;" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-            <Button mnemonicParsing="false" onAction="#onParent" prefWidth="131.0" text="╣▓╠" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#findByType" prefWidth="122.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <ComboBox fx:id="comboType" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
               <items>
@@ -104,7 +100,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
               <children>
                 <Button mnemonicParsing="false" onAction="#randTag" text="R" />
-                <Button mnemonicParsing="false" onAction="#query" prefWidth="193.0" text="QUERY" />
+                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="193.00009999999747" text="QUERY" />
               </children>
             </HBox>
           </children>
