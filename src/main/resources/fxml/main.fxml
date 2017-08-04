@@ -103,6 +103,21 @@
                 <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="193.00009999999747" text="QUERY" />
               </children>
             </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+              <children>
+                <ComboBox id="langs" fx:id="lang" prefHeight="23.0" prefWidth="95.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" text="S_" />
+                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="95.0" text="+" />
+              </children>
+            </HBox>
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="205.0" />

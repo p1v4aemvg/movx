@@ -82,6 +82,9 @@ public class MainController {
     private FilmActorRepository filmActorRepository;
 
     @Inject
+    private FilmLangRepository filmLangRepository;
+
+    @Inject
     private CountryRepository countryRepository;
 
     @FXML
@@ -108,7 +111,13 @@ public class MainController {
     public ComboBox<Tag> tagCombo;
 
     @FXML
+    public ComboBox<FilmLang.Lang> lang;
+
+    @FXML
     HBox letterBox;
+
+    @FXML
+    CheckBox subtitled;
 
     @Inject
     FilmTagRepository filmTagRepository;
@@ -262,6 +271,19 @@ public class MainController {
             }
         });
         customQuery.setItems(FXCollections.observableArrayList((List<CustomQuery>)customQueryRepository.findAll()));
+
+        lang.setConverter(new StringConverter<FilmLang.Lang>() {
+            @Override
+            public String toString(FilmLang.Lang object) {
+                return object.name();
+            }
+
+            @Override
+            public FilmLang.Lang fromString(String string) {
+                return null;
+            }
+        });
+        lang.setItems(FXCollections.observableArrayList(FilmLang.Lang.values()));
 
         fillLetters();
     }
@@ -543,6 +565,21 @@ public class MainController {
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
         query.setText("QUERY " + data.size());
+    }
+
+    @FXML
+    public void addLang() {
+        Film f = firstOrSelected();
+        if (f == null) return;
+        FilmLang.Lang selectedL = lang.getSelectionModel().getSelectedItem();
+        if(selectedL == null) return;
+        Boolean isSub = subtitled.isSelected();
+
+        FilmLang fl = new FilmLang();
+        fl.setFilm(f);
+        fl.setLang(selectedL);
+        fl.setSubtitled(isSub);
+        filmLangRepository.save(fl);
     }
 
     private String googleQ(String s) {
