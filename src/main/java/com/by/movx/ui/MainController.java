@@ -576,7 +576,7 @@ public class MainController {
         Boolean isSound = sound.isSelected();
         Boolean isSub = subtitled.isSelected();
 
-        FilmLang fl = filmLangRepository.findTop1ByFilmAndLand(f, selectedL);
+        FilmLang fl = filmLangRepository.findTop1ByFilmAndLang(f, selectedL);
         if(fl == null) {
             fl = new FilmLang();
             fl.setFilm(f);

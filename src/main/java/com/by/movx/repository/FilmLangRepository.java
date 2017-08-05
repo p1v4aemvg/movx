@@ -18,5 +18,5 @@ import java.util.List;
  */
 public interface FilmLangRepository extends CrudRepository<FilmLang, Long> {
 
-    FilmLang findTop1ByFilmAndLand(Film film, FilmLang.Lang lang);
+    FilmLang findTop1ByFilmAndLang(Film film, FilmLang.Lang lang);
 }
