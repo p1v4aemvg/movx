@@ -117,7 +117,7 @@ public class MainController {
     HBox letterBox;
 
     @FXML
-    CheckBox subtitled;
+    CheckBox sound, subtitled;
 
     @Inject
     FilmTagRepository filmTagRepository;
@@ -573,11 +573,17 @@ public class MainController {
         if (f == null) return;
         FilmLang.Lang selectedL = lang.getSelectionModel().getSelectedItem();
         if(selectedL == null) return;
+        Boolean isSound = sound.isSelected();
         Boolean isSub = subtitled.isSelected();
 
-        FilmLang fl = new FilmLang();
-        fl.setFilm(f);
-        fl.setLang(selectedL);
+        FilmLang fl = filmLangRepository.findTop1ByFilmAndLand(f, selectedL);
+        if(fl == null) {
+            fl = new FilmLang();
+            fl.setFilm(f);
+            fl.setLang(selectedL);
+        }
+
+        fl.setSound(isSound);
         fl.setSubtitled(isSub);
         filmLangRepository.save(fl);
     }

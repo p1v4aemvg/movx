@@ -22,6 +22,9 @@ public class FilmLang {
     @Enumerated
     private Lang lang;
 
+    @Column(name = "sound")
+    private Boolean sound;
+
     @Column(name = "subtitled")
     private Boolean subtitled;
 
@@ -51,6 +54,14 @@ public class FilmLang {
 
     public void setLang(Lang lang) {
         this.lang = lang;
+    }
+
+    public Boolean getSound() {
+        return sound;
+    }
+
+    public void setSound(Boolean sound) {
+        this.sound = sound;
     }
 
     public Boolean getSubtitled() {
