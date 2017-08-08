@@ -105,7 +105,7 @@
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <children>
-                <ComboBox id="langs" fx:id="lang" prefHeight="23.0" prefWidth="69.0">
+                <ComboBox id="langs" fx:id="lang" prefHeight="23.0" prefWidth="62.0">
                   <items>
                     <FXCollections fx:factory="observableArrayList">
                       <String fx:value="Item 1" />
@@ -114,9 +114,9 @@
                     </FXCollections>
                   </items>
                 </ComboBox>
-                <CheckBox fx:id="sound" mnemonicParsing="false" text="_♫__" />
-                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" text="_Â__" />
-                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="69.0" text="+" />
+                <CheckBox fx:id="sound" minWidth="-1.0" mnemonicParsing="false" prefWidth="50.0" text="♫" />
+                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" prefWidth="50.0" text="Â" />
+                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="60.9998779296875" text="+" />
               </children>
             </HBox>
           </children>
