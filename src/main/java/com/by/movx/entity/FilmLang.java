@@ -73,6 +73,6 @@ public class FilmLang {
     }
 
     public enum Lang {
-        NO, RU, EN, BY, DE, FR
+        NO, RU, EN, BY, DE, FR, UA, GR, LT, LV, ES, SP, IT, PL, FN
     }
 }
