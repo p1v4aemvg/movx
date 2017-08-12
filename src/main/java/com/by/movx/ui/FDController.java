@@ -28,6 +28,8 @@ import javax.inject.Inject;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,7 +83,6 @@ public class FDController {
 
     @FXML
     Hyperlink extHyperLink;
-
 
     public void init() {
 
@@ -396,45 +397,31 @@ public class FDController {
 
     @FXML
     public void onC1() {
-        FilmColor color = film.getColor();
-        if (color == null) {
-            color = new FilmColor(film);
-            film.setColor(color);
-        }
-        color.setC1(c1.getValue().toString());
-        filmRepository.save(film);
+        setColor(c1, FilmColor::setC1);
     }
 
     @FXML
     public void onC2() {
-        FilmColor color = film.getColor();
-        if (color == null) {
-            color = new FilmColor(film);
-            film.setColor(color);
-        }
-        color.setC2(c2.getValue().toString());
-        filmRepository.save(film);
+        setColor(c2, FilmColor::setC2);
     }
 
     @FXML
     public void onC3() {
-        FilmColor color = film.getColor();
-        if (color == null) {
-            color = new FilmColor(film);
-            film.setColor(color);
-        }
-        color.setC3(c3.getValue().toString());
-        filmRepository.save(film);
+        setColor(c3, FilmColor::setC3);
     }
 
     @FXML
     public void onC4() {
+        setColor(c4, FilmColor::setC4);
+    }
+
+    private void setColor(ColorPicker cp, BiConsumer<FilmColor, String> f) {
         FilmColor color = film.getColor();
         if (color == null) {
             color = new FilmColor(film);
             film.setColor(color);
         }
-        color.setC4(c4.getValue().toString());
+        f.accept(color, cp.getValue().toString());
         filmRepository.save(film);
     }
 
@@ -505,5 +492,4 @@ public class FDController {
         if(s1 == null) return s2 == null;
         return s2 != null && s1.equals(s2);
     }
-
 }

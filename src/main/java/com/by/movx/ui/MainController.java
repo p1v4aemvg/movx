@@ -2,47 +2,37 @@ package com.by.movx.ui;
 
 import com.by.movx.Common;
 import com.by.movx.ConfigurationControllers;
+import com.by.movx.common.Site;
 import com.by.movx.entity.*;
 import com.by.movx.event.*;
 import com.by.movx.repository.*;
 import com.by.movx.service.QueryEvaluator;
 import com.by.movx.ui.common.FilmByNameAutoCompleteComboBoxListener;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
+import com.by.movx.ui.utils.TableCreator;
+import com.by.movx.ui.utils.UIUtils;
 import com.by.movx.utils.CreatedDateCalculator;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import com.by.movx.utils.URLFetcher;
+import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.google.common.eventbus.Subscribe;
-import org.springframework.util.CollectionUtils;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class MainController {
@@ -137,59 +127,22 @@ public class MainController {
     @Inject
     QueryEvaluator queryEvaluator;
 
+    @Inject
+    URLFetcher fetcher;
+
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
         Common.getInstance().getEventBus().register(this);
 
-        table.setRowFactory(new Callback<TableView<Film>, TableRow<Film>>() {
-            @Override
-            public TableRow<Film> call(TableView<Film> tableView) {
-                final TableRow<Film> row = new TableRow<Film>() {
-                    @Override
-                    protected void updateItem(Film film, boolean empty) {
-                        super.updateItem(film, empty);
-                        if (!empty) {
-                            styleProperty().bind(Bindings.when(new SimpleBooleanProperty(film.isCountInStat()))
-                                    .then("-fx-font-weight: bold;")
-                                    .otherwise(""));
-                        }
-                    }
-                };
-                return row;
-            }
-        });
+        table.setRowFactory(tableView -> UIUtils.boldRow());
 
         count.setText(String.valueOf(filmRepository.countFilms()));
 
         data = FXCollections.observableArrayList();
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
 
-        TableColumn<Film, HBox> countryColumn = new TableColumn<>("Country");
-        countryColumn.setCellValueFactory
-                (c -> new SimpleObjectProperty<>(group(c)));
-
-
-        TableColumn<Film, String> generalName = new TableColumn<>("Общее название");
-        generalName.setCellValueFactory(c -> new SimpleObjectProperty<>(parent(c)));
-
-        TableColumn<Film, String> nameColumn = new TableColumn<>("Нахвание");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Film, Integer> yearColumn = new TableColumn<>("Год");
-        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
-
-        TableColumn<Film, Date> dateColumn = new TableColumn<>("Date");
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-
-        TableColumn<Film, String> folderColumn = new TableColumn<>("Папка");
-        folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(folder(c)));
-
-        TableColumn<Film, String> durationColumn = new TableColumn<>("Тип");
-        durationColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(duration(c)));
-
-        table.getColumns().setAll(countryColumn, generalName, nameColumn,
-                yearColumn, dateColumn, folderColumn, durationColumn);
+        table.getColumns().setAll(TableCreator.createColumns());
         table.setItems(data);
 
         comboCountry.setConverter(new StringConverter<Country>() {
@@ -205,7 +158,6 @@ public class MainController {
         });
         comboCountry.setItems(countries);
 
-
         comboType.setConverter(new StringConverter<Film.Type>() {
             @Override
             public String toString(Film.Type object) {
@@ -218,7 +170,6 @@ public class MainController {
             }
         });
         comboType.setItems(FXCollections.observableArrayList(Film.Type.values()));
-
 
         tagCombo.setConverter(new StringConverter<Tag>() {
             @Override
@@ -257,7 +208,6 @@ public class MainController {
 
         filmByNameCombo.setItems(FXCollections.observableArrayList());
         new FilmByNameAutoCompleteComboBoxListener(filmByNameCombo, filmRepository);
-
 
         customQuery.setConverter(new StringConverter<CustomQuery>() {
             @Override
@@ -542,7 +492,7 @@ public class MainController {
         if (f == null) return;
         try {
             new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-                    googleQ(f.getName() + " " + f.getYear())).start();
+                    fetcher.googleQ(f.getName() + " " + f.getYear())).start();
         } catch (java.io.IOException e) {
             System.out.println(e.getMessage());
         }
@@ -588,10 +538,38 @@ public class MainController {
         filmLangRepository.save(fl);
     }
 
-    private String googleQ(String s) {
-        s = s.replaceAll("[^0-9a-zA-Zа-яА-ЯёЁ\\s]", "");
-        s = s.replaceAll("\\s", "+");
-        return "https://www.google.by/search?q=" + s;
+    @FXML
+    public void onW() throws Exception {
+        fetchSite(Site.WIKI);
+    }
+
+    @FXML
+    public void onKP() throws Exception {
+        fetchSite(Site.KP);
+    }
+
+    @FXML
+    public void onKT() throws Exception {
+        fetchSite(Site.KINO_TEATR);
+    }
+
+    @FXML
+    public void onIVI() throws Exception {
+        fetchSite(Site.IVI);
+    }
+
+    private void fetchSite(Site site) throws Exception {
+        Film f = firstOrSelected();
+        if(f == null) return;
+
+        String url = fetcher.googleQ(f.getName() + " " + f.getYear() + site.getAddSearch());
+        String link = fetcher.fetch(url, site.getContain());
+        if(link == null) return;
+
+        f.getDescription().setExternalLink(link);
+        filmRepository.save(f);
+
+        new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", link).start();
     }
 
     private void turn(Film film) {
@@ -601,43 +579,7 @@ public class MainController {
         filmRepository.save(film);
     }
 
-    private HBox group(TableColumn.CellDataFeatures<Film, HBox> c) {
-        String cssBordering = "-fx-border-color:darkblue ; \n" //#090a0c
-                + "-fx-border-insets:3;\n"
-                + "-fx-border-radius:7;\n"
-                + "-fx-border-width:1.0";
 
-        HBox g = new HBox();
-        c.getValue().getCountries().stream()
-                .map(k -> {
-                            BorderPane p = new BorderPane();
-                            Image im = new Image(new ByteArrayInputStream(k.getImage()));
-                            ImageView iv = new ImageView(im);
-
-                            p.setCenter(iv);
-                            p.setMaxHeight(im.getHeight() + 5);
-                            p.setMaxWidth(im.getWidth() + 5);
-
-                            p.setStyle(cssBordering);
-                            return p;
-                        }
-                )
-                .forEach(p -> g.getChildren().add(p)
-                );
-        return g;
-    }
-
-    private String folder(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getType().getName();
-    }
-
-    private String duration(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getDuration().getName();
-    }
-
-    private String parent(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getParent() == null ? "" : c.getValue().getParent().getName();
-    }
 
     private void fillLetters() {
         char chars[] = "0123456789АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();

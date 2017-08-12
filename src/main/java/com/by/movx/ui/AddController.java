@@ -1,7 +1,9 @@
 package com.by.movx.ui;
 
 import com.by.movx.Common;
-import com.by.movx.entity.*;
+import com.by.movx.entity.Country;
+import com.by.movx.entity.Film;
+import com.by.movx.entity.FilmDescription;
 import com.by.movx.event.ReloadParentEvent;
 import com.by.movx.repository.CountryRepository;
 import com.by.movx.repository.FilmRepository;
@@ -20,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by movx

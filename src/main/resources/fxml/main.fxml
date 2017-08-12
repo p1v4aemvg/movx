@@ -119,6 +119,14 @@
                 <Button mnemonicParsing="false" onAction="#addLang" prefWidth="60.9998779296875" text="+" />
               </children>
             </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
+              <children>
+                <Button mnemonicParsing="false" onAction="#onW" prefWidth="34.0" text="w" />
+                <Button mnemonicParsing="false" onAction="#onKP" prefWidth="34.0" text="kp" />
+                <Button mnemonicParsing="false" onAction="#onKT" prefWidth="34.0" text="kt" />
+                <Button mnemonicParsing="false" onAction="#onIVI" prefWidth="28.0" text="i" />
+              </children>
+            </HBox>
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="205.0" />

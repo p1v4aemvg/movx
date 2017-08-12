@@ -83,6 +83,33 @@
             <version>10.0.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.codehaus.httpcache4j.uribuilder/uribuilder -->
+        <dependency>
+            <groupId>org.codehaus.httpcache4j.uribuilder</groupId>
+            <artifactId>uribuilder</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+        </dependency>
+
     </dependencies>
 
 
