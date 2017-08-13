@@ -428,6 +428,9 @@ public class MainController {
         List<FilmTag> tags = filmTagRepository.findByFilm(film);
         if(!tags.isEmpty()) filmTagRepository.delete(tags);
 
+        List<FilmLang> langs = filmLangRepository.findByFilm(film);
+        if(!langs.isEmpty()) filmLangRepository.delete(langs);
+
         film.setParent(null);
         filmRepository.delete(film);
     }
