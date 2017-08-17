@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -83,13 +85,16 @@ public class CreatedDateCalculator {
                 .findFirst().orElse(null);
         if (itself != null) return itself;
 
-        File season = Stream.of(f.listFiles())
+        List<File> seasons = Stream.of(f.listFiles())
                 .filter(File::isDirectory)
                 .filter(a -> (a.getName().contains(film.getYear().toString())) &&
                         (prepare(a.getName()).contains("season") || prepare(a.getName()).contains("сезон")))
-                .findFirst().orElse(null);
-        if (season != null) {
-            return findInDirectFolder(folder + "\\" + season.getName(), film);
+                .collect(Collectors.toList());
+        for (File season : seasons) {
+            File res = findInDirectFolder(folder + "\\" + season.getName(), film);
+            if(res != null) {
+                return res;
+            }
         }
 
         return null;
