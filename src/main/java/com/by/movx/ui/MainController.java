@@ -201,7 +201,12 @@ public class MainController {
         filmByNameCombo.setOnAction( e -> {
             Film f = filmByNameCombo.getSelectionModel().getSelectedItem();
             if( f != null) {
-                data = FXCollections.observableArrayList(f);
+                List<Film> films = new ArrayList();
+                films.add(f);
+                if(!CollectionUtils.isEmpty(f.getChildren()) ) {
+                    films.addAll(f.getChildren());
+                }
+                data = FXCollections.observableArrayList(films);
                 table.setItems(data);
             }
         });
