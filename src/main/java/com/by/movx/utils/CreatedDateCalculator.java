@@ -1,6 +1,7 @@
 package com.by.movx.utils;
 
 import com.by.movx.entity.Film;
+import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -30,6 +31,10 @@ public class CreatedDateCalculator {
     }
 
     public static File getFile(Film film) {
+
+        if(!CollectionUtils.isEmpty(film.getChildren())) {
+            film = film.getChildren().iterator().next();
+        }
 
         Film where = film.getParent() != null ?  film.getParent() : film;
 
