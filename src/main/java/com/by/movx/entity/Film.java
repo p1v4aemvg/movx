@@ -59,6 +59,9 @@ public class Film {
     @Column(name = "count_in_stat")
     private boolean countInStat;
 
+    @Column(name = "never_delete")
+    private Boolean neverDelete;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
 
@@ -181,6 +184,14 @@ public class Film {
 
     public void setColor(FilmColor color) {
         this.color = color;
+    }
+
+    public Boolean isNeverDelete() {
+        return neverDelete;
+    }
+
+    public void setNeverDelete(Boolean neverDelete) {
+        this.neverDelete = neverDelete;
     }
 
     public enum Type {

@@ -566,6 +566,24 @@ public class MainController {
         fetchSite(Site.IVI);
     }
 
+    @FXML
+    public void on1() {
+        Film film = firstOrSelected();
+        if(film == null) return;
+
+        film.setNeverDelete(true);
+        filmRepository.save(film);
+    }
+
+    @FXML
+    public void on0() {
+        Film film = firstOrSelected();
+        if(film == null) return;
+
+        film.setNeverDelete(false);
+        filmRepository.save(film);
+    }
+
     private void fetchSite(Site site) throws Exception {
         Film f = firstOrSelected();
         if(f == null) return;
