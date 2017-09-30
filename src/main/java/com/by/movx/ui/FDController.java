@@ -2,36 +2,32 @@ package com.by.movx.ui;
 
 import com.by.movx.Common;
 import com.by.movx.entity.*;
-import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.AddSubFilmEvent;
-import com.by.movx.event.TagClickedEvent;
+import com.by.movx.event.ParentFilmClickedEvent;
 import com.by.movx.repository.*;
+import com.by.movx.ui.common.FilmActorsPanel;
+import com.by.movx.ui.common.FilmLangPanel;
+import com.by.movx.ui.common.ParentPanel;
+import com.by.movx.ui.common.TagsPanel;
+import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.inject.Inject;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by movx
@@ -46,7 +42,7 @@ public class FDController {
     private TableView<Actor> actors;
 
     @FXML
-    AnchorPane pane, paneL, mainPane, parentPanel, tagPanel;
+    AnchorPane pane, paneL, mainPane, parentPanel, tagPanel, langPanel;
 
     @FXML
     Slider mark, part;
@@ -69,11 +65,11 @@ public class FDController {
     @Inject
     FilmTagRepository ftRepository;
 
-    @FXML
-    TextArea description;
+    @Inject
+    FilmLangRepository flRepository;
 
     @FXML
-    Button save;
+    TextArea description;
 
     @FXML
     TextField actor, partName, extLink;
@@ -85,6 +81,8 @@ public class FDController {
     Hyperlink extHyperLink;
 
     public void init() {
+
+        Common.getInstance().getEventBus().register(this);
 
         List<Actor> dbData = ((List<Actor>) actorRepository.findAll()).stream()
                 .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
@@ -120,9 +118,11 @@ public class FDController {
         mark.setValue(film.getMark());
         description.setText(film.getDescription().getDescription() == null ? "" : film.getDescription().getDescription());
         markLabel.setText(film.getMark().toString());
-        createLinks();
-        createParents();
-        createTags();
+
+        new FilmActorsPanel(pane, film, faRepository).createLinks();
+        new ParentPanel(parentPanel, film).createLinks();
+        new TagsPanel(tagPanel, film, ftRepository).createLinks();
+        new FilmLangPanel(langPanel, film, flRepository).createLinks();
 
         FilmColor color = film.getColor();
         if (color != null) {
@@ -138,13 +138,6 @@ public class FDController {
     }
 
     @FXML
-    public void save() throws Exception {
-        film.getDescription().setDescription(description.getText());
-        film.setMark((int) mark.getValue());
-        filmRepository.save(film);
-    }
-
-    @FXML
     @Transactional
     public void add() throws Exception {
         Actor a = actorRepository.findByName(actor.getText());
@@ -153,191 +146,7 @@ public class FDController {
             a = actorRepository.save(a);
         }
         faRepository.save(new FilmActor(film, a, new Part((long) (int) part.getValue()), partName.getText()));
-        createLinks();
-    }
-
-    private void createLinks() {
-        final List<FilmActor> fff = faRepository.findByFilm(film);
-        final List<FilmActor> parentFFF = film.getParent() == null ? new ArrayList() : faRepository.findByFilm(film.getParent());
-
-        List<Hyperlink> removed = new ArrayList<>();
-        List<Hyperlink> links = Stream.concat(
-                parentFFF.stream().map(fa -> {
-
-                    Hyperlink l = createLnk(fa, "#8b0201", "#8b4834", "#8b6c2b");
-                    l.setOnAction(event -> {
-                        Common.getInstance().getEventBus().post(new ActorClickedEvent(fa));
-                    });
-                    l.setOnContextMenuRequested(event -> {
-                        fa.setFilm(film);
-                        faRepository.save(fa);
-                        createLinks();
-                    });
-
-                    Hyperlink removeLink = new Hyperlink("-");
-                    removed.add(removeLink);
-
-                    return l;
-                }),
-                fff.stream().map(fa -> {
-
-
-                    Hyperlink l = createLnk(fa, "#091a9c", "#0d69ff", "#898585");
-                    l.setOnAction(event -> {
-                        Common.getInstance().getEventBus().post(new ActorClickedEvent(fa));
-                    });
-                    l.setOnContextMenuRequested(event -> {
-                        TextField temp = new TextField();
-                        temp.setPrefHeight(15);
-                        temp.setLayoutY(l.getLayoutY());
-                        temp.setLayoutX(245);
-                        temp.setOnAction(event1 -> {
-                            if (!temp.getText().isEmpty()) {
-                                fa.setPartName(temp.getText());
-                                l.setText(fa.fullName());
-                                faRepository.save(fa);
-                            }
-                            pane.getChildren().remove(temp);
-                        });
-                        pane.getChildren().add(temp);
-                    });
-
-                    Hyperlink removeLink = new Hyperlink("╳");
-                    removeLink.setOnAction(event -> {
-                        faRepository.delete(fa);
-                        createLinks();
-                    });
-                    removed.add(removeLink);
-
-                    return l;
-                }))
-                .collect(Collectors.toList());
-
-        for (int i = 0; i < links.size(); i++) {
-            links.get(i).setLayoutY(20 * i);
-            links.get(i).setLayoutX(12);
-            links.get(i).setFont(new Font("Courier New", 12));
-        }
-
-        for (int i = 0; i < removed.size(); i++) {
-            removed.get(i).setLayoutY(20 * i);
-            removed.get(i).setFont(new Font("Courier New", 12));
-        }
-
-        pane.getChildren().clear();
-        pane.getChildren().addAll(links);
-        pane.getChildren().addAll(removed);
-        pane.setPrefHeight(20 * links.size());
-    }
-
-    private Hyperlink createLnk(FilmActor fa, String color1, String color2, String color3) {
-        Hyperlink l = new Hyperlink(fa.fullName());
-
-        switch (fa.getPart().getId().intValue()) {
-            case 1:
-                l.setTextFill(Paint.valueOf(color1));
-                break;
-            case 2:
-                l.setTextFill(Paint.valueOf(color2));
-                break;
-            case 3:
-                l.setTextFill(Paint.valueOf(color3));
-                break;
-            default:
-                break;
-        }
-        return l;
-    }
-
-    private void createParents() {
-        parentPanel.getChildren().clear();
-        int i = 0;
-        if (film.getParent() != null) {
-            Hyperlink l = createParent(i, film.getParent());
-            parentPanel.getChildren().add(l);
-            i++;
-        }
-        if (!CollectionUtils.isEmpty(film.getChildren())) {
-            List<Film> children = film.getChildren().stream()
-                    .sorted((f1, f2) -> {
-                        int res = f1.getYear().compareTo(f2.getYear());
-                        return res != 0 ? res :
-                                f1.getId().compareTo(f2.getId());
-                    }).collect(Collectors.toList());
-
-            Map<Integer, List<Film>> map = children.stream().collect(Collectors.groupingBy(Film::getYear));
-            SortedSet<Integer> keys = new TreeSet<Integer>(map.keySet());
-            for (Integer key : keys) {
-                for (Film f : map.get(key)) {
-                    Hyperlink l = createParent(i, f);
-                    parentPanel.getChildren().add(l);
-                    i++;
-                }
-                createEmptyLink(i);
-                i++;
-            }
-        }
-
-        parentPanel.setPrefHeight(20 * i);
-    }
-
-    private Hyperlink createParent(int i, Film f) {
-        Hyperlink l = new Hyperlink(f.getYear() + " " + f.getName());
-        l.setLayoutY(20 * i);
-        l.setFont(new Font("Courier New", 12));
-
-        l.setOnAction(event -> {
-            this.film = f;
-            init();
-        });
-
-        return l;
-    }
-
-    private Hyperlink createEmptyLink(int i) {
-        Hyperlink l = new Hyperlink("-------------------------------------");
-        l.setLayoutY(20 * i);
-        l.setFont(new Font("Courier New", 12));
-
-        return l;
-    }
-
-    private void createTags() {
-        tagPanel.getChildren().clear();
-
-        int i = 0;
-        if (film.getParent() != null) {
-            List<FilmTag> parentTags = ftRepository.findByFilm(film.getParent());
-            if (!CollectionUtils.isEmpty(parentTags)) {
-                for (FilmTag ft : parentTags) {
-                    Hyperlink l = createTagLink(i, ft);
-                    tagPanel.getChildren().add(l);
-                    i++;
-                }
-            }
-        }
-        List<FilmTag> tags = ftRepository.findByFilm(film);
-        if (!CollectionUtils.isEmpty(tags)) {
-            for (FilmTag ft : tags) {
-                Hyperlink l = createTagLink(i, ft);
-                tagPanel.getChildren().add(l);
-                i++;
-            }
-        }
-        tagPanel.setPrefHeight(20 * i);
-    }
-
-    private Hyperlink createTagLink(int i, FilmTag ft) {
-        Hyperlink l = new Hyperlink(ft.getTag().getName());
-        l.setLayoutY(20 * i);
-        l.setFont(new Font("Courier New", 12));
-
-        l.setOnAction(event -> {
-            Common.getInstance().getEventBus().post(new TagClickedEvent(ft));
-
-        });
-
-        return l;
+        new FilmActorsPanel(pane, film, faRepository).createLinks();
     }
 
     @FXML
@@ -376,7 +185,7 @@ public class FDController {
                 if (!exist) {
                     faRepository.save(new FilmActor(
                             film, a, new Part((long) (int) part.getValue()), partName.getText()));
-                    createLinks();
+                    new FilmActorsPanel(pane, film, faRepository).createLinks();
                 }
             }
 
@@ -491,5 +300,13 @@ public class FDController {
     private boolean eq(Integer s1, Integer s2) {
         if(s1 == null) return s2 == null;
         return s2 != null && s1.equals(s2);
+    }
+
+    @Subscribe
+    public void parentClicked(ParentFilmClickedEvent e) {
+        if(e.getData() != null) {
+            this.film = e.getData();
+            init();
+        }
     }
 }
