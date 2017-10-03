@@ -15,7 +15,7 @@ public interface CountryRepository extends CrudRepository<Country, Long> {
     @Query(value = "select c.name, count(fc.film_id) from country c\n" +
             "join film_country fc on fc.country_id = c.id\n " +
             "join film f on f.id = fc.film_id " +
-            "where f.count_in_stat = 1 " +
+            "where f.parent_id is null " +
             "group by fc.country_id order by count(fc.film_id) desc", nativeQuery = true)
     List<Object[]> loadCountryStat();
 }

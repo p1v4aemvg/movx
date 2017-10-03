@@ -56,9 +56,6 @@ public class Film {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "film")
     private FilmColor color;
 
-    @Column(name = "count_in_stat")
-    private boolean countInStat;
-
     @Column(name = "never_delete")
     private Boolean neverDelete;
 
@@ -160,14 +157,6 @@ public class Film {
 
     public void setChildren(Set<Film> children) {
         this.children = children;
-    }
-
-    public boolean isCountInStat() {
-        return countInStat;
-    }
-
-    public void setCountInStat(boolean countInStat) {
-        this.countInStat = countInStat;
     }
 
     public Timestamp getCreatedAt() {

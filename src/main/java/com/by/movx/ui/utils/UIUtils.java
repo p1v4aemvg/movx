@@ -50,7 +50,7 @@ public class UIUtils {
             protected void updateItem(Film film, boolean empty) {
                 super.updateItem(film, empty);
                 if (!empty) {
-                    styleProperty().bind(Bindings.when(new SimpleBooleanProperty(film.isCountInStat()))
+                    styleProperty().bind(Bindings.when(new SimpleBooleanProperty(film.getParent() == null))
                             .then("-fx-font-weight: bold;")
                             .otherwise(""));
                 }

@@ -61,7 +61,7 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
             "order by year(created_at), month(created_at) ", nativeQuery = true)
     List<Object[]> periodStats();
 
-    @Query(value = "select f.year, count(f.id) from film f where f.count_in_stat = 1 " +
+    @Query(value = "select f.year, count(f.id) from film f where f.parent_id is null " +
             "group by f.year", nativeQuery = true)
     List<Object[]> yearStats();
 
@@ -80,7 +80,7 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f from Film f where f.name like :letter% or f.enName like :letter% ")
     List<Film> getFilmsBy1stLetter(@Param(value = "letter") String letter);
 
-    @Query(value = "select count(f) from Film f where f.countInStat = 1")
+    @Query(value = "select count(f) from Film f where f.parent is null")
     Long countFilms();
 
     List<Film> findByNameIgnoreCaseContaining(String name);

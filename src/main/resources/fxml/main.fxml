@@ -49,7 +49,6 @@
                 <TextField fx:id="txtYearFrom" onKeyReleased="#copyYearFrom" prefWidth="193.0" promptText="С" />
               </children>
             </HBox>
-            <Button mnemonicParsing="false" onAction="#turnCount" prefWidth="131.0" text="=&gt;" GridPane.columnIndex="4" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" onAction="#findByType" prefWidth="122.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <ComboBox fx:id="comboType" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
               <items>
@@ -62,8 +61,8 @@
             </ComboBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
               <children>
-                <Button mnemonicParsing="false" onAction="#withoutDate" prefWidth="61.000099999997474" text="╳" />
-                <Button mnemonicParsing="false" onAction="#getCreatedAt" prefWidth="69.0" text="⌛" />
+                <Button mnemonicParsing="false" onAction="#withoutDate" prefWidth="61.000099999997474" text="date_all" />
+                <Button mnemonicParsing="false" onAction="#getCreatedAt" prefWidth="69.0" text="date" />
               </children>
             </HBox>
             <Button mnemonicParsing="false" onAction="#delete" prefWidth="221.0" text="DELETE !!!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -115,7 +114,7 @@
                   </items>
                 </ComboBox>
                 <CheckBox fx:id="sound" minWidth="-1.0" mnemonicParsing="false" prefWidth="50.0" text="♫" />
-                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" prefWidth="50.0" text="Â" />
+                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" prefWidth="50.0" text="sub" />
                 <Button mnemonicParsing="false" onAction="#addLang" prefWidth="60.9998779296875" text="+" />
               </children>
             </HBox>

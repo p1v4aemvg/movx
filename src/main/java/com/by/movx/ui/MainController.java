@@ -441,21 +441,6 @@ public class MainController {
     }
 
     @FXML
-    public void turnCount() {
-        Film film = firstOrSelected();
-        if(film == null) return;
-
-        if (film.getParent() == null && CollectionUtils.isEmpty(film.getChildren()))
-            return;
-        if (film.getParent() == null) {
-            turn(film);
-        } else {
-            turn(film.getParent());
-        }
-
-    }
-
-    @FXML
     public void getCreatedAt() throws Exception {
         Film film = firstOrSelected();
         if (film == null) return;
@@ -597,15 +582,6 @@ public class MainController {
 
         new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", link).start();
     }
-
-    private void turn(Film film) {
-        boolean value = film.isCountInStat();
-        film.setCountInStat(!value);
-        film.getChildren().forEach(f -> f.setCountInStat(value));
-        filmRepository.save(film);
-    }
-
-
 
     private void fillLetters() {
         char chars[] = "0123456789АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
