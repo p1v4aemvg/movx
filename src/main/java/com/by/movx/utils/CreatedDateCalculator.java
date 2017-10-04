@@ -7,8 +7,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,22 +80,29 @@ public class CreatedDateCalculator {
 
     }
 
-
     private static File findInDirectFolder(String folder, Film film) {
         File f = new File(folder);
-        if (f.listFiles() == null) return null;
+        if (f.listFiles() == null)
+            return null;
 
         File itself = Stream.of(f.listFiles())
                 .filter(a -> prepare(a.getName()).contains(prepare(film.getName())) ||
                         (film.getEnName() != null && prepare(a.getName()).contains(prepare(film.getEnName()))))
                 .findFirst().orElse(null);
-        if (itself != null) return itself;
+        if (itself != null)
+            return itself;
 
         List<File> seasons = Stream.of(f.listFiles())
                 .filter(File::isDirectory)
-                .filter(a -> (a.getName().contains(film.getYear().toString())) &&
-                        (prepare(a.getName()).contains("season") || prepare(a.getName()).contains("сезон")))
+                .filter(a ->
+                                yearBetween(a.getName(), film.getYear()) &&
+                                        (
+                                                prepare(a.getName()).contains("season") ||
+                                                prepare(a.getName()).contains("сезон")
+                                        )
+                )
                 .collect(Collectors.toList());
+
         for (File season : seasons) {
             File res = findInDirectFolder(folder + "\\" + season.getName(), film);
             if(res != null) {
@@ -104,6 +112,27 @@ public class CreatedDateCalculator {
 
         return null;
     }
+
+    private static boolean yearBetween(String name, Integer year) {
+        if(name.contains(year.toString()))
+            return true;
+
+        if(name.matches(".*\\d{4}\\-\\d{4}.*")) {
+            Pattern p = Pattern.compile("\\d+");
+            Matcher m = p.matcher(name);
+
+            m.find();
+            Integer i1 = Integer.valueOf(m.group());
+
+            m.find();
+            Integer i2 = Integer.valueOf(m.group());
+
+            return (year > i1) && (year < i2);
+
+        }
+        return false;
+    }
+
 
     private static String prepare(String name) {
         return name.toLowerCase().replaceAll("ё", "е").replaceAll("[^0-9a-zа-я]", "");
