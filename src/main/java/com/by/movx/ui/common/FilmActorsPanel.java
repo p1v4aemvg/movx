@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,11 +78,8 @@ public class FilmActorsPanel extends LinkPanel<FilmActor> {
         };
     }
 
-    protected List<FilmActor> getItems() {
-        return faRepository.findByFilm(film);
+    protected List<FilmActor> getItems(Film f) {
+        return faRepository.findByFilm(f);
     }
 
-    protected List<FilmActor> getParentItems() {
-        return film.getParent() == null ? new ArrayList() : faRepository.findByFilm(film.getParent());
-    }
 }

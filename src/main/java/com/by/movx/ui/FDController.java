@@ -245,7 +245,7 @@ public class FDController {
 
     @FXML
     public void onExternalLink() {
-        String url = film.getDescription().getExternalLink();
+        String url = getLink(film);
         if (url == null) return;
         try {
             new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", url).start();
@@ -255,7 +255,7 @@ public class FDController {
     }
 
     private void autoSaveText() {
-        if(film.getDescription().getExternalLink() == null) {
+        if(getLink(film) == null) {
             extHyperLink.setTextFill(Paint.valueOf("#ff0000"));
         } else {
             extHyperLink.setTextFill(Paint.valueOf("#038b47"));
@@ -263,7 +263,7 @@ public class FDController {
         extLink.clear();
         extLink.textProperty().addListener((observable, oldValue, newValue) -> {
             if(StringUtils.isBlank(newValue)) return;
-            if(!eq(film.getDescription().getExternalLink(), newValue)) {
+            if(!eq(getLink(film), newValue)) {
                 try {
                     String decoded = URLDecoder.decode(newValue, "UTF-8");
                     film.getDescription().setExternalLink(decoded);
@@ -292,6 +292,15 @@ public class FDController {
 
     }
 
+    private String getLink (Film f) {
+        String link = f.getDescription().getExternalLink();
+        while (link == null && f.getParent() != null) {
+            f = f.getParent();
+            link = f.getDescription().getExternalLink();
+        }
+        return link;
+    }
+
     private boolean eq(String s1, String s2) {
         if(s1 == null) return s2 == null;
         return s2 != null && s1.equals(s2);
@@ -304,9 +313,7 @@ public class FDController {
 
     @Subscribe
     public void parentClicked(ParentFilmClickedEvent e) {
-        if(e.getData() != null) {
-            this.film = e.getData();
-            init();
-        }
+        this.film = e.getData();
+        init();
     }
 }

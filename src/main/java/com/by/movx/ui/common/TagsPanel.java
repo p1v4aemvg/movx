@@ -28,13 +28,8 @@ public class TagsPanel extends LinkPanel<FilmTag> {
     }
 
     @Override
-    protected List<FilmTag> getItems() {
-        return ftRepository.findByFilm(film);
-    }
-
-    @Override
-    protected List<FilmTag> getParentItems() {
-        return film.getParent() == null ? new ArrayList() : ftRepository.findByFilm(film.getParent());
+    protected List<FilmTag> getItems(Film f) {
+        return ftRepository.findByFilm(f);
     }
 
     @Override

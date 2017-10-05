@@ -10,7 +10,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,13 +26,8 @@ public class FilmLangPanel extends LinkPanel<FilmLang> {
     }
 
     @Override
-    protected List<FilmLang> getItems() {
-        return flRepository.findByFilm(film);
-    }
-
-    @Override
-    protected List<FilmLang> getParentItems() {
-        return film.getParent() == null ? new ArrayList() : flRepository.findByFilm(film.getParent());
+    protected List<FilmLang> getItems(Film f) {
+        return flRepository.findByFilm(f);
     }
 
     @Override

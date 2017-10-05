@@ -30,8 +30,17 @@ public abstract class LinkPanel<T> {
         this.film = film;
     }
 
-    protected abstract List<T> getItems();  // Stream<List<T>>
-    protected abstract List<T> getParentItems();
+    protected abstract List<T> getItems(Film f);  // Stream<List<T>>
+
+    protected List<T> getParentItems () {
+        Film f = film;
+        final List<T> parentFFF = new ArrayList<>();
+        while (f.getParent() != null) {
+            parentFFF.addAll(getItems(f.getParent()));
+            f = f.getParent();
+        }
+        return parentFFF;
+    }
 
     protected abstract int rank(T t);
     protected abstract String name(T t);
@@ -42,7 +51,7 @@ public abstract class LinkPanel<T> {
     protected abstract EventHandler<ActionEvent> onRemove(T t);
 
     public void createLinks() {
-        final List<T> fff = getItems();
+        final List<T> fff = getItems(film);
         final List<T> parentFFF = getParentItems();
 
         List<Hyperlink> removed = new ArrayList<>();

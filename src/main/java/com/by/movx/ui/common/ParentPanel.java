@@ -24,23 +24,8 @@ public class ParentPanel extends LinkPanel<Film> {
     }
 
     @Override
-    protected List<Film> getItems() {
-
-        List<Film> films = new ArrayList<>();
-
-        Map<Integer, List<Film>> map = film.getChildren().stream()
-                .sorted((f1, f2) -> {
-                    int res = f1.getYear().compareTo(f2.getYear());
-                    return res != 0 ? res :
-                            f1.getId().compareTo(f2.getId());
-                }).collect(Collectors.groupingBy(Film::getYear));
-        SortedSet<Integer> keys = new TreeSet<Integer>(map.keySet());
-        for (Integer key : keys) {
-            films.addAll(map.get(key));
-            films.add(null);
-        }
-
-        return films;
+    protected List<Film> getItems(Film f) {
+        return Lists.newArrayList(f.getChildren());
     }
 
     @Override
@@ -55,7 +40,7 @@ public class ParentPanel extends LinkPanel<Film> {
 
     @Override
     protected String name(Film f) {
-        return f != null ? (f.getYear() + " " + f.getName()) : "";
+        return f.getYear() + " " + f.getName();
     }
 
     @Override
