@@ -92,6 +92,9 @@ public class CreatedDateCalculator {
             if (found != null && found.isDirectory()) {
                 folder = found.getAbsolutePath();
             }
+            if (found != null && !found.isDirectory()) {
+                return found;
+            }
         }
         if(found != null && found.isDirectory()) {
             File temp = findInDirectFolder(found.getAbsolutePath(), deque.getLast());
