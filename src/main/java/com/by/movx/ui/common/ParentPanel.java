@@ -25,7 +25,10 @@ public class ParentPanel extends LinkPanel<Film> {
 
     @Override
     protected List<Film> getItems(Film f) {
-        return Lists.newArrayList(f.getChildren());
+        return Lists.newArrayList(f.getChildren().stream()
+                .sorted((f1, f2) ->
+                        f1.getYear().equals(f2.getYear()) ? (f1.getId().compareTo(f2.getId())) : (f1.getYear().compareTo(f2.getYear())))
+                .collect(Collectors.toList()));
     }
 
     @Override

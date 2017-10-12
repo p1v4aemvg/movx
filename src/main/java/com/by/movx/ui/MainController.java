@@ -13,6 +13,7 @@ import com.by.movx.ui.utils.TableCreator;
 import com.by.movx.ui.utils.UIUtils;
 import com.by.movx.utils.CreatedDateCalculator;
 import com.by.movx.utils.URLFetcher;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -204,7 +205,12 @@ public class MainController {
                 List<Film> films = new ArrayList();
                 films.add(f);
                 if(!CollectionUtils.isEmpty(f.getChildren()) ) {
-                    films.addAll(f.getChildren());
+                    films.addAll(Lists.newArrayList(f.getChildren().stream()
+                            .sorted((f1, f2) ->
+                                    f1.getYear().equals(f2.getYear()) ?
+                                            (f1.getId().compareTo(f2.getId())) :
+                                            (f1.getYear().compareTo(f2.getYear())))
+                            .collect(Collectors.toList())));
                 }
                 data = FXCollections.observableArrayList(films);
                 table.setItems(data);
