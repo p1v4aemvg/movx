@@ -23,6 +23,9 @@ public class Actor {
     @Column(name = "special")
     private boolean special;
 
+    @Column(name = "born")
+    private Integer born;
+
     public Actor() {}
 
     public Actor(String name) {
@@ -59,5 +62,13 @@ public class Actor {
 
     public void setSpecial(boolean special) {
         this.special = special;
+    }
+
+    public Integer getBorn() {
+        return born;
+    }
+
+    public void setBorn(Integer born) {
+        this.born = born;
     }
 }

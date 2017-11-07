@@ -81,12 +81,20 @@ public class FilmActor {
     }
 
     public String fullName() {
-        return actor.getName() + (partName == null ? "" : (repeat(50 - actor.getName().length() - partName.length()) + partName));
+        return age() + " " + actor.getName() + (partName == null ? "" : (repeat(50 + pad() - actor.getName().length() - partName.length()) + partName));
     }
 
     public String film() {
-        return film.getYear().toString() + " " + film.getName() +
-                (partName == null ? "" : (repeat(66 - film.getName().length() - partName.length()) + partName));
+        return film.getYear().toString() + " " + film.getName() + " " + age() +
+                (partName == null ? "" : (repeat(66 + pad() - film.getName().length() - partName.length()) + partName));
+    }
+
+    private String age() {
+        return actor.getBorn() == null ? "" : "(" + (film.getYear() - actor.getBorn()) + ")";
+    }
+
+    private int pad() {
+        return actor.getBorn() == null ? 0 : -(String.valueOf(film.getYear() - actor.getBorn()).length() + 3);
     }
 
     private String repeat(int n) {
