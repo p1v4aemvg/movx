@@ -99,7 +99,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
               <children>
                 <Button mnemonicParsing="false" onAction="#randTag" text="R" />
-                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="193.00009999999747" text="QUERY" />
+                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="193.0" text="QUERY" />
               </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">

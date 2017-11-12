@@ -6,6 +6,7 @@ import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.repository.ActorRepository;
 import com.by.movx.repository.FilmActorRepository;
 import com.by.movx.utils.MovableRect;
+import com.by.movx.utils.URLFetcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
@@ -28,6 +30,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +61,7 @@ public class ActorController {
     Slider part;
 
     @FXML
-    TextField actor, partName, textUrl;
+    TextField actor, partName, textUrl, born;
 
     @FXML
     AnchorPane imgPane;
@@ -82,6 +85,9 @@ public class ActorController {
     CheckBox edit;
 
     private boolean isEdit = false;
+
+    @Inject
+    URLFetcher fetcher;
 
     @PostConstruct
     public void post() {
@@ -141,6 +147,19 @@ public class ActorController {
         }
 
         paneL.getChildren().addAll(letters);
+
+        born.clear();
+        born.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (current == null) return;
+            if (StringUtils.isBlank(newValue)) return;
+            try {
+                Integer year = Integer.valueOf(newValue);
+                current.setBorn(year);
+                actorRepository.save(current);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     private void selectActor(Actor a) {
@@ -324,14 +343,14 @@ public class ActorController {
     public void onRand() {
         List<Actor> dbData = actorRepository.findRand10();
         setData(dbData);
-        rand.setText("♘ " + actorRepository.getNoImgCount());
+        rand.setText("♘" + actorRepository.getNoImgCount());
     }
 
     @FXML
     public void special() {
         List<Actor> filtered = dataAll.stream().filter(Actor::isSpecial).collect(Collectors.toList());
         setData(filtered);
-        spec.setText("☀ " + filtered.size());
+        spec.setText("☀" + filtered.size());
     }
 
     @FXML
@@ -348,5 +367,22 @@ public class ActorController {
 
     public void setCurrent(Actor current) {
         this.current = current;
+    }
+
+    @FXML
+    public void onYear() {
+        List<Actor> filtered = actorRepository.find10NoYear();
+        setData(filtered);
+    }
+
+    @FXML
+    public void google() {
+        if (current == null) return;
+        try {
+            new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+                    fetcher.googleQ(current.getName())).start();
+        } catch (java.io.IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

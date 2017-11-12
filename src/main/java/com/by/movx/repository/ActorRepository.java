@@ -31,4 +31,7 @@ public interface ActorRepository extends CrudRepository<Actor, Long> {
             "group by fa.actor " +
             "order by count(fa.film.id) desc")
     List<Object[]> actorsByRoles(Pageable pageable);
+
+    @Query(value="SELECT a.* FROM actor a where a.born is null order by rand() limit 10", nativeQuery = true)
+    List<Actor> find10NoYear();
 }
