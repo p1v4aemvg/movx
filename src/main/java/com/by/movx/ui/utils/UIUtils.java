@@ -50,9 +50,17 @@ public class UIUtils {
             protected void updateItem(Film film, boolean empty) {
                 super.updateItem(film, empty);
                 if (!empty) {
-                    styleProperty().bind(Bindings.when(new SimpleBooleanProperty(film.getParent() == null))
-                            .then("-fx-font-weight: bold;")
-                            .otherwise(""));
+                    String style = "";
+                    if (film.getParent() == null) {
+                        style += "-fx-font-weight: bold;";
+                    }
+                    if(film.isNeverDelete() == null) {
+                        style += "-fx-text-background-color: #FF6347;";
+                    } else if (!film.isNeverDelete()) {
+                        style += "-fx-text-background-color: #808080;";
+                    }
+
+                    styleProperty().bind(Bindings.when(new SimpleBooleanProperty(true)).then(style).otherwise(""));
                 }
             }
         };
