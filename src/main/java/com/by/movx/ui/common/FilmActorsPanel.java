@@ -32,7 +32,7 @@ public class FilmActorsPanel extends LinkPanel<FilmActor> {
     }
 
     protected String name (FilmActor fa) {
-        return fa.fullName();
+        return fa.fullName(film);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class FilmActorsPanel extends LinkPanel<FilmActor> {
             temp.setOnAction(event1 -> {
                 if (!temp.getText().isEmpty()) {
                     fa.setPartName(temp.getText());
-                    l.setText(fa.fullName());
+                    l.setText(fa.fullName(film));
                     faRepository.save(fa);
                 }
                 pane.getChildren().remove(temp);

@@ -80,17 +80,17 @@ public class FilmActor {
         this.partName = partName;
     }
 
-    public String fullName() {
-        return age() + " " + actor.getName() + (partName == null ? "" : (repeat(50 + pad() - actor.getName().length() - partName.length()) + partName));
+    public String fullName(Film film1) {
+        return age(film1) + " " + actor.getName() + (partName == null ? "" : (repeat(50 + pad() - actor.getName().length() - partName.length()) + partName));
     }
 
     public String film() {
-        return film.getYear().toString() + " " + film.getName() + " " + age() +
+        return film.getYear().toString() + " " + film.getName() + " " + age(film) +
                 (partName == null ? "" : (repeat(66 + pad() - film.getName().length() - partName.length()) + partName));
     }
 
-    private String age() {
-        return actor.getBorn() == null ? "" : "(" + (film.getYear() - actor.getBorn()) + ")";
+    private String age(Film film1) {
+        return actor.getBorn() == null ? "" : "(" + (film1.getYear() - actor.getBorn()) + ")";
     }
 
     private int pad() {
