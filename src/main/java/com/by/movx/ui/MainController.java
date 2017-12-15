@@ -99,7 +99,7 @@ public class MainController {
     private ObservableList<Film> data;
 
     @FXML
-    public ComboBox<Tag> tagCombo;
+    public ComboBox<Tag> tagCombo, cums;
 
     @FXML
     public ComboBox<FilmLang.Lang> lang;
@@ -158,6 +158,19 @@ public class MainController {
             }
         });
         comboCountry.setItems(countries);
+
+        cums.setConverter(new StringConverter<Tag>() {
+            @Override
+            public String toString(Tag object) {
+                return object.getName();
+            }
+
+            @Override
+            public Tag fromString(String string) {
+                return null;
+            }
+        });
+        cums.setItems(FXCollections.observableArrayList(tagRepository.findCumulativeTags()));
 
         comboType.setConverter(new StringConverter<Film.Type>() {
             @Override
@@ -573,6 +586,19 @@ public class MainController {
 
         film.setNeverDelete(false);
         filmRepository.save(film);
+    }
+
+    @FXML
+    public void onCum() {
+        Tag tag = cums.getSelectionModel().getSelectedItem();
+        if(tag == null) return;
+
+        List<Film> films = filmRepository.findByCumulativeTag(tag.getId());
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
+        query.setText("QUERY " + data.size());
+
+        tagCombo.getSelectionModel().select(tag);
     }
 
     private void fetchSite(Site site) throws Exception {
