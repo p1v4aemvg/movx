@@ -88,7 +88,11 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     List<Film> findByNameIgnoreCaseContaining(String name);
 
     @Query(value = "select f.* from film f " +
+            " left join film f1 on f1.id = f.parent_id " +
+            " left join film f2 on f2.id = f1.parent_id " +
             "  where not exists (select * from film_tag ft where ft.tag_id = :tag_id and ft.film_id = f.id) " +
+            "    and not exists(select * from film_tag ft where ft.film_id = f1.id and ft.tag_id = :tag_id) " +
+            "   and not exists(select * from film_tag ft where ft.film_id = f2.id and ft.tag_id = :tag_id) " +
             "   and (f.id >= (select max(ft.film_id) from film_tag ft where ft.tag_id = :tag_id) " +
             "   or (select max(ft.film_id) from film_tag ft where ft.tag_id = :tag_id) is null)", nativeQuery = true)
     List<Film> findByCumulativeTag(@Param(value = "tag_id") Long tagId);
