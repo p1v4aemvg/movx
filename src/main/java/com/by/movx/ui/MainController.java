@@ -491,6 +491,10 @@ public class MainController {
     @FXML
     public void onRandNoLink() {
         Film f = filmRepository.findRandomFilmWithoutLink();
+        if (f == null) {
+            randNoLink.setText("RAND ◊ 0");
+            return;
+        }
         data = FXCollections.observableArrayList(f);
         table.setItems(data);
 
