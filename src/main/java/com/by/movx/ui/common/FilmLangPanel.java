@@ -16,7 +16,7 @@ import java.util.List;
  * Created by movx
  * on 30.09.2017.
  */
-public class FilmLangPanel extends LinkPanel<FilmLang> {
+public class FilmLangPanel extends FilmTargetLinkPanel<FilmLang> {
 
     private FilmLangRepository flRepository;
 

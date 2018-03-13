@@ -1,25 +1,29 @@
 package com.by.movx.ui;
 
 import com.by.movx.Common;
-import com.by.movx.entity.*;
-import com.by.movx.event.FilmClickedEvent;
+import com.by.movx.entity.Actor;
+import com.by.movx.entity.Actors;
+import com.by.movx.entity.FilmActor;
+import com.by.movx.event.PickUpdateEvent;
 import com.by.movx.repository.ActorRepository;
 import com.by.movx.repository.FilmActorRepository;
+import com.by.movx.ui.common.ActorFilmsPanel;
+import com.by.movx.ui.common.PickActorPanel;
 import com.by.movx.utils.MovableRect;
 import com.by.movx.utils.URLFetcher;
+import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.util.Callback;
 import org.apache.commons.lang.StringUtils;
 
@@ -28,9 +32,9 @@ import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +50,7 @@ public class ActorController {
     private TableView<Actor> actors;
 
     @FXML
-    AnchorPane pane, paneL;
+    AnchorPane pane, paneL, pickActor, imgPane;
 
     @FXML
     Label markLabel;
@@ -62,9 +66,6 @@ public class ActorController {
 
     @FXML
     TextField actor, partName, textUrl, born;
-
-    @FXML
-    AnchorPane imgPane;
 
     @FXML
     ImageView img;
@@ -86,6 +87,8 @@ public class ActorController {
 
     private boolean isEdit = false;
 
+    Actors actorsToPick = new Actors();
+
     @Inject
     URLFetcher fetcher;
 
@@ -97,6 +100,7 @@ public class ActorController {
     }
 
     public void init() {
+        Common.getInstance().getEventBus().register(this);
         actors.setRowFactory(new Callback<TableView<Actor>, TableRow<Actor>>() {
             @Override
             public TableRow<Actor> call(TableView<Actor> tableView) {
@@ -109,8 +113,6 @@ public class ActorController {
                 row.setOnMouseClicked(event -> {
                     Actor a = actors.getSelectionModel().getSelectedItem();
                     selectActor(a);
-
-
                 });
                 return row;
             }
@@ -163,81 +165,37 @@ public class ActorController {
     }
 
     private void selectActor(Actor a) {
-        createLinks(a);
+
         setImg(a);
         current = a;
         specBox.setSelected(current.isSpecial());
+        actorsToPick.clear();
+        actorsToPick.add(current);
+
+        createLinks(ActorFilmsPanel.Mode.UNION);
     }
 
-    private String color(int role, int mark) {
-        switch (role) {
-            case 1:
-                return mark > 0 ? "#091a9c" : "#8b0201";
+    private void createLinks(ActorFilmsPanel.Mode mode) {
 
-            case 2:
-                return mark > 0 ? "#0d69ff" : "#8b4834";
+        ActorFilmsPanel actorFilmsPanel =  new ActorFilmsPanel(pane, actorsToPick, filmActorRepository, mode);
+        actorFilmsPanel.createLinks();
+        new PickActorPanel(pickActor, actorsToPick).createLinks();
 
-            case 3:
-                return mark > 0 ?  "#898585" :  "#8b6c2b";
+        List<FilmActor> fff = actorFilmsPanel.getItems(actorsToPick);
 
-            default: return "#000000";
+        if(!fff.isEmpty()) {
+            double x = fff.stream()
+                    .map(fa -> fa.getFilm().getMark() * (4 - fa.getPart().getId()))
+                    .reduce((i1, i2) -> i1 + i2).get();
+
+            double y = fff.stream()
+                    .map(fa -> (4 - fa.getPart().getId()))
+                    .reduce((i1, i2) -> i1 + i2).get();
+
+            double mark = x / y;
+
+            markLabel.setText(String.format("%.3f", mark));
         }
-    }
-    private void createLinks(Actor a) {
-        final List<FilmActor> fff = filmActorRepository.findByActor(a);
-        List<Hyperlink> links = fff.stream()
-                .map(fa -> {
-                    Hyperlink l = new Hyperlink(fa.film());
-                    l.setId(fa.getId().toString());
-                    l.setTextFill(Paint.valueOf(color(fa.getPart().getId().intValue(), fa.getFilm().getMark())));
-
-                    l.setOnAction(event -> {
-                        Common.getInstance().getEventBus().post(new FilmClickedEvent(fa.getFilm()));
-                    });
-
-                    return l;
-                })
-                .collect(Collectors.toList());
-
-        for (int i = 0; i < links.size(); i++) {
-            links.get(i).setLayoutY(20 * i);
-            links.get(i).setFont(new Font("Courier New", 12));
-
-            final int i1 = i;
-            links.get(i).setOnContextMenuRequested(event -> {
-                Hyperlink l = (Hyperlink) event.getSource();
-                TextField temp = new TextField();
-                temp.setId(l.getId());
-                temp.setPrefHeight(15);
-                temp.setLayoutY(i1 * 20);
-                temp.setLayoutX(345);
-                temp.setOnAction(event1 -> {
-                    if (!temp.getText().isEmpty()) {
-                        FilmActor fa = filmActorRepository.findOne(Long.valueOf(((TextField) event1.getSource()).getId()));
-                        fa.setPartName(temp.getText());
-                        ((Hyperlink) event.getSource()).setText(fa.film());
-                        filmActorRepository.save(fa);
-                    }
-                    pane.getChildren().remove(temp);
-                });
-                pane.getChildren().add(temp);
-            });
-        }
-        pane.getChildren().clear();
-        pane.getChildren().addAll(links);
-        pane.setPrefHeight(20 * links.size());
-
-        double x = fff.stream()
-                .map(fa -> fa.getFilm().getMark() * (4 - fa.getPart().getId()))
-                .reduce((i1, i2) -> i1 + i2).get();
-
-        double y = fff.stream()
-                .map(fa -> (4 - fa.getPart().getId()))
-                .reduce((i1, i2) -> i1 + i2).get();
-
-        double mark = x / y;
-
-        markLabel.setText(String.format("%.3f", mark));
     }
 
     private void setImg(Actor a) {
@@ -385,4 +343,60 @@ public class ActorController {
             System.out.println(e.getMessage());
         }
     }
+
+    @FXML
+    private void onDragDetected(MouseEvent event) { //drag
+        Actor selected = actors.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            Dragboard db = actors.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(selected.getName());
+            db.setContent(content);
+            event.consume();
+        }
+    }
+
+    @FXML
+    private void onDragOver(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        if (event.getDragboard().hasString()) {
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        }
+        event.consume();
+    }
+
+    @FXML
+    private void onDragDropped(DragEvent event) {
+
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (event.getDragboard().hasString()) {
+
+            Actor a = actors.getSelectionModel().getSelectedItem();
+            if (a != null) {
+                actorsToPick.add(a);
+                createLinks(ActorFilmsPanel.Mode.UNION);
+            }
+
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
+
+    @FXML
+    private void onUnion() {
+        createLinks(ActorFilmsPanel.Mode.UNION);
+    }
+
+    @FXML
+    private void onIntersection() {
+        createLinks(ActorFilmsPanel.Mode.INTERSECT);
+    }
+
+    @Subscribe
+    public void pickUpdateClicked(PickUpdateEvent e) {
+        createLinks(ActorFilmsPanel.Mode.UNION);
+    }
+
 }

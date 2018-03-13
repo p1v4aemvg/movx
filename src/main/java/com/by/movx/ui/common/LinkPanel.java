@@ -1,7 +1,6 @@
 package com.by.movx.ui.common;
 
 import com.by.movx.Common;
-import com.by.movx.entity.Film;
 import com.by.movx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,40 +19,35 @@ import java.util.stream.Stream;
  * Created by movx
  * on 30.09.2017.
  */
-public abstract class LinkPanel<T> {
+public abstract class LinkPanel<T, F> {
 
     protected AnchorPane pane;
-    protected Film film;
+    protected F target;
 
-    public LinkPanel(AnchorPane pane, Film film) {
+    public LinkPanel(AnchorPane pane, F target) {
         this.pane = pane;
-        this.film = film;
+        this.target = target;
     }
 
-    protected abstract List<T> getItems(Film f);  // Stream<List<T>>
+    protected abstract List<T> getItems(F target);  // Stream<List<T>>
 
-    protected List<T> getParentItems () {
-        Film f = film;
-        final List<T> parentFFF = new ArrayList<>();
-        while (f.getParent() != null) {
-            parentFFF.addAll(getItems(f.getParent()));
-            f = f.getParent();
-        }
-        return parentFFF;
-    }
+    protected abstract List<T> getParentItems();
 
     protected abstract int rank(T t);
+
     protected abstract String name(T t);
 
     protected abstract Event<T> onClicked(T t);
+
     protected abstract EventHandler<? super ContextMenuEvent> onParentRight(T t);
+
     protected abstract EventHandler<? super ContextMenuEvent> onItemRight(T t, Hyperlink l);
+
     protected abstract EventHandler<ActionEvent> onRemove(T t);
 
     public void createLinks() {
-        final List<T> fff = getItems(film);
+        final List<T> fff = getItems(target);
         final List<T> parentFFF = getParentItems();
-
         List<Hyperlink> removed = new ArrayList<>();
         List<Hyperlink> links = Stream.concat(
                 parentFFF.stream().map(fa -> {

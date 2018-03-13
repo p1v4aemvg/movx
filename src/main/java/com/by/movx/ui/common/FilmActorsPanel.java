@@ -18,7 +18,7 @@ import java.util.List;
  * Created by movx
  * on 30.09.2017.
  */
-public class FilmActorsPanel extends LinkPanel<FilmActor> {
+public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
 
     private FilmActorRepository faRepository;
 
@@ -32,7 +32,7 @@ public class FilmActorsPanel extends LinkPanel<FilmActor> {
     }
 
     protected String name (FilmActor fa) {
-        return fa.fullName(film);
+        return fa.fullName(target);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class FilmActorsPanel extends LinkPanel<FilmActor> {
     @Override
     protected EventHandler<ContextMenuEvent> onParentRight(FilmActor fa) {
         return event -> {
-            fa.setFilm(film);
+            fa.setFilm(target);
             faRepository.save(fa);
             createLinks();
         };
@@ -61,7 +61,7 @@ public class FilmActorsPanel extends LinkPanel<FilmActor> {
             temp.setOnAction(event1 -> {
                 if (!temp.getText().isEmpty()) {
                     fa.setPartName(temp.getText());
-                    l.setText(fa.fullName(film));
+                    l.setText(fa.fullName(target));
                     faRepository.save(fa);
                 }
                 pane.getChildren().remove(temp);

@@ -640,7 +640,7 @@ public class MainController {
 
     @Subscribe
     public void filmClicked(FilmClickedEvent e) {
-        Film film = e.getData();
+        Film film = e.getData().getFilm();
         openFilm(film);
     }
 

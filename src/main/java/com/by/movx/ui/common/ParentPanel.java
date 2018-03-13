@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Created by mobx
  * on 30.09.2017.
  */
-public class ParentPanel extends LinkPanel<Film> {
+public class ParentPanel extends FilmTargetLinkPanel<Film> {
 
     public ParentPanel(AnchorPane pane, Film film) {
         super(pane, film);
@@ -33,7 +33,7 @@ public class ParentPanel extends LinkPanel<Film> {
 
     @Override
     protected List<Film> getParentItems() {
-        return film.getParent() != null ? Lists.newArrayList(film.getParent()) : Lists.newArrayList();
+        return target.getParent() != null ? Lists.newArrayList(target.getParent()) : Lists.newArrayList();
     }
 
     @Override

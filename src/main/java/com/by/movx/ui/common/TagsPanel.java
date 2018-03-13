@@ -11,14 +11,13 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by movx
  * on 30.09.2017.
  */
-public class TagsPanel extends LinkPanel<FilmTag> {
+public class TagsPanel extends FilmTargetLinkPanel<FilmTag> {
 
     private FilmTagRepository ftRepository;
 

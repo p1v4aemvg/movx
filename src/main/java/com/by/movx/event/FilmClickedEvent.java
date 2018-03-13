@@ -1,9 +1,9 @@
 package com.by.movx.event;
 
-import com.by.movx.entity.Film;
+import com.by.movx.entity.FilmActor;
 
-public class FilmClickedEvent extends Event<Film> {
-    public FilmClickedEvent(Film data) {
+public class FilmClickedEvent extends Event<FilmActor> {
+    public FilmClickedEvent(FilmActor data) {
         super(data);
     }
 }
