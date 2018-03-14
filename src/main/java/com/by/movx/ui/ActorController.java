@@ -12,6 +12,8 @@ import com.by.movx.ui.common.PickActorPanel;
 import com.by.movx.utils.MovableRect;
 import com.by.movx.utils.URLFetcher;
 import com.google.common.eventbus.Subscribe;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -83,6 +85,9 @@ public class ActorController {
     private Button plBtn, minBtn, captureBtn, getBtn, rand, spec;
 
     @FXML
+    ToggleButton union, intersection;
+
+    @FXML
     CheckBox edit;
 
     private boolean isEdit = false;
@@ -91,6 +96,8 @@ public class ActorController {
 
     @Inject
     URLFetcher fetcher;
+
+    private ActorFilmsPanel.Mode mode = ActorFilmsPanel.Mode.UNION;
 
     @PostConstruct
     public void post() {
@@ -162,21 +169,37 @@ public class ActorController {
                 ex.printStackTrace();
             }
         });
+
+        ToggleGroup tg = new ToggleGroup();
+        union.setToggleGroup(tg);
+        intersection.setToggleGroup(tg);
+        union.setUserData(ActorFilmsPanel.Mode.UNION);
+        intersection.setUserData(ActorFilmsPanel.Mode.INTERSECT);
+
+        tg.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ov,
+                                Toggle toggle, Toggle newToggle) {
+                if (newToggle == null)
+                    mode = ActorFilmsPanel.Mode.UNION;
+                else
+                    mode = (ActorFilmsPanel.Mode) newToggle.getUserData();
+                createLinks();
+            }
+        });
+        union.setSelected(true);
     }
 
     private void selectActor(Actor a) {
-
         setImg(a);
         current = a;
         specBox.setSelected(current.isSpecial());
         actorsToPick.clear();
         actorsToPick.add(current);
 
-        createLinks(ActorFilmsPanel.Mode.UNION);
+        createLinks();
     }
 
-    private void createLinks(ActorFilmsPanel.Mode mode) {
-
+    private void createLinks() {
         ActorFilmsPanel actorFilmsPanel =  new ActorFilmsPanel(pane, actorsToPick, filmActorRepository, mode);
         actorFilmsPanel.createLinks();
         new PickActorPanel(pickActor, actorsToPick).createLinks();
@@ -367,7 +390,6 @@ public class ActorController {
 
     @FXML
     private void onDragDropped(DragEvent event) {
-
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (event.getDragboard().hasString()) {
@@ -375,7 +397,7 @@ public class ActorController {
             Actor a = actors.getSelectionModel().getSelectedItem();
             if (a != null) {
                 actorsToPick.add(a);
-                createLinks(ActorFilmsPanel.Mode.UNION);
+                createLinks();
             }
 
             success = true;
@@ -384,19 +406,8 @@ public class ActorController {
         event.consume();
     }
 
-    @FXML
-    private void onUnion() {
-        createLinks(ActorFilmsPanel.Mode.UNION);
-    }
-
-    @FXML
-    private void onIntersection() {
-        createLinks(ActorFilmsPanel.Mode.INTERSECT);
-    }
-
     @Subscribe
     public void pickUpdateClicked(PickUpdateEvent e) {
-        createLinks(ActorFilmsPanel.Mode.UNION);
+        createLinks();
     }
-
 }
