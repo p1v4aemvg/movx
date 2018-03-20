@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -29,7 +30,23 @@ public class CreatedDateCalculator {
         return attr.creationTime().toMillis();
     }
 
+    public static Long getFileSize(Film film) throws Exception {
+        return getFiles(film).collect(Collectors.summingLong(File::length));
+    }
+
+    private static BasicFileAttributes getFileAttributes(Film film) throws Exception {
+        File file = getFile(film);
+        if (file == null) return null;
+
+        Path path = file.toPath();
+        return Files.readAttributes(path, BasicFileAttributes.class);
+    }
+
     public static File getFile(Film film) {
+        return getFiles(film).findFirst().orElse(null);
+    }
+
+    private static Stream<File> getFiles(Film film) {
 
         Deque<Film> deque = new ArrayDeque<>();
         deque.addLast(film);
@@ -46,77 +63,55 @@ public class CreatedDateCalculator {
         }
 
         String folder = BASE_DIR + film.getType().getName() + "\\" + where.getDuration().getDescription();
-        File found = findInFolder(folder, deque);
-        if (found != null) {
+        Stream<File> found = findInFolder(folder, deque);
+        if (found.count() > 0) {
             return found;
         }
 
         folder += "\\" + String.valueOf(10 * (where.getYear() / 10)) + "-е";
         found = findInFolder(folder, deque);
-        if (found != null) {
+        if (found.count() > 0) {
             return found;
         }
 
         folder += "\\" + where.getYear();
         found = findInFolder(folder, deque);
-        if (found != null) {
+        if (found.count() > 0) {
             return found;
         }
 
-        return null;
+        return Stream.empty();
     }
 
-    private static File findInFolder(String folder, Film film) {
-        if (film.getParent() != null) {
-            Film parent = film.getParent();
-            File parentFolder = findInDirectFolder(folder, parent);
-            if (parentFolder != null && parentFolder.isDirectory()) {
-                File temp = findInDirectFolder(parentFolder.getAbsolutePath(), film);
-                if(temp != null) return temp;
-            }
-            return parentFolder;
-        } else {
-            File filmFile = findInDirectFolder(folder, film);
-            if (filmFile != null && filmFile.isDirectory()) {
-                File temp = findInDirectFolder(filmFile.getAbsolutePath(), film);
-                if (temp != null) return temp;
-            }
-            return filmFile;
-        }
-    }
-
-    private static File findInFolder(String folder, Deque<Film> deque) {
-        File found = null;
+    private static Stream<File> findInFolder(String folder, Deque<Film> deque) {
+        Stream<File> found = Stream.empty();
         for (Film parent : deque) {
             found = findInDirectFolder(folder, parent);
-            if (found != null && found.isDirectory()) {
-                folder = found.getAbsolutePath();
+            if (found.count() > 0 && found.findFirst().get().isDirectory()) {
+                folder = found.findFirst().get().getAbsolutePath();
             }
-            if (found != null && !found.isDirectory()) {
+            if (found.count() > 0 && !found.findFirst().get().isDirectory()) {
                 return found;
             }
         }
-        if(found != null && found.isDirectory()) {
-            File temp = findInDirectFolder(found.getAbsolutePath(), deque.getLast());
-            if (temp != null) return temp;
+        if(found.count() > 0l && found.findFirst().get().isDirectory()) {
+            Stream<File> temp = findInDirectFolder(found.findFirst().get().getAbsolutePath(), deque.getLast());
+            if (temp.count() > 0) return temp;
         }
         return found;
     }
 
-    private static File findInDirectFolder(String folder, Film film) {
+    private static Stream<File> findInDirectFolder(String folder, Film film) {
         File f = new File(folder);
-        if (f.listFiles() == null)
-            return null;
 
-        return Stream.of(f.listFiles())
+        return f.listFiles() == null ? Stream.empty(): Stream.of(f.listFiles())
                 .filter(a ->
                                 prepare(a.getName()).contains(prepare(film.getName())) ||
-                          (
-                                film.getEnName() != null &&
-                                prepare(a.getName()).contains(prepare(film.getEnName()))
-                          )
-                )
-                .findFirst().orElse(null);
+                                        (
+                                                film.getEnName() != null &&
+                                                        prepare(a.getName()).contains(prepare(film.getEnName()))
+                                        )
+                );
     }
 
     private static String prepare(String name) {

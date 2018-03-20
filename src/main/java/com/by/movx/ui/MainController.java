@@ -524,6 +524,17 @@ public class MainController {
     }
 
     @FXML
+    public void onFileSize() throws Exception {
+        Film f = firstOrSelected();
+        if (f == null) return;
+        long size = CreatedDateCalculator.getFileSize(f);
+
+        if (size == 0) return;
+        f.setFilmSize(size);
+        filmRepository.save(f);
+    }
+
+    @FXML
     public void query() {
         CustomQuery q = customQuery.getSelectionModel().getSelectedItem();
         if(q == null) return;

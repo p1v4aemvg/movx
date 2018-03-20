@@ -62,6 +62,9 @@ public class Film {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @Column(name = "film_size")
+    private Long filmSize;
+
     public Film() {
     }
 
@@ -181,6 +184,14 @@ public class Film {
 
     public void setNeverDelete(Boolean neverDelete) {
         this.neverDelete = neverDelete;
+    }
+
+    public Long getFilmSize() {
+        return filmSize;
+    }
+
+    public void setFilmSize(Long filmSize) {
+        this.filmSize = filmSize;
     }
 
     public enum Type {
