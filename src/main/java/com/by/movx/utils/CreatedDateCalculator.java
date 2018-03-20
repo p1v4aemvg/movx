@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,22 +33,14 @@ public class CreatedDateCalculator {
     }
 
     public static Long getFileSize(Film film) throws Exception {
-        return getFiles(film).collect(Collectors.summingLong(File::length));
-    }
-
-    private static BasicFileAttributes getFileAttributes(Film film) throws Exception {
-        File file = getFile(film);
-        if (file == null) return null;
-
-        Path path = file.toPath();
-        return Files.readAttributes(path, BasicFileAttributes.class);
+        return getFiles(film).stream().collect(Collectors.summingLong(File::length));
     }
 
     public static File getFile(Film film) {
-        return getFiles(film).findFirst().orElse(null);
+        return getFiles(film).stream().findFirst().orElse(null);
     }
 
-    private static Stream<File> getFiles(Film film) {
+    private static List<File> getFiles(Film film) {
 
         Deque<Film> deque = new ArrayDeque<>();
         deque.addLast(film);
@@ -63,55 +57,55 @@ public class CreatedDateCalculator {
         }
 
         String folder = BASE_DIR + film.getType().getName() + "\\" + where.getDuration().getDescription();
-        Stream<File> found = findInFolder(folder, deque);
-        if (found.count() > 0) {
+        List<File> found = findInFolder(folder, deque);
+        if (found.size() > 0) {
             return found;
         }
 
         folder += "\\" + String.valueOf(10 * (where.getYear() / 10)) + "-е";
         found = findInFolder(folder, deque);
-        if (found.count() > 0) {
+        if (found.size() > 0) {
             return found;
         }
 
         folder += "\\" + where.getYear();
         found = findInFolder(folder, deque);
-        if (found.count() > 0) {
+        if (found.size() > 0) {
             return found;
         }
 
-        return Stream.empty();
+        return new ArrayList<>();
     }
 
-    private static Stream<File> findInFolder(String folder, Deque<Film> deque) {
-        Stream<File> found = Stream.empty();
+    private static List<File> findInFolder(String folder, Deque<Film> deque) {
+        List<File> found = new ArrayList<>();
         for (Film parent : deque) {
             found = findInDirectFolder(folder, parent);
-            if (found.count() > 0 && found.findFirst().get().isDirectory()) {
-                folder = found.findFirst().get().getAbsolutePath();
+            if (found.size() > 0 && found.get(0).isDirectory()) {
+                folder = found.get(0).getAbsolutePath();
             }
-            if (found.count() > 0 && !found.findFirst().get().isDirectory()) {
+            if (found.size() > 0 && !found.get(0).isDirectory()) {
                 return found;
             }
         }
-        if(found.count() > 0l && found.findFirst().get().isDirectory()) {
-            Stream<File> temp = findInDirectFolder(found.findFirst().get().getAbsolutePath(), deque.getLast());
-            if (temp.count() > 0) return temp;
+        if(found.size() > 0 && found.get(0).isDirectory()) {
+            List<File> temp = findInDirectFolder(found.get(0).getAbsolutePath(), deque.getLast());
+            if (temp.size() > 0) return temp;
         }
         return found;
     }
 
-    private static Stream<File> findInDirectFolder(String folder, Film film) {
+    private static List<File> findInDirectFolder(String folder, Film film) {
         File f = new File(folder);
 
-        return f.listFiles() == null ? Stream.empty(): Stream.of(f.listFiles())
+        return f.listFiles() == null ? new ArrayList<>(): Stream.of(f.listFiles())
                 .filter(a ->
                                 prepare(a.getName()).contains(prepare(film.getName())) ||
                                         (
                                                 film.getEnName() != null &&
                                                         prepare(a.getName()).contains(prepare(film.getEnName()))
                                         )
-                );
+                ).collect(Collectors.toList());
     }
 
     private static String prepare(String name) {
