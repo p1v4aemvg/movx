@@ -20,9 +20,10 @@ public class CustomQuery {
     @Column(name = "query_string")
     private String query;
 
-    public CustomQuery() {
+    @Column(name = "order_by")
+    private String orderBy;
 
-    }
+    public CustomQuery() {}
 
     public Long getId() {
         return id;
@@ -46,5 +47,13 @@ public class CustomQuery {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
     }
 }

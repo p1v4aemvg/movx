@@ -3,7 +3,9 @@ package com.by.movx.service;
 import com.by.movx.entity.CustomQuery;
 import com.by.movx.entity.Film;
 import com.by.movx.repository.FilmRepository;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -34,7 +36,9 @@ public class QueryEvaluator {
             ids.add(Long.valueOf(o.toString()));
         }
 
-        return filmRepository.findByIdIn(ids);
+        String params[] = StringUtils.split(cq.getOrderBy(), ", ");
+        return filmRepository.findByIdIn(ids,
+                new Sort(Sort.Direction.valueOf(params[1].toUpperCase()), params[0]));
     }
 
 

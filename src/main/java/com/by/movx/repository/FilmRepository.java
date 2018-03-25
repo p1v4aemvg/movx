@@ -2,6 +2,7 @@ package com.by.movx.repository;
 
 import com.by.movx.entity.Country;
 import com.by.movx.entity.Film;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -14,7 +15,7 @@ import java.util.List;
  * on 04.02.2016.
  */
 public interface FilmRepository extends CrudRepository<Film, Long> {
-    List<Film> findByIdIn(List<Long> idList);
+    List<Film> findByIdIn(List<Long> idList, Sort sort);
 
     List<Film> findByYear (Integer year, Pageable pageable);
 
