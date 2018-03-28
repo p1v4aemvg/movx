@@ -646,6 +646,7 @@ public class MainController {
             letters.add(h);
         }
 
+        letterBox.getChildren().clear();
         letterBox.getChildren().addAll(letters);
     }
 
