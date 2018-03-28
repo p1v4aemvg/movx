@@ -19,7 +19,7 @@
       <children>
         <GridPane prefHeight="138.0" prefWidth="889.0">
           <children>
-            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#toWatch" prefWidth="131.0001220703125" text="WATCH 10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#toWatch" prefWidth="135.0001220703125" text="WATCH 10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <ComboBox fx:id="comboCountry" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" onAction="#findByCountry" prefWidth="170.0" text="Найти" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" onAction="#edit" prefWidth="147.0" text="Edit" GridPane.columnIndex="2" GridPane.rowIndex="0" />
@@ -27,7 +27,12 @@
             <HBox prefHeight="22.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
               <children>
                 <Button mnemonicParsing="false" onAction="#reload" prefWidth="61.0" text="#" />
-                <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="162.0" text="ADD" />
+                <Button mnemonicParsing="false" onAction="#reloadAll" prefWidth="50.0" text="⟲">
+                  <font>
+                    <Font size="12.0" />
+                  </font>
+                </Button>
+                <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="117.0" text="ADD" />
               </children>
             </HBox>
             <Button mnemonicParsing="false" onAction="#onTag" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="5" />
@@ -40,7 +45,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <children>
                 <TextField fx:id="txtYearTo" prefWidth="170.00009999999747" promptText="По" />
-                <Button mnemonicParsing="false" onAction="#inc" prefWidth="50.000099999997474" text="&gt;" />
+                <Button mnemonicParsing="false" onAction="#inc" prefWidth="61.0" text="&gt;" />
               </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
@@ -115,7 +120,7 @@
                 </ComboBox>
                 <CheckBox fx:id="sound" minWidth="-1.0" mnemonicParsing="false" prefWidth="50.0" text="♫" />
                 <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" prefWidth="50.0" text="sub" />
-                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="60.9998779296875" text="+" />
+                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="67.0" text="+" />
               </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">

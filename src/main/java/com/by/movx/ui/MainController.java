@@ -717,4 +717,9 @@ public class MainController {
         }
         return film;
     }
+
+    @FXML
+    public void reloadAll() {
+        init();
+    }
 }

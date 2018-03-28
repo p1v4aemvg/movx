@@ -1,39 +1,39 @@
-SELECT * FROM film_actor fa
+insert into film_description
+(film_id, description, image_url, external_link)
+select id, null, null, null from film
+where not exists (select * from film_description fd where id = fd.film_id);
+________________________________________________________________________________________
 
-group by fa.film_id, fa.actor_id
+select a.name, count(fa.film_id), fa.actor_id from film_actor fa
+join actor a on a.id = fa.actor_id
+group by fa.actor_id
+order by count(fa.film_id) desc
 
-having count(fa.id) > 1;
+________________________________________________________________________________________
 
- 
+drop procedure if exists myproc;
+DELIMITER //  
 
--- join film f on f.id = fa.film_id;
+CREATE PROCEDURE myproc()
+	BEGIN
+		DECLARE i INT unsigned DEFAULT 1;
+		WHILE (i <= 6) DO
+			insert into film (name, en_name, year, mark, type, duration, parent_id) values
+			(concat('����� ', i),concat('Season ', i), 1989, 0, 2, 3, 419);
+			SET i = i+1;
+		END WHILE;
 
+		insert into film_description (film_id, description, image_url, external_link)
+		select id, null, null, null from film
+		where not exists (select * from film_description fd where id = fd.film_id);
+	END
+;
+_______________________________________________________________________________________
 
-
-DELETE fa
-  FROM film_actor fa 
-JOIN 
-(
-  
-	SELECT film_id, actor_id, MAX(id) id1
-    
-	FROM film_actor
-   
-	GROUP BY film_id, actor_id
-     
-) d 
-   
-
-	ON
- 
-	(
-		fa.film_id = d.film_id 
-
-		and fa.actor_id = d.actor_id
-  
-		AND fa.id <> d.id1
-	)
-
-
-	
-     where   fa.id > 0;
+create table film_lang (
+id int(11) not null primary key,
+film_id int(11) not null,
+lang_id int(11) not null,
+subtitled tinyint(1) not null
+);
+________________________________________________________________________________________
