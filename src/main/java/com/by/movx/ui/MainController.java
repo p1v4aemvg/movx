@@ -8,22 +8,25 @@ import com.by.movx.event.*;
 import com.by.movx.repository.*;
 import com.by.movx.service.QueryEvaluator;
 import com.by.movx.ui.common.FilmByNameAutoCompleteComboBoxListener;
+import com.by.movx.ui.common.PTableColumn;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
-import com.by.movx.ui.utils.TableCreator;
 import com.by.movx.ui.utils.UIUtils;
 import com.by.movx.utils.CreatedDateCalculator;
 import com.by.movx.utils.URLFetcher;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 
@@ -32,6 +35,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,6 +135,15 @@ public class MainController {
     @Inject
     URLFetcher fetcher;
 
+    @FXML
+    PTableColumn<Film, HBox> countryColumn;
+    @FXML
+    PTableColumn<Film, String> generalName, nameColumn, folderColumn, durationColumn;
+    @FXML
+    PTableColumn<Film, Integer> yearColumn, sizeColumn;
+    @FXML
+    PTableColumn<Film, Date> dateColumn;
+
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
@@ -143,7 +156,7 @@ public class MainController {
         data = FXCollections.observableArrayList();
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
 
-        table.getColumns().setAll(TableCreator.createColumns());
+        createColumns();
         table.setItems(data);
 
         comboCountry.setConverter(new StringConverter<Country>() {
@@ -203,7 +216,7 @@ public class MainController {
             @Override
             public String toString(Film object) {
                 return object == null ? null :
-                        object.getYear() + " " + object.getName();
+                        object.getYear() + " " + name(object);
             }
 
             @Override
@@ -722,5 +735,47 @@ public class MainController {
     @FXML
     public void reloadAll() {
         init();
+    }
+
+    private void createColumns() {
+        countryColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(UIUtils.wrapCountries(c)));
+        generalName.setCellValueFactory(c -> new SimpleObjectProperty<>(parent(c)));
+        nameColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(name(c)));
+        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+        folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(folder(c)));
+        durationColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(duration(c)));
+        sizeColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(size(c)));
+    }
+
+    private static String name(TableColumn.CellDataFeatures<Film, String> c) {
+        return name(c.getValue());
+    }
+
+    private static String name(Film film) {
+        if(film == null) return StringUtils.EMPTY;
+        String name = film.getName();
+        if (StringUtils.isBlank(name)) return StringUtils.EMPTY;
+        int index = name.indexOf('~');
+        if(index == -1) {
+            return name;
+        }
+        return name.substring(0, index);
+    }
+
+    private static String folder(TableColumn.CellDataFeatures<Film, String> c) {
+        return c.getValue().getType().getName();
+    }
+
+    private static String duration(TableColumn.CellDataFeatures<Film, String> c) {
+        return c.getValue().getDuration().getName();
+    }
+
+    private static String parent(TableColumn.CellDataFeatures<Film, String> c) {
+        return c.getValue().getParent() == null ? "" : c.getValue().getParent().getName();
+    }
+
+    private static Integer size(TableColumn.CellDataFeatures<Film, Integer> c) {
+        return c.getValue().getFilmSize() == null ? 0 : Long.valueOf(c.getValue().getFilmSize()/(1024*1024)).intValue();
     }
 }
