@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 
@@ -41,6 +42,8 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class MainController {
+
+    private static final Logger LOG = Logger.getLogger(MainController.class);
 
     @Inject
     @Qualifier("fdView")
@@ -533,6 +536,7 @@ public class MainController {
         if (f == null) return;
         File file = CreatedDateCalculator.getFile(f);
         if(file == null) return;
+        LOG.info("explorer.exe /select,\"" + file + "\"");
         Runtime.getRuntime().exec("explorer.exe /select,\"" + file + "\"");
     }
 
@@ -541,8 +545,6 @@ public class MainController {
         Film f = firstOrSelected();
         if (f == null) return;
         long size = CreatedDateCalculator.getFileSize(f);
-
-        if (size == 0) return;
         f.setFilmSize(size);
         filmRepository.save(f);
     }
