@@ -97,9 +97,7 @@
                 </ComboBox>
               </children>
             </HBox>
-            <Button fx:id="randNoLink" mnemonicParsing="false" onAction="#onRandNoLink" prefWidth="146.0" text="RAND ◊" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Button mnemonicParsing="false" onAction="#google" prefWidth="146.0" text="G" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-            <Button mnemonicParsing="false" onAction="#explorer" prefWidth="147.0" text="EXP" GridPane.columnIndex="4" GridPane.rowIndex="4" />
             <ComboBox fx:id="customQuery" prefHeight="21.0" prefWidth="227.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
               <items>
                 <FXCollections fx:factory="observableArrayList">
@@ -112,7 +110,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
               <children>
                 <Button mnemonicParsing="false" onAction="#randTag" text="R" />
-                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="199.0" text="QUERY" />
+                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="199.0" text="◊◊◊" />
               </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -162,6 +160,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
               <children>
                 <Button mnemonicParsing="false" onAction="#onFileSize" prefWidth="67.0" text="SIZE" />
+                <Button mnemonicParsing="false" onAction="#explorer" prefWidth="80.00009999999747" text="EXP" />
               </children>
             </HBox>
           </children>

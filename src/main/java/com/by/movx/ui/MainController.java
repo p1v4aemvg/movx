@@ -127,7 +127,7 @@ public class MainController {
     CustomQueryRepository customQueryRepository;
 
     @FXML
-    Button randNoLink, query;
+    Button query;
 
     @FXML
     ComboBox<Film> filmByNameCombo;
@@ -505,20 +505,6 @@ public class MainController {
     }
 
     @FXML
-    public void onRandNoLink() {
-        Film f = filmRepository.findRandomFilmWithoutLink();
-        if (f == null) {
-            randNoLink.setText("RAND ◊ 0");
-            return;
-        }
-        data = FXCollections.observableArrayList(f);
-        table.setItems(data);
-
-        Long count = filmRepository.filmWithoutLinkCount();
-        randNoLink.setText("RAND ◊ " + count);
-    }
-
-    @FXML
     public void google() {
         Film f = firstOrSelected();
         if (f == null) return;
@@ -556,7 +542,7 @@ public class MainController {
         List<Film> films = queryEvaluator.getFilms(q);
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
-        query.setText("QUERY " + data.size());
+        query.setText("◊◊◊ " + data.size() + "(" + queryEvaluator.getFilmsCount(q) + ")");
     }
 
     @FXML
