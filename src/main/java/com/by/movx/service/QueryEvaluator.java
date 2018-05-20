@@ -43,8 +43,8 @@ public class QueryEvaluator {
 
     public Long getFilmsCount(CustomQuery cq) {
         String query = cq.getQuery();
-        query = query.replaceAll("distinct f.id", "count(f.id)");
-        query = query.replaceAll("distinct f1.id", "count(f1.id)");
+        query = query.replaceAll("distinct f.id", "count(distinct f.id))");
+        query = query.replaceAll("distinct f1.id", "count(distinct f1.id)");
 
         Query q = entityManager.createNativeQuery(query);
         List objects = q.getResultList();
