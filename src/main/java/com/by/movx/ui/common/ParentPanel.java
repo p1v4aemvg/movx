@@ -3,6 +3,7 @@ package com.by.movx.ui.common;
 import com.by.movx.entity.Film;
 import com.by.movx.event.Event;
 import com.by.movx.event.ParentFilmClickedEvent;
+import com.by.movx.utils.FilmUtils;
 import com.google.common.collect.Lists;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,7 +44,7 @@ public class ParentPanel extends FilmTargetLinkPanel<Film> {
 
     @Override
     protected String name(Film f) {
-        return f.getYear() + " " + f.getName();
+        return f.getYear() + " " + FilmUtils.name(f, Film::getName);
     }
 
     @Override

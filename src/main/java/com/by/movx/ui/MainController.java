@@ -12,6 +12,7 @@ import com.by.movx.ui.common.PTableColumn;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
 import com.by.movx.ui.utils.UIUtils;
 import com.by.movx.utils.CreatedDateCalculator;
+import com.by.movx.utils.FilmUtils;
 import com.by.movx.utils.URLFetcher;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
@@ -219,7 +220,7 @@ public class MainController {
             @Override
             public String toString(Film object) {
                 return object == null ? null :
-                        object.getYear() + " " + name(object);
+                        object.getYear() + " " + FilmUtils.name(object, Film::getName);
             }
 
             @Override
@@ -510,7 +511,7 @@ public class MainController {
         if (f == null) return;
         try {
             new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-                    fetcher.googleQ(f.getName() + " " + f.getYear())).start();
+                    fetcher.googleQ(FilmUtils.name(f, Film::getName) + " " + f.getYear())).start();
         } catch (java.io.IOException e) {
             System.out.println(e.getMessage());
         }
@@ -621,7 +622,7 @@ public class MainController {
         Film f = firstOrSelected();
         if(f == null) return;
 
-        String url = fetcher.googleQ(f.getName() + " " + f.getYear() + site.getAddSearch());
+        String url = fetcher.googleQ(FilmUtils.name(f, Film::getName) + " " + f.getYear() + site.getAddSearch());
         String link = fetcher.fetch(url, site.getContain());
         if(link == null) return;
 
@@ -737,18 +738,7 @@ public class MainController {
     }
 
     private static String name(TableColumn.CellDataFeatures<Film, String> c) {
-        return name(c.getValue());
-    }
-
-    private static String name(Film film) {
-        if(film == null) return StringUtils.EMPTY;
-        String name = film.getName();
-        if (StringUtils.isBlank(name)) return StringUtils.EMPTY;
-        int index = name.indexOf('~');
-        if(index == -1) {
-            return name;
-        }
-        return name.substring(0, index);
+        return FilmUtils.name(c.getValue(), Film::getName);
     }
 
     private static String folder(TableColumn.CellDataFeatures<Film, String> c) {
@@ -760,7 +750,7 @@ public class MainController {
     }
 
     private static String parent(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getParent() == null ? "" : c.getValue().getParent().getName();
+        return c.getValue().getParent() == null ? "" : FilmUtils.name(c.getValue().getParent(), Film::getName);
     }
 
     private static Integer size(TableColumn.CellDataFeatures<Film, Integer> c) {

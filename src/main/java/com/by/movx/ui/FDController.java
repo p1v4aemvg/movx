@@ -9,6 +9,7 @@ import com.by.movx.ui.common.FilmActorsPanel;
 import com.by.movx.ui.common.FilmLangPanel;
 import com.by.movx.ui.common.ParentPanel;
 import com.by.movx.ui.common.TagsPanel;
+import com.by.movx.utils.FilmUtils;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -113,7 +114,7 @@ public class FDController {
         paneL.getChildren().addAll(letters);
 
         filmName.setWrapText(true);
-        filmName.setText(film.getName() + " " + film.getYear());
+        filmName.setText(FilmUtils.name(film, Film::getName) + " " + film.getYear());
 
         mark.setValue(film.getMark());
         description.setText(film.getDescription().getDescription() == null ? "" : film.getDescription().getDescription());

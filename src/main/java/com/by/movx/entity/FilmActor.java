@@ -1,5 +1,7 @@
 package com.by.movx.entity;
 
+import com.by.movx.utils.FilmUtils;
+
 import javax.persistence.*;
 import java.util.Arrays;
 
@@ -85,8 +87,9 @@ public class FilmActor {
     }
 
     public String film() {
-        return film.getYear().toString() + " " + film.getName() + " " + age(film) +
-                (partName == null ? "" : (repeat(66 + pad() - film.getName().length() - partName.length()) + partName));
+        String name = FilmUtils.name(film, Film::getName);
+        return film.getYear().toString() + " " + name + " " + age(film) +
+                (partName == null ? "" : (repeat(66 + pad() - name.length() - partName.length()) + partName));
     }
 
     private String age(Film film1) {
