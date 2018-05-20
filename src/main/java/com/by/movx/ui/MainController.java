@@ -542,7 +542,7 @@ public class MainController {
         List<Film> films = queryEvaluator.getFilms(q);
         data = FXCollections.observableArrayList(films);
         table.setItems(data);
-        query.setText("◊◊◊ " + data.size() + "(" + queryEvaluator.getFilmsCount(q) + ")");
+        query.setText("◊◊◊ " + data.size() + " (" + queryEvaluator.getFilmsCount(q) + ")");
     }
 
     @FXML
