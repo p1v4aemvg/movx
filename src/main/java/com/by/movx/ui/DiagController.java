@@ -1,22 +1,32 @@
 package com.by.movx.ui;
 
+import com.by.movx.ConfigurationControllers;
 import com.by.movx.repository.ActorRepository;
 import com.by.movx.repository.CountryRepository;
 import com.by.movx.repository.FilmRepository;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import org.springframework.data.domain.PageRequest;
-
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
 import java.util.List;
 
-
 public class DiagController {
+
+    @Inject
+    @Qualifier("statActorsView")
+    ConfigurationControllers.View statActorsView;
+
+    @Inject
+    StatActorsController statActorsController;
 
     @Inject
     private ActorRepository actorRepository;
@@ -58,15 +68,18 @@ public class DiagController {
         for (final XYChart.Series<String, Integer> serie : bar.getData()) {
             for (final XYChart.Data<String, Integer> data : serie.getData()) {
                 Tooltip tooltip = new Tooltip();
-                Object y = data.getYValue();
-                if(y instanceof Integer )
-                   tooltip.setText(y.toString());
-                else if(y instanceof Double)
-                    tooltip.setText(String.valueOf(((Double) y).intValue()));
+                tooltip.setText(getStr(data.getYValue()) + " -> " + getStr(data.getXValue()));
                 Tooltip.install(data.getNode(), tooltip);
             }
         }
+    }
 
+    private String getStr(Object o) {
+        if(o instanceof Integer )
+            return o.toString();
+        else if(o instanceof Double)
+            return String.valueOf(((Double) o).intValue());
+        return o.toString();
     }
 
     public void close() {
@@ -109,22 +122,26 @@ public class DiagController {
 
     @FXML
     public void diagByActor() throws Exception {
-        offset = 0;
-        setStats(actorRepository.actorsByRoles(new PageRequest(offset, limit)));
-        init();
+        statActorsController.init();
+
+        if (statActorsView.getView().getScene() != null)
+            statActorsView.getView().getScene().setRoot(anyButton());
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(statActorsView.getView());
+
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.centerOnScreen();
+        stage.show();
     }
 
-    @FXML
-    public void onPrev() {
-        offset--;
-        setStats(actorRepository.actorsByRoles(new PageRequest(offset, limit)));
-        init();
-    }
+    private Button anyButton() {
+        Button b = new Button();
 
-    @FXML
-    public void onNext() {
-        offset++;
-        setStats(actorRepository.actorsByRoles(new PageRequest(offset, limit)));
-        init();
+        b.setOnMouseClicked(e -> {
+            ((Node)(e.getSource())).getScene().getWindow().hide();
+        });
+        return b;
     }
 }

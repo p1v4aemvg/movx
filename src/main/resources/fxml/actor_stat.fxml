@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0000999999975" prefWidth="482.9998779296875" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.StatActorsController">
+  <children>
+    <ScrollPane layoutX="29.0" layoutY="26.0" prefHeight="401.0" prefWidth="428.0">
+      <content>
+        <AnchorPane id="Content" fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="386.0" prefWidth="413.0" />
+      </content>
+    </ScrollPane>
+  </children>
+</AnchorPane>

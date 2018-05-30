@@ -27,7 +27,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
@@ -85,6 +84,9 @@ public class MainController {
 
     @Inject
     private CountryRepository countryRepository;
+
+    @Inject
+    private ActorRepository actorRepository;
 
     @FXML
     Label count;
@@ -661,6 +663,13 @@ public class MainController {
     @Subscribe
     public void actorClicked(ActorClickedEvent e) {
         actorController.setCurrent(e.getData().getActor());
+        onActor();
+    }
+
+    @Subscribe
+    public void statActorClicked(StatActorClickedEvent e) {
+        Actor a = actorRepository.findOne((Long)(e.getData()[2]));
+        actorController.setCurrent(a);
         onActor();
     }
 

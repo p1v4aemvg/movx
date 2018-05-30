@@ -41,6 +41,11 @@ public class ConfigurationControllers {
         return loadView("fxml/add.fxml");
     }
 
+    @Bean(name = "statActorsView")
+    public View getStatActorsView() throws IOException {
+        return loadView("fxml/actor_stat.fxml");
+    }
+
     @Bean
     public ComboPooledDataSource dataSource() throws PropertyVetoException {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
@@ -77,6 +82,10 @@ public class ConfigurationControllers {
         return (AddController) getAddView().getController();
     }
 
+    @Bean StatActorsController getStatActorsConroller() throws IOException {
+        return (StatActorsController) getStatActorsView().getController();
+    }
+
     public View loadView(String url) throws IOException {
         InputStream fxmlStream = null;
         try {
@@ -90,7 +99,6 @@ public class ConfigurationControllers {
             }
         }
     }
-
 
     public class View {
         private Parent view;

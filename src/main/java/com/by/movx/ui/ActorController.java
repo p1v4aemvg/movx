@@ -200,7 +200,7 @@ public class ActorController {
     }
 
     private void createLinks() {
-        ActorFilmsPanel actorFilmsPanel =  new ActorFilmsPanel(pane, actorsToPick, filmActorRepository, mode);
+        ActorFilmsPanel actorFilmsPanel = new ActorFilmsPanel(pane, actorsToPick, filmActorRepository, mode);
         actorFilmsPanel.createLinks();
         new PickActorPanel(pickActor, actorsToPick).createLinks();
 
