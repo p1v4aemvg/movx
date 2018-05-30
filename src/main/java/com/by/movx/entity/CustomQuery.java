@@ -23,6 +23,10 @@ public class CustomQuery {
     @Column(name = "order_by")
     private String orderBy;
 
+    @Column(name = "cq_type")
+    @Enumerated
+    private CQType cqType;
+
     public CustomQuery() {}
 
     public Long getId() {
@@ -55,5 +59,17 @@ public class CustomQuery {
 
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
+    }
+
+    public CQType getCqType() {
+        return cqType;
+    }
+
+    public void setCqType(CQType cqType) {
+        this.cqType = cqType;
+    }
+
+    public enum CQType {
+        URGENT, MEDIUM, COLLECTION, RAND
     }
 }

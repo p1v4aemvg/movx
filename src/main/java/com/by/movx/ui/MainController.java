@@ -25,7 +25,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -264,6 +266,38 @@ public class MainController {
             }
         });
         customQuery.setItems(FXCollections.observableArrayList((List<CustomQuery>)customQueryRepository.findAll()));
+        customQuery.setCellFactory(
+                new Callback<ListView<CustomQuery>, ListCell<CustomQuery>>() {
+                    @Override public ListCell<CustomQuery> call(ListView<CustomQuery> param) {
+                        final ListCell<CustomQuery> cell = new ListCell<CustomQuery>() {
+//                            {
+//                                super.setPrefWidth(100);
+//                            }
+                            @Override public void updateItem(CustomQuery item,
+                                                             boolean empty) {
+                                super.updateItem(item, empty);
+                                if (item != null) {
+                                    setText(item.getName());
+                                    if (item.getCqType() == CustomQuery.CQType.URGENT) {
+                                        setTextFill(Color.RED);
+                                    } else if(item.getCqType() == CustomQuery.CQType.MEDIUM) {
+                                        setTextFill(Color.ORANGE);
+                                    } else if(item.getCqType() == CustomQuery.CQType.COLLECTION) {
+                                        setTextFill(Color.DARKSLATEBLUE);
+                                    } else if(item.getCqType() == CustomQuery.CQType.RAND) {
+                                        setTextFill(Color.FORESTGREEN);
+                                    } else {
+                                        setTextFill(Color.BLACK);
+                                    }
+                                }
+                                else {
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                });
 
         lang.setConverter(new StringConverter<FilmLang.Lang>() {
             @Override
