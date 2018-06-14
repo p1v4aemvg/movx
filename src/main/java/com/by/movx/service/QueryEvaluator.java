@@ -41,6 +41,11 @@ public class QueryEvaluator {
                 new Sort(Sort.Direction.valueOf(params[1].toUpperCase()), params[0]));
     }
 
+    public List<Object[]> getStats(CustomQuery cq) {
+        Query q = entityManager.createNativeQuery(cq.getQuery());
+        return (List<Object[]>)q.getResultList();
+    }
+
     public Long getFilmsCount(CustomQuery cq) {
         String query = cq.getQuery();
         query = query.replaceAll("distinct f.id", "count(distinct f.id)");

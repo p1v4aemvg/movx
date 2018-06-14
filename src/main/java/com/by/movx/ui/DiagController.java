@@ -1,9 +1,9 @@
 package com.by.movx.ui;
 
 import com.by.movx.ConfigurationControllers;
-import com.by.movx.repository.ActorRepository;
-import com.by.movx.repository.CountryRepository;
-import com.by.movx.repository.FilmRepository;
+import com.by.movx.entity.CustomQuery;
+import com.by.movx.repository.CustomQueryRepository;
+import com.by.movx.service.QueryEvaluator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -11,9 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
@@ -28,29 +30,39 @@ public class DiagController {
     @Inject
     StatActorsController statActorsController;
 
-    @Inject
-    private ActorRepository actorRepository;
-
-
-    @Inject
-    private FilmRepository filmRepository;
-
-
-    @Inject
-    private CountryRepository countryRepository;
-
     @FXML
     LineChart<String, Integer> bar;
 
     @FXML
     Label count;
 
+    @FXML
+    private ComboBox<CustomQuery> customQuery;
+
+    @Inject
+    CustomQueryRepository customQueryRepository;
+
+    @Inject
+    QueryEvaluator queryEvaluator;
+
     List<Object[]> stats;
 
-    int offset = 0, limit = 10;
+    public void loadQ() {
+        customQuery.setConverter(new StringConverter<CustomQuery>() {
+            @Override
+            public String toString(CustomQuery object) {
+                return object.getName();
+            }
+
+            @Override
+            public CustomQuery fromString(String string) {
+                return null;
+            }
+        });
+        customQuery.setItems(FXCollections.observableArrayList(customQueryRepository.findByQueryType(CustomQuery.QueryType.STAT)));
+    }
 
     public void init() {
-
         bar.setVerticalGridLinesVisible(true);
         bar.setHorizontalGridLinesVisible(true);
 
@@ -75,9 +87,9 @@ public class DiagController {
     }
 
     private String getStr(Object o) {
-        if(o instanceof Integer )
+        if (o instanceof Integer)
             return o.toString();
-        else if(o instanceof Double)
+        else if (o instanceof Double)
             return String.valueOf(((Double) o).intValue());
         return o.toString();
     }
@@ -87,37 +99,6 @@ public class DiagController {
 
     public void setStats(List<Object[]> stats) {
         this.stats = stats;
-    }
-
-    @FXML
-    public void diagByYear() throws Exception {
-        setStats(filmRepository.yearStats());
-        init();
-    }
-
-    @FXML
-    public void diagByMark() throws Exception {
-        setStats(filmRepository.markStats());
-        init();
-    }
-
-    @FXML
-    public void diagByCountry() throws Exception {
-        setStats(countryRepository.loadCountryStat());
-        init();
-    }
-
-    @FXML
-    public void diagBy1stLetter() throws Exception {
-        setStats(filmRepository.filmsBy1stLetter());
-        init();
-    }
-
-
-    @FXML
-    public void diagByPeriods() throws Exception {
-        setStats(filmRepository.periodStats());
-        init();
     }
 
     @FXML
@@ -140,8 +121,16 @@ public class DiagController {
         Button b = new Button();
 
         b.setOnMouseClicked(e -> {
-            ((Node)(e.getSource())).getScene().getWindow().hide();
+            ((Node) (e.getSource())).getScene().getWindow().hide();
         });
         return b;
+    }
+
+    @FXML
+    public void query() {
+        CustomQuery q = customQuery.getSelectionModel().getSelectedItem();
+        if (q == null) return;
+        setStats(queryEvaluator.getStats(q));
+        init();
     }
 }

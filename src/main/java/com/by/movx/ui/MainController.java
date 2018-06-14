@@ -265,14 +265,11 @@ public class MainController {
                 return null;
             }
         });
-        customQuery.setItems(FXCollections.observableArrayList((List<CustomQuery>)customQueryRepository.findAll()));
+        customQuery.setItems(FXCollections.observableArrayList(customQueryRepository.findByQueryType(CustomQuery.QueryType.FILM)));
         customQuery.setCellFactory(
                 new Callback<ListView<CustomQuery>, ListCell<CustomQuery>>() {
                     @Override public ListCell<CustomQuery> call(ListView<CustomQuery> param) {
                         final ListCell<CustomQuery> cell = new ListCell<CustomQuery>() {
-//                            {
-//                                super.setPrefWidth(100);
-//                            }
                             @Override public void updateItem(CustomQuery item,
                                                              boolean empty) {
                                 super.updateItem(item, empty);
@@ -456,6 +453,8 @@ public class MainController {
     }
 
     private void startDiag() throws Exception {
+
+        diagController.loadQ();
 
         if (diagView.getView().getScene() != null)
             diagView.getView().getScene().setRoot(new Button());

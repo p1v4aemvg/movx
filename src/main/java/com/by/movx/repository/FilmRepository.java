@@ -40,26 +40,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f.* from film f order by rand() limit 1", nativeQuery = true)
     Film findRandomFilm();
 
-    @Query(value = "select f.mark, count(f.id) from film f " +
-            "group by f.mark", nativeQuery = true)
-    List<Object[]> markStats();
-
-    @Query(value = "select concat(monthname(created_at), \" \",  year(created_at)), count(distinct(created_at)) from film " +
-            "where created_at is not null " +
-            "and year(created_at) >= 2014 " +
-            "group by year(created_at), month(created_at) " +
-            "order by year(created_at), month(created_at) ", nativeQuery = true)
-    List<Object[]> periodStats();
-
-    @Query(value = "select f.year, count(f.id) from film f where f.parent_id is null " +
-            "group by f.year", nativeQuery = true)
-    List<Object[]> yearStats();
-
-    @Query(value = "SELECT substring(f.name, 1, 1), count(f.id) from film f " +
-            "group by substring(f.name, 1, 1) " +
-            "order by substring(f.name, 1, 1)", nativeQuery = true)
-    List<Object[]> filmsBy1stLetter();
-
     @Query(value = "select f.* from film f " +
             "join film_tag ft on f.id = ft.film_id " +
             "join tag t on ft.tag_id = t.id " +

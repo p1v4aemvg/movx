@@ -27,6 +27,10 @@ public class CustomQuery {
     @Enumerated
     private CQType cqType;
 
+    @Column(name = "query_type")
+    @Enumerated
+    private QueryType queryType;
+
     public CustomQuery() {}
 
     public Long getId() {
@@ -69,7 +73,19 @@ public class CustomQuery {
         this.cqType = cqType;
     }
 
+    public QueryType getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(QueryType queryType) {
+        this.queryType = queryType;
+    }
+
     public enum CQType {
-        URGENT, MEDIUM, COLLECTION, RAND
+        URGENT, MEDIUM, COLLECTION, RAND, NEUTRAL
+    }
+
+    public enum QueryType{
+        FILM, STAT
     }
 }
