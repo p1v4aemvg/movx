@@ -1,7 +1,9 @@
 package com.by.movx.ui;
 
+import com.by.movx.Common;
 import com.by.movx.ConfigurationControllers;
 import com.by.movx.entity.CustomQuery;
+import com.by.movx.event.StatNodeClickedEvent;
 import com.by.movx.repository.CustomQueryRepository;
 import com.by.movx.service.QueryEvaluator;
 import javafx.collections.FXCollections;
@@ -82,6 +84,15 @@ public class DiagController {
                 Tooltip tooltip = new Tooltip();
                 tooltip.setText(getStr(data.getYValue()) + " -> " + getStr(data.getXValue()));
                 Tooltip.install(data.getNode(), tooltip);
+
+                data.getNode().setOnMouseClicked(e -> {
+                    Common.getInstance().getEventBus().post(
+                            new StatNodeClickedEvent(
+                                    customQuery.getSelectionModel().getSelectedItem(),
+                                    "'" + getStr(data.getXValue()) + "'"
+                            )
+                    );
+                });
             }
         }
     }

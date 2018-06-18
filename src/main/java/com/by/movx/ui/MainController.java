@@ -726,6 +726,13 @@ public class MainController {
         add();
     }
 
+    @Subscribe
+    public void statNodeClicked(StatNodeClickedEvent e) {
+        List<Film> films = queryEvaluator.getFilmsByStatNode(e.getQuery(), e.getData());
+        data = FXCollections.observableArrayList(films);
+        table.setItems(data);
+    }
+
     private void openFilm(Film film) {
         if (film == null) return;
 
