@@ -62,5 +62,6 @@
         <AnchorPane id="Content" fx:id="langPanel" minHeight="-1.0" minWidth="-1.0" prefHeight="112.0" prefWidth="374.0" />
       </content>
     </ScrollPane>
+    <Button layoutX="1019.0" layoutY="53.0" mnemonicParsing="false" onAction="#explorer" text="EXP" />
   </children>
 </AnchorPane>

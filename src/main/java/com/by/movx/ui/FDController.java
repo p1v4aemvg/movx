@@ -9,6 +9,7 @@ import com.by.movx.ui.common.FilmActorsPanel;
 import com.by.movx.ui.common.FilmLangPanel;
 import com.by.movx.ui.common.ParentPanel;
 import com.by.movx.ui.common.TagsPanel;
+import com.by.movx.utils.CreatedDateCalculator;
 import com.by.movx.utils.FilmUtils;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -253,6 +255,14 @@ public class FDController {
         } catch (java.io.IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    public void explorer() throws Exception {
+        if (film == null) return;
+        File file = CreatedDateCalculator.getFile(film);
+        if(file == null) return;
+        Runtime.getRuntime().exec("explorer.exe /select,\"" + file + "\"");
     }
 
     private void autoSaveText() {
