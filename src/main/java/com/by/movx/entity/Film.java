@@ -65,6 +65,9 @@ public class Film {
     @Column(name = "film_size")
     private Long filmSize;
 
+    @Column(name = "special")
+    private Boolean special;
+
     public Film() {
     }
 
@@ -192,6 +195,14 @@ public class Film {
 
     public void setFilmSize(Long filmSize) {
         this.filmSize = filmSize;
+    }
+
+    public Boolean getSpecial() {
+        return special;
+    }
+
+    public void setSpecial(Boolean special) {
+        this.special = special;
     }
 
     public enum Type {

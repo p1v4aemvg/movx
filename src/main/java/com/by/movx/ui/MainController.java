@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
@@ -651,6 +652,28 @@ public class MainController {
         query.setText("QUERY " + data.size());
 
         tagCombo.getSelectionModel().select(tag);
+    }
+
+    @FXML
+    public void onTodo() throws Exception {
+        Film film = firstOrSelected();
+        if(film == null) return;
+
+        film.setSpecial(true);
+        filmRepository.save(film);
+
+        File file = CreatedDateCalculator.getFile(film);
+        if(file == null) return;
+        FileUtils.copyFileToDirectory(file, new File("D:\\zxc\\zxc"));
+    }
+
+    @FXML
+    public void onUnTodo() {
+        Film film = firstOrSelected();
+        if(film == null) return;
+
+        film.setSpecial(false);
+        filmRepository.save(film);
     }
 
     private void fetchSite(Site site) throws Exception {
