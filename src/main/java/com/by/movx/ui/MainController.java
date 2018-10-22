@@ -662,9 +662,9 @@ public class MainController {
         film.setSpecial(true);
         filmRepository.save(film);
 
-        File file = CreatedDateCalculator.getFile(film);
-        if(file == null) return;
-        FileUtils.copyFileToDirectory(file, new File("D:\\zxc\\zxc"));
+//        File file = CreatedDateCalculator.getFile(film);
+//        if(file == null) return;
+//        FileUtils.copyFileToDirectory(file, new File("D:\\zxc\\zxc"));
     }
 
     @FXML
