@@ -68,6 +68,9 @@ public class Film {
     @Column(name = "special")
     private Boolean special;
 
+    @Column(name = "quality")
+    private Integer quality;
+
     public Film() {
     }
 
@@ -203,6 +206,14 @@ public class Film {
 
     public void setSpecial(Boolean special) {
         this.special = special;
+    }
+
+    public Integer getQuality() {
+        return quality;
+    }
+
+    public void setQuality(Integer quality) {
+        this.quality = quality;
     }
 
     public enum Type {

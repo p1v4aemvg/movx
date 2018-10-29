@@ -149,7 +149,7 @@ public class MainController {
     @FXML
     PTableColumn<Film, String> generalName, nameColumn, folderColumn, durationColumn;
     @FXML
-    PTableColumn<Film, Integer> yearColumn, sizeColumn;
+    PTableColumn<Film, Integer> yearColumn, sizeColumn, qColumn;
     @FXML
     PTableColumn<Film, Date> dateColumn;
 
@@ -524,6 +524,17 @@ public class MainController {
     }
 
     @FXML
+    public void onQuality() throws Exception {
+        Film film = firstOrSelected();
+        if (film == null) return;
+
+        int quality = CreatedDateCalculator.getQuality(film);
+        if (quality == 0) return;
+        film.setQuality(quality);
+        filmRepository.save(film);
+    }
+
+    @FXML
     public void withoutDate() {
         List<Film> films = filmRepository.filmsWithoutDate();
         for (Film f : films) {
@@ -807,6 +818,7 @@ public class MainController {
         folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(folder(c)));
         durationColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(duration(c)));
         sizeColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(size(c)));
+        qColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(quality(c)));
     }
 
     private static String name(TableColumn.CellDataFeatures<Film, String> c) {
@@ -819,6 +831,10 @@ public class MainController {
 
     private static String duration(TableColumn.CellDataFeatures<Film, String> c) {
         return c.getValue().getDuration().getName();
+    }
+
+    private static Integer quality(TableColumn.CellDataFeatures<Film, Integer> c) {
+        return c.getValue().getQuality();
     }
 
     private static String parent(TableColumn.CellDataFeatures<Film, String> c) {

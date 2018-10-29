@@ -2,18 +2,19 @@ package com.by.movx.utils;
 
 import com.by.movx.entity.Film;
 import com.google.common.collect.Lists;
+import com.jayway.restassured.path.json.JsonPath;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +24,8 @@ import java.util.stream.Stream;
  * on 27.11.2016.
  */
 public class CreatedDateCalculator {
+
+    private static final String VIDEO_EXT[] = {"mp4", "avi", "mkv", "flv", "mp3"};
 
     private static final String BASE_DIR = "J:\\Video\\";
 
@@ -44,6 +47,36 @@ public class CreatedDateCalculator {
 
     public static File getFile(Film film) {
         return getFiles(film, true).stream().filter(f -> !f.isDirectory()).findFirst().orElse(null);
+    }
+
+    public static Integer getQuality(Film film) throws Exception {
+        return getFiles(film, false).stream()
+                .filter(matches(film))
+                .flatMap(f -> {
+                    if (f.isDirectory()) {
+                        return FileUtils.listFiles(f, VIDEO_EXT, true).stream();
+                    } else if (ArrayUtils.contains(VIDEO_EXT, FilenameUtils.getExtension(f.getName()))) {
+                        return Stream.of(f);
+                    } else {
+                        return Stream.empty();
+                    }
+                }).map(f -> {
+                    try {
+                        return (int)((f.length()/extractMinutes(f))/1024);
+                    } catch (Exception ex) {
+                        return 0;
+                    }
+                }).max(Integer::compare).orElse(0);
+
+    }
+
+    private static Integer extractMinutes(File file) throws Exception {
+        Process p = Runtime.getRuntime().exec("mediainfo \"" + file.getAbsolutePath() + "\" --Output=JSON");
+        String data = new String(IOUtils.toByteArray(p.getInputStream()));
+
+        String strValue = StringUtils.substringBefore(JsonPath.from(data).get("media.track[0].Duration"), ".");
+
+       return Integer.valueOf(strValue);
     }
 
     private static List<File> getFiles(Film film, boolean deep) {
