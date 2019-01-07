@@ -69,10 +69,9 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
             temp.setLayoutX(345);
             temp.setOnAction(event1 -> {
                 if (!temp.getText().isEmpty()) {
-                    FilmActor filmActor = faRepository.findOne(Long.valueOf(((TextField) event1.getSource()).getId()));
                     fa.setPartName(temp.getText());
-                    ((Hyperlink) event.getSource()).setText(filmActor.film());
-                    faRepository.save(filmActor);
+                    l.setText(fa.film());
+                    faRepository.save(fa);
                 }
                 pane.getChildren().remove(temp);
             });
