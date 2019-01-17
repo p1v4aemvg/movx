@@ -57,7 +57,8 @@ public class Film {
     private FilmColor color;
 
     @Column(name = "never_delete")
-    private Boolean neverDelete;
+    @Enumerated
+    private DeletionStatus neverDelete;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -184,11 +185,11 @@ public class Film {
         this.color = color;
     }
 
-    public Boolean isNeverDelete() {
+    public DeletionStatus getNeverDelete() {
         return neverDelete;
     }
 
-    public void setNeverDelete(Boolean neverDelete) {
+    public void setNeverDelete(DeletionStatus neverDelete) {
         this.neverDelete = neverDelete;
     }
 
@@ -268,6 +269,10 @@ public class Film {
                 return Duration.UNKNOWN;
             return values()[index];
         }
+    }
+
+    public enum DeletionStatus {
+        MAYBE, NEVER, INCOMPLETE
     }
 
 }

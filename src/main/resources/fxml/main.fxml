@@ -142,6 +142,7 @@
                             <children>
                                 <Button mnemonicParsing="false" onAction="#on1" prefWidth="82.0" text="1" />
                                 <Button mnemonicParsing="false" onAction="#on0" prefWidth="69.0" text="0" />
+                                <Button mnemonicParsing="false" onAction="#on2" prefWidth="69.0" text="2" />
                             </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">

@@ -54,10 +54,12 @@ public class UIUtils {
                     if (film.getParent() == null) {
                         style += "-fx-font-weight: bold;";
                     }
-                    if(film.isNeverDelete() == null) {
+                    if(film.getNeverDelete() == null) {
                         style += "-fx-text-background-color: #FF6347;";
-                    } else if (!film.isNeverDelete()) {
+                    } else if (film.getNeverDelete().equals(Film.DeletionStatus.MAYBE)) {
                         style += "-fx-text-background-color: #808080;";
+                    } else if (film.getNeverDelete().equals(Film.DeletionStatus.INCOMPLETE)) {
+                        style += "-fx-text-background-color: #6A5AFF;";
                     }
 
                     styleProperty().bind(Bindings.when(new SimpleBooleanProperty(true)).then(style).otherwise(""));

@@ -639,7 +639,7 @@ public class MainController {
         Film film = firstOrSelected();
         if(film == null) return;
 
-        film.setNeverDelete(true);
+        film.setNeverDelete(Film.DeletionStatus.NEVER);
         filmRepository.save(film);
     }
 
@@ -648,10 +648,18 @@ public class MainController {
         Film film = firstOrSelected();
         if(film == null) return;
 
-        film.setNeverDelete(false);
+        film.setNeverDelete(Film.DeletionStatus.MAYBE);
         filmRepository.save(film);
     }
 
+    @FXML
+    public void on2() {
+        Film film = firstOrSelected();
+        if(film == null) return;
+
+        film.setNeverDelete(Film.DeletionStatus.INCOMPLETE);
+        filmRepository.save(film);
+    }
     @FXML
     public void onCum() {
         Tag tag = cums.getSelectionModel().getSelectedItem();
