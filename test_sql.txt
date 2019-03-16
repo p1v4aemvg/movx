@@ -1,4 +1,4 @@
-insert into film_description
+﻿insert into film_description
 (film_id, description, image_url, external_link)
 select id, null, null, null from film
 where not exists (select * from film_description fd where id = fd.film_id);
@@ -37,3 +37,28 @@ lang_id int(11) not null,
 subtitled tinyint(1) not null
 );
 ________________________________________________________________________________________
+
+NO_ACTORS - old
+select distinct f.id from film f
+ 
+	left join film f1 on f1.id = f.parent_id
+ 
+	left join film f2 on f2.id = f1.parent_id
+ 
+where 
+     
+	not exists (select * from film_actor fa where fa.film_id = f.id)
+     
+	and not exists (select * from film_actor fa where fa.film_id = f1.id)
+     
+	and not exists (select * from film_actor fa where fa.film_id = f2.id)
+     
+
+	and not exists(select * from film_tag ft where ft.film_id = f.id and ft.tag_id = 78) 
+     
+	and not exists(select * from film_tag ft where ft.film_id = f1.id and ft.tag_id = 78)
+ 	
+	and not exists(select * from film_tag ft where ft.film_id = f2.id and ft.tag_id = 78) 
+     
+
+	and not exists (select * from film fp where fp.parent_id = f.id);
