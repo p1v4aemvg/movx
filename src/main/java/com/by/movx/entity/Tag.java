@@ -17,9 +17,6 @@ public class Tag {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "checked")
-    private Boolean checked;
-
     public Tag() {}
 
     public Tag(Long id) {
@@ -40,13 +37,5 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Boolean getChecked() {
-        return checked;
-    }
-
-    public void setChecked(Boolean checked) {
-        this.checked = checked;
     }
 }
