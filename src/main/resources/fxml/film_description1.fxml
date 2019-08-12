@@ -12,35 +12,31 @@
 
 <AnchorPane id="AnchorPane" fx:id="mainPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="636.0" prefWidth="1086.999977929685" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.FDController">
   <children>
-    <Label fx:id="filmName" layoutX="662.0" layoutY="75.0" prefHeight="68.0" prefWidth="397.0" text="Label">
+    <Label fx:id="filmName" layoutX="660.0" layoutY="12.0" prefHeight="25.0" prefWidth="364.0" text="Label">
       <font>
         <Font name="Arial Bold" size="14.0" fx:id="x2" />
       </font>
     </Label>
-    <TextArea fx:id="description" disable="false" editable="false" focusTraversable="false" layoutX="659.0" layoutY="143.0" pickOnBounds="false" prefHeight="156.0" prefWidth="400.0" wrapText="true" />
-    <Label fx:id="fileName" layoutX="209.0" layoutY="346.0" prefWidth="128.0" text="" />
-    <Slider fx:id="mark" blockIncrement="1.0" layoutX="216.0" layoutY="344.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="216.0" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
-    <ScrollPane id="ppp" layoutX="216.0" layoutY="458.0" prefHeight="156.0" prefWidth="396.9998779296875">
+    <TextArea fx:id="description" disable="false" editable="false" focusTraversable="false" layoutX="659.0" layoutY="154.0" pickOnBounds="false" prefHeight="144.99990000000253" prefWidth="400.0" wrapText="true" />
+    <Label fx:id="fileName" layoutX="214.0" layoutY="315.0" prefWidth="128.0" text="" />
+    <Slider fx:id="mark" blockIncrement="1.0" layoutX="216.0" layoutY="313.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="327.5" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
+    <ScrollPane id="ppp" layoutX="214.0" layoutY="426.0" prefHeight="190.0" prefWidth="397.0">
       <content>
-        <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
+        <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="188.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
-    <TextField fx:id="actor" layoutX="216.0" layoutY="412.0" prefWidth="156.0" promptText="actor" />
-    <Button id="add" layoutX="609.0" layoutY="426.0" minWidth="25.0" mnemonicParsing="false" onAction="#add" prefWidth="30.0" text="+" />
-    <TextField fx:id="partName" layoutX="388.0" layoutY="412.0" prefWidth="156.0" promptText="part" />
+    <TextField fx:id="actor" layoutX="215.0" layoutY="381.0" prefWidth="170.0" promptText="actor" />
+    <Button id="add" layoutX="615.0" layoutY="382.0" minWidth="25.0" mnemonicParsing="false" onAction="#add" prefWidth="30.0" text="+" />
+    <TextField fx:id="partName" layoutX="393.0" layoutY="381.0" prefWidth="156.0" promptText="part" />
     <TableView fx:id="actors" layoutX="14.0" layoutY="42.0" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="572.0" prefWidth="170.0" />
-    <Slider fx:id="part" blockIncrement="1.0" layoutX="575.0" layoutY="377.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" orientation="VERTICAL" prefHeight="68.0" showTickLabels="true" showTickMarks="false" snapToTicks="true" />
+    <Slider fx:id="part" blockIncrement="1.0" layoutX="580.0" layoutY="346.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" orientation="VERTICAL" prefHeight="68.0" showTickLabels="true" showTickMarks="false" snapToTicks="true" />
     <AnchorPane fx:id="paneL" layoutX="184.0" layoutY="42.0" prefHeight="526.0" prefWidth="30.0" />
-    <Label fx:id="markLabel" layoutX="446.0" layoutY="333.0" prefHeight="41.0" prefWidth="40.0" text="0">
+    <Label fx:id="markLabel" layoutX="580.0" layoutY="305.0" prefHeight="41.0" prefWidth="40.0" text="0">
       <font>
         <Font name="System Bold" size="30.0" fx:id="x1" />
       </font>
     </Label>
-    <ColorPicker fx:id="c1" layoutX="488.0" layoutY="266.0" minWidth="30.0" onAction="#onC1" prefWidth="40.0" />
-    <ColorPicker fx:id="c2" layoutX="550.0" layoutY="266.0" onAction="#onC2" prefWidth="40.0" />
-    <ColorPicker fx:id="c3" layoutX="488.0" layoutY="317.0" onAction="#onC3" prefWidth="40.0" />
-    <ColorPicker fx:id="c4" layoutX="550.0" layoutY="317.0" onAction="#onC4" prefWidth="40.0" />
-    <Button layoutX="453.0" layoutY="266.0" mnemonicParsing="false" onAction="#sub" text="+" />
+    <Button layoutX="600.0" layoutY="44.0" minWidth="25.0" mnemonicParsing="false" onAction="#sub" prefWidth="30.0" text="+" />
     <ScrollPane layoutX="216.0" layoutY="43.0" prefHeight="200.0" prefWidth="374.0">
       <content>
         <AnchorPane id="Content" fx:id="parentPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="250.0">
@@ -50,18 +46,23 @@
         </AnchorPane>
       </content>
     </ScrollPane>
-    <ScrollPane layoutX="662.0" layoutY="459.0" prefHeight="156.0" prefWidth="396.9998779296875">
+    <ScrollPane layoutX="662.0" layoutY="459.0" prefHeight="157.0" prefWidth="396.9998779296875">
       <content>
         <AnchorPane id="pane" fx:id="tagPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
-    <Hyperlink fx:id="extHyperLink" layoutX="658.0" layoutY="53.0" onAction="#onExternalLink" prefWidth="201.0" text="Описание" />
-    <TextField fx:id="extLink" layoutX="215.0" layoutY="265.0" prefWidth="200.0" />
+    <TextField fx:id="extLink" layoutX="215.0" layoutY="265.0" prefWidth="373.9998779296875" />
     <ScrollPane layoutX="663.0" layoutY="312.0" prefHeight="114.0" prefWidth="397.0">
       <content>
         <AnchorPane id="Content" fx:id="langPanel" minHeight="-1.0" minWidth="-1.0" prefHeight="112.0" prefWidth="374.0" />
       </content>
     </ScrollPane>
-    <Button layoutX="1019.0" layoutY="53.0" mnemonicParsing="false" onAction="#explorer" text="EXP" />
+    <Button layoutX="1036.0" layoutY="12.0" mnemonicParsing="false" onAction="#explorer" text="EXP" />
+    <ScrollPane layoutX="659.0" layoutY="66.0" prefHeight="84.0" prefWidth="397.0">
+      <content>
+        <AnchorPane id="Content" fx:id="extLinksPanel" minHeight="0.0" minWidth="0.0" prefHeight="82.0" prefWidth="356.0" />
+      </content>
+    </ScrollPane>
+    <Hyperlink fx:id="extHyperLink" layoutX="657.0" layoutY="37.0" onAction="#onExternalLink" prefWidth="397.0" text="Описание" />
   </children>
 </AnchorPane>

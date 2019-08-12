@@ -53,9 +53,6 @@ public class Film {
                     nullable = false, updatable = false)})
     Set<Country> countries;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "film")
-    private FilmColor color;
-
     @Column(name = "never_delete")
     @Enumerated
     private DeletionStatus neverDelete;
@@ -175,14 +172,6 @@ public class Film {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public FilmColor getColor() {
-        return color;
-    }
-
-    public void setColor(FilmColor color) {
-        this.color = color;
     }
 
     public DeletionStatus getNeverDelete() {

@@ -19,7 +19,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,8 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
  */
 
 public class FDController {
+    private static final String  URL_REGEXP = "\\(?\\b(https?://|www[.])[-A-Za-z0-9+&amp;@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&amp;@#/%=~_()|]";
+    private static final Pattern pattern = Pattern.compile(URL_REGEXP);
 
     Film film;
 
@@ -45,7 +47,7 @@ public class FDController {
     private TableView<Actor> actors;
 
     @FXML
-    AnchorPane pane, paneL, mainPane, parentPanel, tagPanel, langPanel;
+    AnchorPane pane, paneL, mainPane, parentPanel, tagPanel, langPanel, extLinksPanel;
 
     @FXML
     Slider mark, part;
@@ -76,9 +78,6 @@ public class FDController {
 
     @FXML
     TextField actor, partName, extLink;
-
-    @FXML
-    ColorPicker c1, c2, c3, c4;
 
     @FXML
     Hyperlink extHyperLink;
@@ -116,26 +115,15 @@ public class FDController {
         paneL.getChildren().addAll(letters);
 
         filmName.setWrapText(true);
-        filmName.setText(FilmUtils.name(film, Film::getName) + " " + film.getYear());
+        filmName.setText(StringUtils.abbreviateMiddle(FilmUtils.name(film, Film::getName) + " " + film.getYear(), ".", 45));
 
         mark.setValue(film.getMark());
-        description.setText(film.getDescription().getDescription() == null ? "" : film.getDescription().getDescription());
         markLabel.setText(film.getMark().toString());
 
         new FilmActorsPanel(pane, film, faRepository).createLinks();
         new ParentPanel(parentPanel, film).createLinks();
         new TagsPanel(tagPanel, film, ftRepository).createLinks();
         new FilmLangPanel(langPanel, film, flRepository).createLinks();
-
-        FilmColor color = film.getColor();
-        if (color != null) {
-            c1.setValue(Color.valueOf(color.getC1()));
-            c2.setValue(Color.valueOf(color.getC2()));
-            c3.setValue(Color.valueOf(color.getC3()));
-            c4.setValue(Color.valueOf(color.getC4()));
-        }
-
-        mainPane.setStyle(generateStyleStr(film));
 
         autoSaveText();
     }
@@ -208,48 +196,13 @@ public class FDController {
     }
 
     @FXML
-    public void onC1() {
-        setColor(c1, FilmColor::setC1);
-    }
-
-    @FXML
-    public void onC2() {
-        setColor(c2, FilmColor::setC2);
-    }
-
-    @FXML
-    public void onC3() {
-        setColor(c3, FilmColor::setC3);
-    }
-
-    @FXML
-    public void onC4() {
-        setColor(c4, FilmColor::setC4);
-    }
-
-    private void setColor(ColorPicker cp, BiConsumer<FilmColor, String> f) {
-        FilmColor color = film.getColor();
-        if (color == null) {
-            color = new FilmColor(film);
-            film.setColor(color);
-        }
-        f.accept(color, cp.getValue().toString());
-        filmRepository.save(film);
-    }
-
-    private String generateStyleStr(Film f) {
-        FilmColor color = f.getColor() != null ? f.getColor() : new FilmColor();
-        return "-fx-background-color: linear-gradient( to bottom right,  "
-                + color.getC1().replace("0x", "#") + "  , "
-                + color.getC2().replace("0x", "#") + "  , "
-                + color.getC3().replace("0x", "#") + " , "
-                + color.getC4().replace("0x", "#") + " )";
-    }
-
-    @FXML
     public void onExternalLink() {
         String url = getLink(film);
         if (url == null) return;
+        openUrl(url);
+    }
+
+    private void openUrl(String url) {
         try {
             new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", url).start();
         } catch (java.io.IOException e) {
@@ -266,11 +219,14 @@ public class FDController {
     }
 
     private void autoSaveText() {
-        if(getLink(film) == null) {
+        String filmExtLink = getLink(film);
+        if(filmExtLink == null) {
             extHyperLink.setTextFill(Paint.valueOf("#ff0000"));
         } else {
             extHyperLink.setTextFill(Paint.valueOf("#038b47"));
+            extHyperLink.setText(StringUtils.abbreviate(filmExtLink, 60));
         }
+
         extLink.clear();
         extLink.textProperty().addListener((observable, oldValue, newValue) -> {
             if(StringUtils.isBlank(newValue)) return;
@@ -287,12 +243,14 @@ public class FDController {
 
         description.setEditable(true);
         description.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(StringUtils.isBlank(newValue)) return;
+            if(newValue == null) return;
             if(!eq(film.getDescription().getDescription(), newValue)) {
                 film.getDescription().setDescription(newValue);
                 filmRepository.save(film);
             }
         });
+
+        extractLinksFromDescription();
 
         mark.valueProperty().addListener((obs, oldV, newV) -> {
             if(!eq(film.getMark(), newV.intValue())) {
@@ -301,6 +259,26 @@ public class FDController {
             }
         });
 
+    }
+
+    private void extractLinksFromDescription() {
+        extLinksPanel.getChildren().clear();
+
+        String text = StringUtils.defaultString(film.getDescription().getDescription());
+        Matcher matcher = pattern.matcher(text);
+        int i = 0;
+        while (matcher.find()) {
+            String url = matcher.group();
+            Hyperlink l = new Hyperlink(StringUtils.abbreviate(url, 60));
+            l.setLayoutY(i * 18);
+            l.setOnMouseClicked(event -> {
+                openUrl(url);
+            });
+            extLinksPanel.getChildren().add(l);
+            i++;
+        }
+
+        description.setText(text);
     }
 
     private String getLink (Film f) {
