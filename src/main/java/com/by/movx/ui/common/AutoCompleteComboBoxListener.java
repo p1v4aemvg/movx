@@ -21,7 +21,6 @@ public abstract class AutoCompleteComboBoxListener<T> implements EventHandler<Ke
     private String name;
 
     protected abstract List<T> getData(String name);
-    protected abstract void create (String name);
 
     public AutoCompleteComboBoxListener(final ComboBox comboBox) {
         this.comboBox = comboBox;
@@ -53,7 +52,6 @@ public abstract class AutoCompleteComboBoxListener<T> implements EventHandler<Ke
             moveCaretToPos = true;
             caretPos = comboBox.getEditor().getCaretPosition();
         } else if (event.getCode() == KeyCode.ENTER) {
-            create(name);
             comboBox.getEditor().setText(name);
         }
 

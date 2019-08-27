@@ -9,6 +9,7 @@ import com.by.movx.ui.common.FilmActorsPanel;
 import com.by.movx.ui.common.FilmLangPanel;
 import com.by.movx.ui.common.ParentPanel;
 import com.by.movx.ui.common.TagsPanel;
+import com.by.movx.ui.utils.ControllerUtils;
 import com.by.movx.utils.CreatedDateCalculator;
 import com.by.movx.utils.FilmUtils;
 import com.google.common.eventbus.Subscribe;
@@ -213,9 +214,7 @@ public class FDController {
     @FXML
     public void explorer() throws Exception {
         if (film == null) return;
-        File file = CreatedDateCalculator.getFile(film);
-        if(file == null) return;
-        Runtime.getRuntime().exec("explorer.exe /select,\"" + file + "\"");
+        ControllerUtils.startExplorer(film);
     }
 
     private void autoSaveText() {

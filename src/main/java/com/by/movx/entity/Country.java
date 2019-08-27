@@ -23,9 +23,6 @@ public class Country {
     @Column(name = "image")
     private byte[] image;
 
-//    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "countries")
-//    private Set<Film> films;
-
     public Country() {}
 
     public Country(Long id) {
@@ -64,11 +61,4 @@ public class Country {
         this.image = image;
     }
 
-//    public Set<Film> getFilms() {
-//        return films;
-//    }
-//
-//    public void setFilms(Set<Film> films) {
-//        this.films = films;
-//    }
 }

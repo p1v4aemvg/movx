@@ -3,7 +3,7 @@ package com.by.movx.event;
 import com.by.movx.entity.CustomQuery;
 
 /**
- * Created by Администратор
+ * Created by movx
  * on 18.06.2018.
  */
 public class StatNodeClickedEvent extends Event<String> {

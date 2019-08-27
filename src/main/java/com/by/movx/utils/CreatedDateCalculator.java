@@ -62,21 +62,19 @@ public class CreatedDateCalculator {
                     }
                 }).map(f -> {
                     try {
-                        return (int)((f.length()/extractMinutes(f))/1024);
+                        return (int) ((f.length() / extractMinutes(f)) / 1024);
                     } catch (Exception ex) {
                         return 0;
                     }
                 }).max(Integer::compare).orElse(0);
-
     }
 
     private static Integer extractMinutes(File file) throws Exception {
         Process p = Runtime.getRuntime().exec("mediainfo \"" + file.getAbsolutePath() + "\" --Output=JSON");
         String data = new String(IOUtils.toByteArray(p.getInputStream()));
-
         String strValue = StringUtils.substringBefore(JsonPath.from(data).get("media.track[0].Duration"), ".");
 
-       return Integer.valueOf(strValue);
+        return Integer.valueOf(strValue);
     }
 
     private static List<File> getFiles(Film film, boolean deep) {
@@ -85,7 +83,7 @@ public class CreatedDateCalculator {
         deque.addLast(film);
         Film where = film;
 
-        while(deep && !CollectionUtils.isEmpty(film.getChildren())) {
+        while (deep && !CollectionUtils.isEmpty(film.getChildren())) {
             film = film.getChildren().iterator().next();
             deque.addLast(film);
         }
@@ -129,12 +127,12 @@ public class CreatedDateCalculator {
                 return found;
             }
         }
-        if(deep && found.size() > 0 && found.stream().allMatch(File::isDirectory)) {
+        if (deep && found.size() > 0 && found.stream().allMatch(File::isDirectory)) {
             List<File> temp = findInDirectFolder(found.get(0).getAbsolutePath(), deque.getLast());
             if (temp.size() > 0) return temp;
         }
 
-        if(latestNotNull != null) {
+        if (latestNotNull != null) {
             return deep ? Lists.newArrayList(new File(latestNotNull).listFiles()) : Lists.newArrayList(new File(latestNotNull));
         }
         return found;
@@ -143,7 +141,7 @@ public class CreatedDateCalculator {
     private static List<File> findInDirectFolder(String folder, Film film) {
         File f = new File(folder);
 
-        return f.listFiles() == null ? new ArrayList<>(): Stream.of(f.listFiles())
+        return f.listFiles() == null ? new ArrayList<>() : Stream.of(f.listFiles())
                 .filter(matches(film)).collect(Collectors.toList());
     }
 

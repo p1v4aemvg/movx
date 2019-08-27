@@ -6,6 +6,7 @@ import com.by.movx.entity.FilmActor;
 import com.by.movx.event.Event;
 import com.by.movx.event.FilmClickedEvent;
 import com.by.movx.repository.FilmActorRepository;
+import com.by.movx.utils.FilmUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Hyperlink;
@@ -45,7 +46,7 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
     }
 
     protected String name (FilmActor fa) {
-        return fa.film();
+        return FilmUtils.film(fa);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
             temp.setOnAction(event1 -> {
                 if (!temp.getText().isEmpty()) {
                     fa.setPartName(temp.getText());
-                    l.setText(fa.film());
+                    l.setText(FilmUtils.film(fa));
                     faRepository.save(fa);
                 }
                 pane.getChildren().remove(temp);
@@ -88,9 +89,7 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
         List<FilmActor> fas = new ArrayList<>();
 
         for (Actor a : actors.getActors()) {
-//            if(mode == Mode.UNION)
             fas.addAll(faRepository.findByActor(a));
-//            else fas.retainAll(faRepository.findByActor(a));
         }
 
         if(mode == Mode.UNION) {
@@ -100,6 +99,7 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
                     .sorted((fa1, fa2) -> Integer.compare(fa1.getFilm().getYear(), fa2.getFilm().getYear()))
                     .collect(Collectors.toList());
         }
+
         return fas.stream()
                 .collect(Collectors.groupingBy(fa -> fa.getFilm().getId())).entrySet()
                 .stream()
@@ -107,7 +107,5 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
                 .map(e -> e.getValue().get(0))
                 .sorted((fa1, fa2) -> Integer.compare(fa1.getFilm().getYear(), fa2.getFilm().getYear()))
                 .collect(Collectors.toList());
-
     }
-
 }

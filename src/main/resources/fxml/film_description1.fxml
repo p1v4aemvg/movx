@@ -19,7 +19,7 @@
     </Label>
     <TextArea fx:id="description" disable="false" editable="false" focusTraversable="false" layoutX="659.0" layoutY="154.0" pickOnBounds="false" prefHeight="144.99990000000253" prefWidth="400.0" wrapText="true" />
     <Label fx:id="fileName" layoutX="214.0" layoutY="315.0" prefWidth="128.0" text="" />
-    <Slider fx:id="mark" blockIncrement="1.0" layoutX="216.0" layoutY="313.0" majorTickUnit="1.0" max="10.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="327.5" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
+    <Slider fx:id="mark" blockIncrement="1.0" layoutX="216.0" layoutY="313.0" majorTickUnit="1.0" max="5.0" minorTickCount="1" mouseTransparent="false" pickOnBounds="false" prefWidth="327.5" showTickLabels="true" showTickMarks="false" snapToTicks="false" />
     <ScrollPane id="ppp" layoutX="214.0" layoutY="426.0" prefHeight="190.0" prefWidth="397.0">
       <content>
         <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="188.0" prefWidth="230.0" />

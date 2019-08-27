@@ -71,7 +71,6 @@ public class ConfigurationControllers {
         return (DiagController) getDiagView().getController();
     }
 
-
     @Bean
     public ActorController getActorController() throws IOException {
         return (ActorController) getActorView().getController();
@@ -124,7 +123,6 @@ public class ConfigurationControllers {
         public void setController(Object controller) {
             this.controller = controller;
         }
-
 
     }
 

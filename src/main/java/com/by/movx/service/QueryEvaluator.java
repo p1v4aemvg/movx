@@ -75,6 +75,4 @@ public class QueryEvaluator {
         return filmRepository.findByIdIn(ids,
                 new Sort(Sort.Direction.valueOf(params[1].toUpperCase()), params[0]));
     }
-
-
 }

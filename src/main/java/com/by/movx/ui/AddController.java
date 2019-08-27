@@ -166,6 +166,5 @@ public class AddController {
                             return p;
                         }
                 ).forEach(p -> cBox.getChildren().add(p));
-
     }
 }

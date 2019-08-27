@@ -2,7 +2,6 @@ package com.by.movx.ui;
 
 import com.by.movx.Common;
 import com.by.movx.ConfigurationControllers;
-import com.by.movx.common.Site;
 import com.by.movx.entity.*;
 import com.by.movx.event.*;
 import com.by.movx.repository.*;
@@ -10,6 +9,9 @@ import com.by.movx.service.QueryEvaluator;
 import com.by.movx.ui.common.FilmByNameAutoCompleteComboBoxListener;
 import com.by.movx.ui.common.PTableColumn;
 import com.by.movx.ui.common.TagAutoCompleteComboBoxListener;
+import com.by.movx.ui.utils.ColumnUtils;
+import com.by.movx.ui.utils.ControllerUtils;
+import com.by.movx.ui.utils.Converters;
 import com.by.movx.ui.utils.UIUtils;
 import com.by.movx.utils.CreatedDateCalculator;
 import com.by.movx.utils.FilmUtils;
@@ -23,20 +25,23 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.io.File;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,8 +50,6 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class MainController {
-
-    private static final Logger LOG = Logger.getLogger(MainController.class);
 
     @Inject
     @Qualifier("fdView")
@@ -92,7 +95,7 @@ public class MainController {
     private ActorRepository actorRepository;
 
     @FXML
-    Label count;
+    Label count, currentCount;
 
     @FXML
     private TableView<Film> table;
@@ -116,9 +119,6 @@ public class MainController {
 
     @FXML
     public ComboBox<FilmLang.Lang> lang;
-
-    @FXML
-    HBox letterBox;
 
     @FXML
     CheckBox sound, subtitled;
@@ -146,10 +146,13 @@ public class MainController {
 
     @FXML
     PTableColumn<Film, HBox> countryColumn;
+
     @FXML
     PTableColumn<Film, String> generalName, nameColumn, folderColumn, durationColumn;
+
     @FXML
     PTableColumn<Film, Integer> yearColumn, sizeColumn, qColumn;
+
     @FXML
     PTableColumn<Film, Date> dateColumn;
 
@@ -166,73 +169,22 @@ public class MainController {
         ObservableList<Country> countries = FXCollections.observableArrayList((List<Country>) countryRepository.findAll());
 
         createColumns();
-        table.setItems(data);
+        setItems(data);
 
-        comboCountry.setConverter(new StringConverter<Country>() {
-            @Override
-            public String toString(Country object) {
-                return object.getName();
-            }
-
-            @Override
-            public Country fromString(String string) {
-                return null;
-            }
-        });
+        comboCountry.setConverter(Converters.countryStringConverter());
         comboCountry.setItems(countries);
 
-        cums.setConverter(new StringConverter<Tag>() {
-            @Override
-            public String toString(Tag object) {
-                return object.getName();
-            }
-
-            @Override
-            public Tag fromString(String string) {
-                return null;
-            }
-        });
+        cums.setConverter(Converters.tagStringConverter());
         cums.setItems(FXCollections.observableArrayList(tagRepository.findCumulativeTags()));
 
-        comboType.setConverter(new StringConverter<Film.Type>() {
-            @Override
-            public String toString(Film.Type object) {
-                return object.getName();
-            }
-
-            @Override
-            public Film.Type fromString(String string) {
-                return null;
-            }
-        });
+        comboType.setConverter(Converters.filmTypeStringConverter());
         comboType.setItems(FXCollections.observableArrayList(Film.Type.values()));
 
-        tagCombo.setConverter(new StringConverter<Tag>() {
-            @Override
-            public String toString(Tag object) {
-                return object == null ? null : object.getName();
-            }
-
-            @Override
-            public Tag fromString(String string) {
-                return null;
-            }
-        });
+        tagCombo.setConverter(Converters.tagStringConverter());
         tagCombo.setItems(FXCollections.observableArrayList());
         new TagAutoCompleteComboBoxListener(tagCombo, tagRepository);
 
-        filmByNameCombo.setConverter(new StringConverter<Film>() {
-            @Override
-            public String toString(Film object) {
-                return object == null ? null :
-                        object.getYear() + " " + FilmUtils.name(object, Film::getName);
-            }
-
-            @Override
-            public Film fromString(String string) {
-                return null;
-            }
-        });
+        filmByNameCombo.setConverter(Converters.filmStringConverter());
 
         filmByNameCombo.setOnAction( e -> {
             Film f = filmByNameCombo.getSelectionModel().getSelectedItem();
@@ -248,24 +200,14 @@ public class MainController {
                             .collect(Collectors.toList())));
                 }
                 data = FXCollections.observableArrayList(films);
-                table.setItems(data);
+                setItems(data);
             }
         });
 
         filmByNameCombo.setItems(FXCollections.observableArrayList());
         new FilmByNameAutoCompleteComboBoxListener(filmByNameCombo, filmRepository);
 
-        customQuery.setConverter(new StringConverter<CustomQuery>() {
-            @Override
-            public String toString(CustomQuery object) {
-                return object.getName();
-            }
-
-            @Override
-            public CustomQuery fromString(String string) {
-                return null;
-            }
-        });
+        customQuery.setConverter(Converters.customQueryStringConverter());
         customQuery.setItems(FXCollections.observableArrayList(customQueryRepository.findByQueryType(CustomQuery.QueryType.FILM)));
         customQuery.setCellFactory(
                 new Callback<ListView<CustomQuery>, ListCell<CustomQuery>>() {
@@ -287,8 +229,7 @@ public class MainController {
                                     } else {
                                         setTextFill(Color.BLACK);
                                     }
-                                }
-                                else {
+                                } else {
                                     setText(null);
                                 }
                             }
@@ -297,27 +238,15 @@ public class MainController {
                     }
                 });
 
-        lang.setConverter(new StringConverter<FilmLang.Lang>() {
-            @Override
-            public String toString(FilmLang.Lang object) {
-                return object.name();
-            }
-
-            @Override
-            public FilmLang.Lang fromString(String string) {
-                return null;
-            }
-        });
+        lang.setConverter(Converters.filmLangConverter());
         lang.setItems(FXCollections.observableArrayList(FilmLang.Lang.values()));
-
-        fillLetters();
     }
 
     @FXML
     public void onRand() {
         Film f = filmRepository.findRandomFilm();
         data = FXCollections.observableArrayList(f);
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -325,7 +254,7 @@ public class MainController {
         Tag tag = tagCombo.getSelectionModel().getSelectedItem();
         if (tag == null) return;
         data = FXCollections.observableArrayList(filmRepository.getFilmsByTag(tag.getName()));
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -369,7 +298,7 @@ public class MainController {
         List<Film> films = filmRepository.findByYearBetween(from, to);
         data = FXCollections.observableArrayList(films);
 
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -381,7 +310,7 @@ public class MainController {
         List<Film> films = filmRepository.findByYearBetween(from + 1, from + 1);
         data = FXCollections.observableArrayList(films);
 
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -393,7 +322,7 @@ public class MainController {
         List<Film> films = filmRepository.findByYearBetween(from - 1, from - 1);
         data = FXCollections.observableArrayList(films);
 
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -417,7 +346,7 @@ public class MainController {
         List<Film> films = filmRepository.findFirst10ByMarkOrderByIdDesc(0)
                 .stream().sorted((f1, f2) -> f1.getId().compareTo(f2.getId())).collect(Collectors.toList());
         data = FXCollections.observableArrayList(films);
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -436,7 +365,7 @@ public class MainController {
         Country c = comboCountry.getSelectionModel().getSelectedItem();
         List<Film> films = filmRepository.findByCountry(c);
         data = FXCollections.observableArrayList(films);
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -445,26 +374,12 @@ public class MainController {
         if (type == null) return;
         List<Film> films = filmRepository.findByType(type);
         data = FXCollections.observableArrayList(films);
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
     public void diag() throws Exception {
         startDiag();
-    }
-
-    private void startDiag() throws Exception {
-
-        diagController.loadQ();
-
-        if (diagView.getView().getScene() != null)
-            diagView.getView().getScene().setRoot(new Button());
-
-        Stage stage = new Stage();
-        stage.setScene(new Scene(diagView.getView()));
-        stage.setResizable(true);
-        stage.centerOnScreen();
-        stage.show();
     }
 
     @FXML
@@ -484,8 +399,17 @@ public class MainController {
 
         stage.setOnCloseRequest(event -> {
             addController.setParent(null);
-            System.out.println("xxx");
         });
+    }
+
+    @FXML
+    public void onAddTag() {
+        String name = tagCombo.getEditor().getText();
+        if(StringUtils.isNotBlank(name) && !tagRepository.isExistsByName(name)) {
+            Tag t = new Tag();
+            t.setName(name);
+            tagRepository.save(t);
+        }
     }
 
     @FXML
@@ -549,7 +473,7 @@ public class MainController {
         }
 
         data = FXCollections.observableArrayList(films);
-        table.setItems(data);
+        setItems(data);
     }
 
     @FXML
@@ -568,10 +492,7 @@ public class MainController {
     public void explorer() throws Exception {
         Film f = firstOrSelected();
         if (f == null) return;
-        File file = CreatedDateCalculator.getFile(f);
-        if(file == null) return;
-        LOG.info("explorer.exe /select,\"" + file + "\"");
-        Runtime.getRuntime().exec("explorer.exe /select,\"" + file + "\"");
+        ControllerUtils.startExplorer(f);
     }
 
     @FXML
@@ -589,7 +510,7 @@ public class MainController {
         if(q == null) return;
         List<Film> films = queryEvaluator.getFilms(q);
         data = FXCollections.observableArrayList(films);
-        table.setItems(data);
+        setItems(data);
         query.setText("◊◊◊ " + data.size() + " (" + queryEvaluator.getFilmsCount(q) + ")");
     }
 
@@ -612,26 +533,6 @@ public class MainController {
         fl.setSound(isSound);
         fl.setSubtitled(isSub);
         filmLangRepository.save(fl);
-    }
-
-    @FXML
-    public void onW() throws Exception {
-        fetchSite(Site.WIKI);
-    }
-
-    @FXML
-    public void onKP() throws Exception {
-        fetchSite(Site.KP);
-    }
-
-    @FXML
-    public void onKT() throws Exception {
-        fetchSite(Site.KINO_TEATR);
-    }
-
-    @FXML
-    public void onIVI() throws Exception {
-        fetchSite(Site.IVI);
     }
 
     @FXML
@@ -660,6 +561,7 @@ public class MainController {
         film.setNeverDelete(Film.DeletionStatus.INCOMPLETE);
         filmRepository.save(film);
     }
+
     @FXML
     public void onCum() {
         Tag tag = cums.getSelectionModel().getSelectedItem();
@@ -667,7 +569,7 @@ public class MainController {
 
         List<Film> films = filmRepository.findByCumulativeTag(tag.getId());
         data = FXCollections.observableArrayList(films);
-        table.setItems(data);
+        setItems(data);
         query.setText("QUERY " + data.size());
 
         tagCombo.getSelectionModel().select(tag);
@@ -680,10 +582,6 @@ public class MainController {
 
         film.setSpecial(true);
         filmRepository.save(film);
-
-//        File file = CreatedDateCalculator.getFile(film);
-//        if(file == null) return;
-//        FileUtils.copyFileToDirectory(file, new File("D:\\zxc\\zxc"));
     }
 
     @FXML
@@ -695,38 +593,19 @@ public class MainController {
         filmRepository.save(film);
     }
 
-    private void fetchSite(Site site) throws Exception {
+    @FXML
+    public void onCopy() {
         Film f = firstOrSelected();
-        if(f == null) return;
+        if (f == null) return;
 
-        String url = fetcher.googleQ(FilmUtils.name(f, Film::getName) + " " + f.getYear() + site.getAddSearch());
-        String link = fetcher.fetch(url, site.getContain());
-        if(link == null) return;
-
-        f.getDescription().setExternalLink(link);
-        filmRepository.save(f);
-
-        new ProcessBuilder("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", link).start();
+        StringSelection stringSelection = new StringSelection(f.getName());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
     }
 
-    private void fillLetters() {
-        char chars[] = "0123456789АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-        List<Hyperlink> letters = new ArrayList<>();
-
-        int k = 0;
-        for (final char c : chars) {
-            Hyperlink h = new Hyperlink(String.valueOf(c));
-            h.setLayoutX(8 * k);
-            k++;
-            h.setOnMouseClicked(event -> {
-                data = FXCollections.observableArrayList(filmRepository.getFilmsBy1stLetter(String.valueOf(c)));
-                table.setItems(data);
-            });
-            letters.add(h);
-        }
-
-        letterBox.getChildren().clear();
-        letterBox.getChildren().addAll(letters);
+    @FXML
+    public void reloadAll() {
+        init();
     }
 
     @Subscribe
@@ -793,6 +672,19 @@ public class MainController {
         stage.show();
     }
 
+    private void startDiag() throws Exception {
+        diagController.loadQ();
+
+        if (diagView.getView().getScene() != null)
+            diagView.getView().getScene().setRoot(new Button());
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(diagView.getView()));
+        stage.setResizable(true);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
     private Button anyButton() {
         Button b = new Button();
 
@@ -812,44 +704,20 @@ public class MainController {
         return film;
     }
 
-    @FXML
-    public void reloadAll() {
-        init();
-    }
-
     private void createColumns() {
         countryColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(UIUtils.wrapCountries(c)));
-        generalName.setCellValueFactory(c -> new SimpleObjectProperty<>(parent(c)));
-        nameColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(name(c)));
+        generalName.setCellValueFactory(c -> new SimpleObjectProperty<>(ColumnUtils.parent(c)));
+        nameColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(ColumnUtils.name(c)));
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-        folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(folder(c)));
-        durationColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(duration(c)));
-        sizeColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(size(c)));
-        qColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(quality(c)));
+        folderColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(ColumnUtils.folder(c)));
+        durationColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(ColumnUtils.duration(c)));
+        sizeColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(ColumnUtils.size(c)));
+        qColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(ColumnUtils.quality(c)));
     }
 
-    private static String name(TableColumn.CellDataFeatures<Film, String> c) {
-        return FilmUtils.name(c.getValue(), Film::getName);
-    }
-
-    private static String folder(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getType().getName();
-    }
-
-    private static String duration(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getDuration().getName();
-    }
-
-    private static Integer quality(TableColumn.CellDataFeatures<Film, Integer> c) {
-        return c.getValue().getQuality();
-    }
-
-    private static String parent(TableColumn.CellDataFeatures<Film, String> c) {
-        return c.getValue().getParent() == null ? "" : FilmUtils.name(c.getValue().getParent(), Film::getName);
-    }
-
-    private static Integer size(TableColumn.CellDataFeatures<Film, Integer> c) {
-        return c.getValue().getFilmSize() == null ? 0 : Long.valueOf(c.getValue().getFilmSize()/(1024*1024)).intValue();
+    private void setItems(ObservableList<Film> data) {
+        currentCount.setText(String.valueOf(data.size()));
+        table.setItems(data);
     }
 }

@@ -7,7 +7,7 @@ import javafx.scene.control.ComboBox;
 import java.util.List;
 
 /**
- * Created by Администратор
+ * Created by movx
  * on 02.06.2016.
  */
 public class TagAutoCompleteComboBoxListener extends AutoCompleteComboBoxListener<Tag> {
@@ -23,12 +23,4 @@ public class TagAutoCompleteComboBoxListener extends AutoCompleteComboBoxListene
         return tagRepository.findByNameIgnoreCaseContaining(name);
     }
 
-    @Override
-    protected void create(String name) {
-        if(!tagRepository.isExistsByName(name)) {
-            Tag t = new Tag();
-            t.setName(name);
-            tagRepository.save(t);
-        }
-    }
 }

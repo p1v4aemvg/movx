@@ -16,22 +16,6 @@ import java.util.List;
  * on 04.02.2016.
  */
 public interface FilmActorRepository extends CrudRepository<FilmActor, Long> {
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE fa " +
-            "  FROM film_actor fa JOIN " +
-            "( " +
-            "  SELECT film_id, actor_id, MAX(id) id1 " +
-            "    FROM film_actor " +
-            "   GROUP BY film_id, actor_id " +
-            ") d  " +
-            "   ON " +
-            " (fa.film_id = d.film_id  " +
-            "and fa.actor_id = d.actor_id " +
-            "  AND fa.id <> d.id1) " +
-            "where   fa.id > 0 ", nativeQuery = true)
-    void deleteDuplicates();
-
     @Query(value = "select fa from FilmActor fa " +
             "where fa.actor = :actor " +
             "order by fa.film.year")

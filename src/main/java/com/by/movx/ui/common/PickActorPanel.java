@@ -17,7 +17,7 @@ import java.util.List;
  * Created by movx
  * on 30.09.2017.
  */
-public  class PickActorPanel extends ActorTargetLinkPanel<Actor> {
+public class PickActorPanel extends ActorTargetLinkPanel<Actor> {
 
     public PickActorPanel(AnchorPane pane, Actors actors) {
         super(pane, actors);

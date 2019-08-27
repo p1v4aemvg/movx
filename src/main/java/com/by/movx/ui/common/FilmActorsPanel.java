@@ -5,6 +5,7 @@ import com.by.movx.entity.FilmActor;
 import com.by.movx.event.ActorClickedEvent;
 import com.by.movx.event.Event;
 import com.by.movx.repository.FilmActorRepository;
+import com.by.movx.utils.FilmUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Hyperlink;
@@ -32,7 +33,7 @@ public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
     }
 
     protected String name (FilmActor fa) {
-        return fa.fullName(target);
+        return FilmUtils.fullName(fa, target);
     }
 
     @Override
@@ -47,7 +48,6 @@ public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
             faRepository.save(fa);
             createLinks();
         };
-
     }
 
     @Override
@@ -61,7 +61,7 @@ public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
             temp.setOnAction(event1 -> {
                 if (!temp.getText().isEmpty()) {
                     fa.setPartName(temp.getText());
-                    l.setText(fa.fullName(target));
+                    l.setText(FilmUtils.fullName(fa, target));
                     faRepository.save(fa);
                 }
                 pane.getChildren().remove(temp);
@@ -81,5 +81,4 @@ public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
     protected List<FilmActor> getItems(Film f) {
         return faRepository.findByFilm(f);
     }
-
 }

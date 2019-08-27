@@ -9,187 +9,198 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1052.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.MainController">
-    <children>
-        <TableView fx:id="table" editable="true" prefHeight="413.0" prefWidth="799.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="174.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
-            <columns>
-                <PTableColumn text="Country" fx:id="countryColumn" percentageWidth="0.13" />
-                <PTableColumn text="Общее название" fx:id="generalName" percentageWidth="0.15" />
-                <PTableColumn text="Нахвание" fx:id="nameColumn" percentageWidth="0.20" />
-                <PTableColumn text="Год" fx:id="yearColumn" percentageWidth="0.07" />
-                <PTableColumn text="Date" fx:id="dateColumn" percentageWidth="0.15" />
-                <PTableColumn text="Папка" fx:id="folderColumn" percentageWidth="0.10" />
-                <PTableColumn text="Тип" fx:id="durationColumn" percentageWidth="0.05" />
-                <PTableColumn text="Размер" fx:id="sizeColumn" percentageWidth="0.08" />
-                <PTableColumn text="Q" fx:id="qColumn" percentageWidth="0.05" />
-            </columns>
-        </TableView>
-        <HBox fx:id="letterBox" prefHeight="27.0" prefWidth="799.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-        <HBox alignment="CENTER" prefHeight="138.0" prefWidth="629.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
-            <children>
-                <GridPane prefHeight="138.0" prefWidth="889.0">
-                    <children>
-                        <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#toWatch" prefWidth="135.0001220703125" text="WATCH 10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <ComboBox fx:id="comboCountry" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                        <Button mnemonicParsing="false" onAction="#findByCountry" prefWidth="170.0" text="Найти" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                        <Button mnemonicParsing="false" onAction="#edit" prefWidth="147.0" text="Edit" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <Button fx:id="actor" mnemonicParsing="false" onAction="#onActor" prefWidth="231.0" text="ACTORS" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <HBox prefHeight="22.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#reload" prefWidth="61.0" text="#" />
-                                <Button mnemonicParsing="false" onAction="#reloadAll" prefWidth="50.0" text="⟲">
-                                    <font>
-                                        <Font size="12.0" />
-                                    </font>
-                                </Button>
-                                <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="117.0" text="ADD" />
-                            </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#onTag" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <ComboBox fx:id="tagCombo" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                        <Button mnemonicParsing="false" onAction="#addTag" prefWidth="146.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                        <Button fx:id="rand" mnemonicParsing="false" onAction="#onRand" prefWidth="147.0" text="RAND" GridPane.columnIndex="4" GridPane.rowIndex="0" />
-                        <Button mnemonicParsing="false" onAction="#diag" prefWidth="147.0" text="☈" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#findByYear" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <Button mnemonicParsing="false" onAction="#addCountry" prefWidth="147.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <children>
-                                <TextField fx:id="txtYearTo" prefWidth="170.00009999999747" promptText="По" />
-                                <Button mnemonicParsing="false" onAction="#inc" prefWidth="61.0" text="&gt;" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#dec" prefWidth="38.0" text="&lt;" />
-                                <TextField fx:id="txtYearFrom" onKeyReleased="#copyYearFrom" prefWidth="193.0" promptText="С" />
-                            </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#findByType" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <ComboBox fx:id="comboType" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Item 1" />
-                                    <String fx:value="Item 2" />
-                                    <String fx:value="Item 3" />
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#withoutDate" prefWidth="67.0" text="date_all" />
-                                <Button mnemonicParsing="false" onAction="#getCreatedAt" prefWidth="80.0" text="date" />
-                            </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#delete" prefWidth="227.0" text="DELETE !!!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <children>
-                                <Label fx:id="count" alignment="CENTER" contentDisplay="CENTER" prefWidth="61.0" text="Label" visible="true">
-                                    <font>
-                                        <Font name="System Bold" size="16.0" />
-                                    </font>
-                                </Label>
-                                <ComboBox id="linl" fx:id="filmByNameCombo" prefHeight="21.0" prefWidth="169.00009999999747">
-                                    <items>
-                                        <FXCollections fx:factory="observableArrayList">
-                                            <String fx:value="Item 1" />
-                                            <String fx:value="Item 2" />
-                                            <String fx:value="Item 3" />
-                                        </FXCollections>
-                                    </items>
-                                </ComboBox>
-                            </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#google" prefWidth="146.0" text="G" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <ComboBox fx:id="customQuery" prefHeight="21.0" prefWidth="227.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Item 1" />
-                                    <String fx:value="Item 2" />
-                                    <String fx:value="Item 3" />
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#randTag" text="R" />
-                                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="199.0" text="◊◊◊" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                            <children>
-                                <ComboBox id="langs" fx:id="lang" prefHeight="23.0" prefWidth="62.0">
-                                    <items>
-                                        <FXCollections fx:factory="observableArrayList">
-                                            <String fx:value="Item 1" />
-                                            <String fx:value="Item 2" />
-                                            <String fx:value="Item 3" />
-                                        </FXCollections>
-                                    </items>
-                                </ComboBox>
-                                <CheckBox fx:id="sound" minWidth="-1.0" mnemonicParsing="false" prefWidth="50.0" text="♫" />
-                                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" prefWidth="50.0" text="sub" />
-                                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="67.0" text="+" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#onW" prefWidth="38.0" text="w" />
-                                <Button mnemonicParsing="false" onAction="#onKP" prefWidth="38.0" text="kp" />
-                                <Button mnemonicParsing="false" onAction="#onKT" prefWidth="38.0" text="kt" />
-                                <Button mnemonicParsing="false" onAction="#onIVI" prefWidth="34.0" text="i" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#on1" prefWidth="82.0" text="1" />
-                                <Button mnemonicParsing="false" onAction="#on0" prefWidth="69.0" text="0" />
-                                <Button mnemonicParsing="false" onAction="#on2" prefWidth="69.0" text="2" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                            <children>
-                                <ComboBox id="cum" fx:id="cums" prefHeight="21.0" prefWidth="117.0">
-                                    <items>
-                                        <FXCollections fx:factory="observableArrayList">
-                                            <String fx:value="Item 1" />
-                                            <String fx:value="Item 2" />
-                                            <String fx:value="Item 3" />
-                                        </FXCollections>
-                                    </items>
-                                </ComboBox>
-                                <Button mnemonicParsing="false" onAction="#onCum" prefWidth="28.0" text="C" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#onFileSize" prefWidth="67.0" text="SIZE" />
-                                <Button mnemonicParsing="false" onAction="#explorer" prefWidth="80.00009999999747" text="EXP" />
-                            </children>
-                        </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#onTodo" prefWidth="67.0" text="TODO" />
-                                <Button mnemonicParsing="false" onAction="#onUnTodo" prefWidth="80.0" text="-TODO" />
-                            </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#onQuality" prefWidth="38.0" text="Q" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                    </children>
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="205.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.0" minWidth="10.0" prefWidth="190.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="10.0" prefWidth="92.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="101.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="101.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                </GridPane>
-            </children>
-        </HBox>
-    </children>
+  <children>
+    <TableView fx:id="table" editable="true" prefHeight="413.0" prefWidth="799.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="174.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+      <columns>
+        <PTableColumn text="Country" fx:id="countryColumn" percentageWidth="0.13" />
+        <PTableColumn text="Общее название" fx:id="generalName" percentageWidth="0.15" />
+        <PTableColumn text="Нахвание" fx:id="nameColumn" percentageWidth="0.20" />
+        <PTableColumn text="Год" fx:id="yearColumn" percentageWidth="0.07" />
+        <PTableColumn text="Date" fx:id="dateColumn" percentageWidth="0.15" />
+        <PTableColumn text="Папка" fx:id="folderColumn" percentageWidth="0.10" />
+        <PTableColumn text="Тип" fx:id="durationColumn" percentageWidth="0.05" />
+        <PTableColumn text="Размер" fx:id="sizeColumn" percentageWidth="0.08" />
+        <PTableColumn text="Q" fx:id="qColumn" percentageWidth="0.05" />
+      </columns>
+    </TableView>
+    <HBox fx:id="letterBox" layoutY="0.0" prefHeight="27.0" prefWidth="1024.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+      <children>
+        <Label fx:id="currentCount" prefHeight="23.0" prefWidth="45.0" text="Label">
+          <font>
+            <Font name="System Bold Italic" size="16.0" />
+          </font>
+        </Label>
+      </children>
+    </HBox>
+    <HBox alignment="CENTER" prefHeight="138.0" prefWidth="629.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+      <children>
+        <GridPane prefHeight="138.0" prefWidth="889.0">
+          <children>
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#toWatch" prefWidth="135.0001220703125" text="WATCH 10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <ComboBox fx:id="comboCountry" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button mnemonicParsing="false" onAction="#findByCountry" prefWidth="170.0" text="Найти" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button mnemonicParsing="false" onAction="#edit" prefWidth="147.0" text="Edit" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Button fx:id="actor" mnemonicParsing="false" onAction="#onActor" prefWidth="231.0" text="ACTORS" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <HBox prefHeight="22.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+              <children>
+                <Button mnemonicParsing="false" onAction="#reload" prefWidth="61.0" text="#" />
+                <Button mnemonicParsing="false" onAction="#reloadAll" prefWidth="50.0" text="⟲">
+                  <font>
+                    <Font size="12.0" />
+                  </font>
+                </Button>
+                <Button id="add" mnemonicParsing="false" onAction="#add" prefWidth="117.0" text="ADD" />
+              </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#onTag" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button mnemonicParsing="false" onAction="#addTag" prefWidth="146.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+            <Button fx:id="rand" mnemonicParsing="false" onAction="#onRand" prefWidth="147.0" text="RAND" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+            <Button mnemonicParsing="false" onAction="#diag" prefWidth="147.0" text="☈" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#findByYear" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#addCountry" prefWidth="147.0" text="+" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+              <children>
+                <TextField fx:id="txtYearTo" prefWidth="170.00009999999747" promptText="По" />
+                <Button mnemonicParsing="false" onAction="#inc" prefWidth="61.0" text="&gt;" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+              <children>
+                <Button mnemonicParsing="false" onAction="#dec" prefWidth="38.0" text="&lt;" />
+                <TextField fx:id="txtYearFrom" onKeyReleased="#copyYearFrom" prefWidth="193.0" promptText="С" />
+              </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#findByType" prefWidth="138.0" text="Найти" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboType" prefHeight="21.0" prefWidth="231.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
+              <children>
+                <Button mnemonicParsing="false" onAction="#withoutDate" prefWidth="67.0" text="date_all" />
+                <Button mnemonicParsing="false" onAction="#getCreatedAt" prefWidth="80.0" text="date" />
+              </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#delete" prefWidth="227.0" text="DELETE !!!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+              <children>
+                <Label fx:id="count" alignment="CENTER" contentDisplay="CENTER" prefWidth="61.0" text="Label" visible="true">
+                  <font>
+                    <Font name="System Bold" size="16.0" />
+                  </font>
+                </Label>
+                <ComboBox id="linl" fx:id="filmByNameCombo" prefHeight="21.0" prefWidth="169.00009999999747">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+              </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#google" prefWidth="146.0" text="G" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <ComboBox fx:id="customQuery" prefHeight="21.0" prefWidth="227.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+              <children>
+                <Button mnemonicParsing="false" onAction="#randTag" text="R" />
+                <Button fx:id="query" mnemonicParsing="false" onAction="#query" prefWidth="199.0" text="◊◊◊" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+              <children>
+                <ComboBox id="langs" fx:id="lang" prefHeight="23.0" prefWidth="62.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <CheckBox fx:id="sound" minWidth="-1.0" mnemonicParsing="false" prefWidth="50.0" text="♫" />
+                <CheckBox id="subtitle" fx:id="subtitled" mnemonicParsing="false" prefWidth="50.0" text="sub" />
+                <Button mnemonicParsing="false" onAction="#addLang" prefWidth="67.0" text="+" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+              <children>
+                <Button mnemonicParsing="false" onAction="#on1" prefWidth="82.0" text="1" />
+                <Button mnemonicParsing="false" onAction="#on0" prefWidth="69.0" text="0" />
+                <Button mnemonicParsing="false" onAction="#on2" prefWidth="69.0" text="2" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+              <children>
+                <ComboBox id="cum" fx:id="cums" prefHeight="21.0" prefWidth="117.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <Button mnemonicParsing="false" onAction="#onCum" prefWidth="28.0" text="C" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+              <children>
+                <Button mnemonicParsing="false" onAction="#onFileSize" prefWidth="67.0" text="SIZE" />
+                <Button mnemonicParsing="false" onAction="#explorer" prefWidth="80.00009999999747" text="EXP" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+              <children>
+                <Button mnemonicParsing="false" onAction="#onTodo" prefWidth="67.0" text="TODO" />
+                <Button mnemonicParsing="false" onAction="#onUnTodo" prefWidth="80.0" text="-TODO" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+              <children>
+                <Button mnemonicParsing="false" onAction="#onQuality" prefWidth="38.0" text="Q" />
+                <Button mnemonicParsing="false" onAction="#onCopy" prefWidth="38.0" text="CC" />
+              </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="5">
+              <children>
+                <ComboBox fx:id="tagCombo" prefHeight="21.0" prefWidth="199.0" />
+                <Button mnemonicParsing="false" onAction="#onAddTag" prefWidth="38.0" text="+" />
+              </children>
+            </HBox>
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="205.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.0" minWidth="10.0" prefWidth="190.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="10.0" prefWidth="92.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="101.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="101.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+        </GridPane>
+      </children>
+    </HBox>
+  </children>
 </AnchorPane>

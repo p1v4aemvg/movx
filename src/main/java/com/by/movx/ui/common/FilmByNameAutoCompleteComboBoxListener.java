@@ -9,7 +9,7 @@ import javafx.scene.control.ComboBox;
 import java.util.List;
 
 /**
- * Created by Администратор
+ * Created by movx
  * on 02.06.2016.
  */
 public class FilmByNameAutoCompleteComboBoxListener extends AutoCompleteComboBoxListener<Film> {
@@ -25,8 +25,4 @@ public class FilmByNameAutoCompleteComboBoxListener extends AutoCompleteComboBox
         return filmRepository.findByNameIgnoreCaseContaining(name);
     }
 
-    @Override
-    protected void create(String name) {
-
-    }
 }
