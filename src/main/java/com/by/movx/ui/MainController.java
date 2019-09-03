@@ -191,6 +191,11 @@ public class MainController {
             if( f != null) {
                 List<Film> films = new ArrayList();
                 films.add(f);
+                Film parent = f.getParent();
+                while (parent != null) {
+                    films.add(parent);
+                    parent = parent.getParent();
+                }
                 if(!CollectionUtils.isEmpty(f.getChildren()) ) {
                     films.addAll(Lists.newArrayList(f.getChildren().stream()
                             .sorted((f1, f2) ->
