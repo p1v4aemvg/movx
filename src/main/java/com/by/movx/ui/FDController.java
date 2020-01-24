@@ -214,6 +214,9 @@ public class FDController {
     @FXML
     public void explorer() throws Exception {
         if (film == null) return;
+        film.incStatCount();
+        filmRepository.save(film);
+
         ControllerUtils.startExplorer(film);
     }
 
