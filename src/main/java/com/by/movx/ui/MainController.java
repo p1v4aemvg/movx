@@ -497,6 +497,8 @@ public class MainController {
     public void explorer() throws Exception {
         Film f = firstOrSelected();
         if (f == null) return;
+        f.incStatCount();
+        filmRepository.save(f);
         ControllerUtils.startExplorer(f);
     }
 

@@ -69,6 +69,9 @@ public class Film {
     @Column(name = "quality")
     private Integer quality;
 
+    @Column(name = "s_count")
+    private Integer statCount = 0;
+
     public Film() {
     }
 
@@ -204,6 +207,18 @@ public class Film {
 
     public void setQuality(Integer quality) {
         this.quality = quality;
+    }
+
+    public Integer getStatCount() {
+        return statCount;
+    }
+
+    public void setStatCount(Integer statCount) {
+        this.statCount = statCount;
+    }
+
+    public void incStatCount() {
+        this.statCount = this.statCount + 1;
     }
 
     public enum Type {
