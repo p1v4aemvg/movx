@@ -82,7 +82,7 @@ public class ActorController {
     private MovableRect r;
 
     @FXML
-    private Button plBtn, minBtn, captureBtn, getBtn, rand, spec;
+    private Button plBtn, minBtn, captureBtn, getBtn, rand, spec, year;
 
     @FXML
     ToggleButton union, intersection;
@@ -354,6 +354,8 @@ public class ActorController {
     public void onYear() {
         List<Actor> filtered = actorRepository.find10NoYear();
         setData(filtered);
+        year.setText("Y" + actorRepository.getNoBornCount());
+
     }
 
     @FXML

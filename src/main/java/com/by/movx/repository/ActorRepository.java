@@ -19,6 +19,9 @@ public interface ActorRepository extends CrudRepository<Actor, Long> {
     @Query(value = "select count(*) from actor where img is null", nativeQuery = true)
     Long getNoImgCount();
 
+    @Query(value = "select count(*) from actor where born is null", nativeQuery = true)
+    Long getNoBornCount();
+
     @Query(value = "select a.name, count(fa.film), a.id from FilmActor fa " +
             "join fa.actor a " +
             "group by fa.actor " +

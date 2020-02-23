@@ -41,7 +41,7 @@
         <Font name="System Bold" size="20.0" />
       </font>
     </Label>
-    <Button layoutX="164.0" layoutY="16.0" mnemonicParsing="false" onAction="#onYear" prefWidth="50.0" text="Y" />
+    <Button fx:id="year" layoutX="164.0" layoutY="16.0" mnemonicParsing="false" onAction="#onYear" prefWidth="50.0" text="Y" />
     <Button layoutX="846.0" layoutY="380.0" mnemonicParsing="false" onAction="#google" text="G" />
     <TextField fx:id="born" layoutX="886.0" layoutY="379.0" prefWidth="94.0" promptText="year" />
     <ScrollPane layoutX="837.0" layoutY="414.0" prefHeight="200.00009999999747" prefWidth="208.0">
