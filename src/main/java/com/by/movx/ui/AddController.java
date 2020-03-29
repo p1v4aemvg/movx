@@ -53,6 +53,9 @@ public class AddController {
     @FXML
     private HBox cBox;
 
+    @FXML
+    private CheckBox isEntity;
+
     private Set<Country> selectedCountries = new HashSet<>();
 
     public void init() {
@@ -115,6 +118,7 @@ public class AddController {
         film.setEnName(enname.getText().isEmpty() ? null : enname.getText());
         film.setYear(Integer.valueOf(year.getText()));
         film.setType(type.getSelectionModel().getSelectedItem());
+        film.setEntity(isEntity.isSelected());
         film.setMark(0);
         film.setDuration(Film.Duration.of((int) duration.getValue()));
         film.setParent(parent);

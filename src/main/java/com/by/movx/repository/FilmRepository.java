@@ -50,7 +50,7 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     @Query(value = "select f from Film f where f.name like :letter% or f.enName like :letter% ")
     List<Film> getFilmsBy1stLetter(@Param(value = "letter") String letter);
 
-    @Query(value = "select count(f) from Film f where f.parent is null")
+    @Query(value = "select count(f) from Film f where f.entity = true")
     Long countFilms();
 
     List<Film> findByNameIgnoreCaseContaining(String name);

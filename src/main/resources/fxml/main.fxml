@@ -137,7 +137,12 @@
                 <Button mnemonicParsing="false" onAction="#addLang" prefWidth="67.0" text="+" />
               </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                <children>
+                    <Button mnemonicParsing="false" onAction="#setEntityTrue" prefWidth="38.0" text="E+" />
+                    <Button mnemonicParsing="false" onAction="#setEntityFalse" prefWidth="35.0" text="E-" />
+                </children>
+            </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
               <children>
                 <Button mnemonicParsing="false" onAction="#on1" prefWidth="82.0" text="1" />

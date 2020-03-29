@@ -72,6 +72,9 @@ public class Film {
     @Column(name = "s_count")
     private Integer statCount = 0;
 
+    @Column(name = "is_entity")
+    private Boolean entity;
+
     public Film() {
     }
 
@@ -218,7 +221,19 @@ public class Film {
     }
 
     public void incStatCount() {
-        this.statCount = this.statCount + 1;
+        Film toUpdate = this;
+        while(toUpdate.getParent() != null && toUpdate.getEntity().equals(false)) {
+            toUpdate = toUpdate.getParent();
+        }
+        toUpdate.setStatCount(toUpdate.getStatCount() + 1);
+    }
+
+    public Boolean getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Boolean entity) {
+        this.entity = entity;
     }
 
     public enum Type {

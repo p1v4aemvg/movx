@@ -615,6 +615,25 @@ public class MainController {
         init();
     }
 
+    @FXML
+    public void setEntityTrue() {
+        setEntity(true);
+    }
+
+    @FXML
+    public void setEntityFalse() {
+        setEntity(false);
+    }
+
+    private void setEntity(boolean val) {
+        Film f = firstOrSelected();
+        if(f == null) {
+            return;
+        }
+        f.setEntity(val);
+        filmRepository.save(f);
+    }
+
     @Subscribe
     public void filmClicked(FilmClickedEvent e) {
         Film film = e.getData().getFilm();
