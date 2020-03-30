@@ -632,6 +632,17 @@ public class MainController {
         }
         f.setEntity(val);
         filmRepository.save(f);
+
+        if (val) {
+            f.getChildren().forEach(this::setFalseAll);
+        }
+    }
+
+    private void setFalseAll(Film f) {
+        f.setEntity(false);
+        filmRepository.save(f);
+
+        f.getChildren().forEach(this::setFalseAll);
     }
 
     @Subscribe
