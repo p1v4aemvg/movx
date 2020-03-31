@@ -51,7 +51,7 @@ public class UIUtils {
                 super.updateItem(film, empty);
                 if (!empty) {
                     String style = "";
-                    if (film.getParent() == null) {
+                    if (film.getEntity() != null && film.getEntity().equals(true)) {
                         style += "-fx-font-weight: bold;";
                     }
                     if(film.getNeverDelete() == null) {
