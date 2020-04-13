@@ -625,6 +625,41 @@ public class MainController {
         setEntity(false);
     }
 
+    @FXML
+    public void setMark1(){
+        setMark(1);
+    }
+
+    @FXML
+    public void setMark2(){
+        setMark(2);
+    }
+
+    @FXML
+    public void setMark3(){
+        setMark(3);
+    }
+
+    @FXML
+    public void setMark4(){
+        setMark(4);
+    }
+
+    @FXML
+    public void setMark5(){
+        setMark(5);
+    }
+
+    private void setMark(int mark){
+       Film f = firstOrSelected();
+        if(f == null){
+            return;
+        }
+        f.setMark(mark);
+        filmRepository.save(f);
+    }
+
+
     private void setEntity(boolean val) {
         Film f = firstOrSelected();
         if(f == null) {

@@ -32,6 +32,15 @@
         </Label>
       </children>
     </HBox>
+      <HBox layoutX="355.0" layoutY="0.0" prefHeight="27.0" prefWidth="361.0">
+          <children>
+              <Button mnemonicParsing="false" onAction="#setMark1" text="1" />
+              <Button mnemonicParsing="false" onAction="#setMark2" text="2" />
+              <Button mnemonicParsing="false" onAction="#setMark3" text="3" />
+              <Button mnemonicParsing="false" onAction="#setMark4" text="4" />
+              <Button mnemonicParsing="false" onAction="#setMark5" text="5" />
+          </children>
+      </HBox>
     <HBox alignment="CENTER" prefHeight="138.0" prefWidth="629.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
       <children>
         <GridPane prefHeight="138.0" prefWidth="889.0">
