@@ -694,9 +694,17 @@ public class MainController {
 
     @Subscribe
     public void statActorClicked(StatActorClickedEvent e) {
-        Actor a = actorRepository.findOne((Long)(e.getData()[2]));
+        Actor a = actorRepository.findOne(Long.valueOf((Integer) (e.getData()[2])));
         actorController.setCurrent(a);
         onActor();
+    }
+
+    @Subscribe
+    public void statFilmClicked(StatFilmClickedEvent e) {
+        Film f = filmRepository.findOne(Long.valueOf((Integer) (e.getData()[2])));
+        if(f != null) {
+            openFilm(f);
+        }
     }
 
     @Subscribe

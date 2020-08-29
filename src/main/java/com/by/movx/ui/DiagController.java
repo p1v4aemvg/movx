@@ -26,11 +26,11 @@ import java.util.List;
 public class DiagController {
 
     @Inject
-    @Qualifier("statActorsView")
-    ConfigurationControllers.View statActorsView;
+    @Qualifier("statListView")
+    ConfigurationControllers.View statListView;
 
     @Inject
-    StatActorsController statActorsController;
+    StatListController statListController;
 
     @FXML
     LineChart<String, Integer> bar;
@@ -112,22 +112,6 @@ public class DiagController {
         this.stats = stats;
     }
 
-    @FXML
-    public void diagByActor() throws Exception {
-        statActorsController.init();
-
-        if (statActorsView.getView().getScene() != null)
-            statActorsView.getView().getScene().setRoot(anyButton());
-
-        Stage stage = new Stage();
-        Scene scene = new Scene(statActorsView.getView());
-
-        stage.setScene(scene);
-        stage.setResizable(true);
-        stage.centerOnScreen();
-        stage.show();
-    }
-
     private Button anyButton() {
         Button b = new Button();
 
@@ -141,7 +125,24 @@ public class DiagController {
     public void query() {
         CustomQuery q = customQuery.getSelectionModel().getSelectedItem();
         if (q == null) return;
-        setStats(queryEvaluator.getStats(q));
-        init();
+
+        if(q.getEntityType() == null) {
+            setStats(queryEvaluator.getStats(q));
+            init();
+        } else {
+            statListController.setCustomQuery(q);
+            statListController.init();
+
+            if (statListView.getView().getScene() != null)
+                statListView.getView().getScene().setRoot(anyButton());
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(statListView.getView());
+
+            stage.setScene(scene);
+            stage.setResizable(true);
+            stage.centerOnScreen();
+            stage.show();
+        }
     }
 }

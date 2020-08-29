@@ -23,11 +23,6 @@
         <ColorAdjust brightness="-0.01526717557251911" contrast="-0.04580152671755722" hue="0.748091603053435" saturation="0.07633587786259532" />
       </effect>
     </LineChart>
-    <Button mnemonicParsing="false" onAction="#diagByActor" prefWidth="75.0" text="☻" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="20.0">
-      <font>
-        <Font size="12.0" />
-      </font>
-    </Button>
     <ComboBox fx:id="customQuery" prefHeight="21.0" prefWidth="171.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
       <items>
         <FXCollections fx:factory="observableArrayList">

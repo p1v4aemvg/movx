@@ -41,9 +41,9 @@ public class ConfigurationControllers {
         return loadView("fxml/add.fxml");
     }
 
-    @Bean(name = "statActorsView")
-    public View getStatActorsView() throws IOException {
-        return loadView("fxml/actor_stat.fxml");
+    @Bean(name = "statListView")
+    public View getStatListView() throws IOException {
+        return loadView("fxml/list_stat.fxml");
     }
 
     @Bean
@@ -81,8 +81,8 @@ public class ConfigurationControllers {
         return (AddController) getAddView().getController();
     }
 
-    @Bean StatActorsController getStatActorsConroller() throws IOException {
-        return (StatActorsController) getStatActorsView().getController();
+    @Bean StatListController getStatListConroller() throws IOException {
+        return (StatListController) getStatListView().getController();
     }
 
     public View loadView(String url) throws IOException {

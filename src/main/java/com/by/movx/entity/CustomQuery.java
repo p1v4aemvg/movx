@@ -27,6 +27,10 @@ public class CustomQuery {
     @Enumerated
     private CQType cqType;
 
+    @Column(name = "entity_type")
+    @Enumerated
+    private EntityType entityType;
+
     @Column(name = "query_type")
     @Enumerated
     private QueryType queryType;
@@ -81,11 +85,23 @@ public class CustomQuery {
         this.queryType = queryType;
     }
 
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
+
     public enum CQType {
         URGENT, MEDIUM, COLLECTION, RAND, NEUTRAL
     }
 
     public enum QueryType{
         FILM, STAT
+    }
+
+    public enum EntityType {
+        actor, film
     }
 }

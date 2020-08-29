@@ -1,8 +1,10 @@
 package com.by.movx.ui.common;
 
+import com.by.movx.entity.CustomQuery;
 import com.by.movx.event.Event;
 import com.by.movx.event.StatActorClickedEvent;
-import com.by.movx.repository.ActorRepository;
+import com.by.movx.event.StatFilmClickedEvent;
+import com.by.movx.service.QueryEvaluator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Hyperlink;
@@ -16,18 +18,21 @@ import java.util.List;
  * Created by movx
  * on 20.05.2018.
  */
-public class StatActorsLinkPanel extends LinkPanel<Object[], Object> {
+public class StatLinkPanel extends LinkPanel<Object[], Object> {
 
-    private ActorRepository actorRepository;
+    private QueryEvaluator queryEvaluator;
 
-    public StatActorsLinkPanel(AnchorPane pane, ActorRepository actorRepository) {
+    private CustomQuery customQuery;
+
+    public StatLinkPanel(AnchorPane pane, QueryEvaluator queryEvaluator, CustomQuery customQuery) {
         super(pane, null);
-        this.actorRepository = actorRepository;
+        this.queryEvaluator = queryEvaluator;
+        this.customQuery = customQuery;
     }
 
     @Override
     protected List<Object[]> getItems(Object target) {
-        return actorRepository.actorsByRoles();
+        return queryEvaluator.getStats(customQuery);
     }
 
     @Override
@@ -47,7 +52,13 @@ public class StatActorsLinkPanel extends LinkPanel<Object[], Object> {
 
     @Override
     protected Event<Object[]> onClicked(Object[] objects) {
-        return new StatActorClickedEvent(objects);
+        if(customQuery.getEntityType() == CustomQuery.EntityType.actor) {
+            return new StatActorClickedEvent(objects);
+        } else if(customQuery.getEntityType() == CustomQuery.EntityType.film) {
+            return new StatFilmClickedEvent(objects);
+        } else {
+            return null;
+        }
     }
 
     @Override
