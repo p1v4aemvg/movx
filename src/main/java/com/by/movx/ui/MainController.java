@@ -570,6 +570,15 @@ public class MainController {
     }
 
     @FXML
+    public void on3() {
+        Film film = firstOrSelected();
+        if(film == null) return;
+
+        film.setNeverDelete(Film.DeletionStatus.INCOMPLETE_SERIES);
+        filmRepository.save(film);
+    }
+
+    @FXML
     public void onCum() {
         Tag tag = cums.getSelectionModel().getSelectedItem();
         if(tag == null) return;

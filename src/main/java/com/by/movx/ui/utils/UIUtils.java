@@ -60,6 +60,8 @@ public class UIUtils {
                         style += "-fx-text-background-color: #808080;";
                     } else if (film.getNeverDelete().equals(Film.DeletionStatus.INCOMPLETE)) {
                         style += "-fx-text-background-color: #6A5AFF;";
+                    } else if (film.getNeverDelete().equals(Film.DeletionStatus.INCOMPLETE_SERIES)) {
+                        style += "-fx-text-background-color: #038a03;";
                     }
 
                     styleProperty().bind(Bindings.when(new SimpleBooleanProperty(true)).then(style).otherwise(""));

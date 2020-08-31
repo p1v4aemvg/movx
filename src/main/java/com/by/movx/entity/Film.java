@@ -291,7 +291,7 @@ public class Film {
     }
 
     public enum DeletionStatus {
-        MAYBE, NEVER, INCOMPLETE
+        MAYBE, NEVER, INCOMPLETE, INCOMPLETE_SERIES
     }
 
 }
