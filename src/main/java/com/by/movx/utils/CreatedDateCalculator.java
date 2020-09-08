@@ -27,7 +27,7 @@ public class CreatedDateCalculator {
 
     private static final String VIDEO_EXT[] = {"mp4", "avi", "mkv", "flv", "mp3"};
 
-    private static final String BASE_DIR = "J:\\Video\\";
+    private static final String BASE_DIR = "H:\\Video\\";
 
     public static Long getCreatedAt(Film film) throws Exception {
         File file = getFile(film);
