@@ -25,9 +25,9 @@
         <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="188.0" prefWidth="230.0" />
       </content>
     </ScrollPane>
-    <TextField fx:id="actor" layoutX="215.0" layoutY="381.0" prefWidth="170.0" promptText="actor" />
+    <TextField fx:id="actor" layoutX="216.0" layoutY="369.0" prefWidth="170.0" promptText="actor" />
     <Button id="add" layoutX="615.0" layoutY="382.0" minWidth="25.0" mnemonicParsing="false" onAction="#add" prefWidth="30.0" text="+" />
-    <TextField fx:id="partName" layoutX="393.0" layoutY="381.0" prefWidth="156.0" promptText="part" />
+    <TextField fx:id="partName" layoutX="393.0" layoutY="369.0" prefWidth="156.0" promptText="part" />
     <TableView fx:id="actors" layoutX="14.0" layoutY="42.0" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="572.0" prefWidth="170.0" />
     <Slider fx:id="part" blockIncrement="1.0" layoutX="580.0" layoutY="346.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" orientation="VERTICAL" prefHeight="68.0" showTickLabels="true" showTickMarks="false" snapToTicks="true" />
     <AnchorPane fx:id="paneL" layoutX="184.0" layoutY="42.0" prefHeight="526.0" prefWidth="30.0" />
@@ -64,5 +64,6 @@
       </content>
     </ScrollPane>
     <Hyperlink fx:id="extHyperLink" layoutX="657.0" layoutY="37.0" onAction="#onExternalLink" prefWidth="397.0" text="Описание" />
+    <CheckBox fx:id="absent" layoutX="216.0" layoutY="403.0" mnemonicParsing="false" onAction="#setAbsent" text="Absent?" />
   </children>
 </AnchorPane>

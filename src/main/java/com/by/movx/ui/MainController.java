@@ -635,6 +635,21 @@ public class MainController {
     }
 
     @FXML
+    public void addFD() {
+        List<Film> noFD = filmRepository.findWithoutFD();
+        if(noFD.isEmpty()) {
+            return;
+        }
+        noFD.forEach(film -> film.setDescription(new FilmDescription(film)));
+        filmRepository.save(noFD);
+    }
+
+    @FXML
+    public void setMarkNeg(){
+        setMark(-1);
+    }
+
+    @FXML
     public void setMark1(){
         setMark(1);
     }
@@ -668,13 +683,15 @@ public class MainController {
         filmRepository.save(f);
     }
 
-
     private void setEntity(boolean val) {
         Film f = firstOrSelected();
         if(f == null) {
             return;
         }
         f.setEntity(val);
+        if(!val) {
+            f.setMark(-1);
+        }
         filmRepository.save(f);
 
         if (val) {
@@ -684,6 +701,7 @@ public class MainController {
 
     private void setFalseAll(Film f) {
         f.setEntity(false);
+        f.setMark(-1);
         filmRepository.save(f);
 
         f.getChildren().forEach(this::setFalseAll);

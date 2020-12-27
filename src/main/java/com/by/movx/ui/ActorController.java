@@ -3,7 +3,6 @@ package com.by.movx.ui;
 import com.by.movx.Common;
 import com.by.movx.entity.Actor;
 import com.by.movx.entity.Actors;
-import com.by.movx.entity.FilmActor;
 import com.by.movx.event.PickUpdateEvent;
 import com.by.movx.repository.ActorRepository;
 import com.by.movx.repository.FilmActorRepository;
@@ -19,7 +18,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -53,9 +51,6 @@ public class ActorController {
 
     @FXML
     AnchorPane pane, paneL, pickActor, imgPane;
-
-    @FXML
-    Label markLabel;
 
     @Inject
     FilmActorRepository filmActorRepository;
@@ -203,22 +198,6 @@ public class ActorController {
         ActorFilmsPanel actorFilmsPanel = new ActorFilmsPanel(pane, actorsToPick, filmActorRepository, mode);
         actorFilmsPanel.createLinks();
         new PickActorPanel(pickActor, actorsToPick).createLinks();
-
-        List<FilmActor> fff = actorFilmsPanel.getItems(actorsToPick);
-
-        if(!fff.isEmpty()) {
-            double x = fff.stream()
-                    .map(fa -> fa.getFilm().getMark() * (4 - fa.getPart().getId()))
-                    .reduce((i1, i2) -> i1 + i2).get();
-
-            double y = fff.stream()
-                    .map(fa -> (4 - fa.getPart().getId()))
-                    .reduce((i1, i2) -> i1 + i2).get();
-
-            double mark = x / y;
-
-            markLabel.setText(String.format("%.3f", mark));
-        }
     }
 
     private void setImg(Actor a) {

@@ -34,6 +34,7 @@
     </HBox>
     <HBox layoutX="355.0" layoutY="0.0" prefHeight="27.0" prefWidth="361.0">
       <children>
+        <Button mnemonicParsing="false" onAction="#setMarkNeg" text="-1" />
         <Button mnemonicParsing="false" onAction="#setMark1" text="1" />
         <Button mnemonicParsing="false" onAction="#setMark2" text="2" />
         <Button mnemonicParsing="false" onAction="#setMark3" text="3" />
@@ -150,6 +151,8 @@
               <children>
                 <Button mnemonicParsing="false" onAction="#setEntityTrue" prefWidth="38.0" text="E+" />
                 <Button mnemonicParsing="false" onAction="#setEntityFalse" prefWidth="35.0" text="E-" />
+                <Button onAction="#addFD" mnemonicParsing="false" text="FD" />
+
               </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">

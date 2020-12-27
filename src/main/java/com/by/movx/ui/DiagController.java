@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,11 +66,12 @@ public class DiagController {
     }
 
     public void init() {
+        bar.setVisible(true);
+        bar.setMinWidth(stats.size() * 15);
         bar.setVerticalGridLinesVisible(true);
         bar.setHorizontalGridLinesVisible(true);
 
         XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-        series.setName("Wanderlust");
         stats.stream().forEach(e -> {
             String x = e[0].toString();
             Integer y = Integer.valueOf(e[1].toString());
@@ -83,6 +85,7 @@ public class DiagController {
             for (final XYChart.Data<String, Integer> data : serie.getData()) {
                 Tooltip tooltip = new Tooltip();
                 tooltip.setText(getStr(data.getYValue()) + " -> " + getStr(data.getXValue()));
+                tooltip.setFont(new Font(15));
                 Tooltip.install(data.getNode(), tooltip);
 
                 data.getNode().setOnMouseClicked(e -> {
@@ -93,6 +96,11 @@ public class DiagController {
                             )
                     );
                 });
+
+                data.getNode().setOnMouseEntered(event ->
+                        data.getNode().setStyle("-fx-background-color: YELLOW;")
+                );
+                data.getNode().setOnMouseExited(event -> data.getNode().setStyle(""));
             }
         }
     }

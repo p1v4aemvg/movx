@@ -119,7 +119,7 @@ public class AddController {
         film.setYear(Integer.valueOf(year.getText()));
         film.setType(type.getSelectionModel().getSelectedItem());
         film.setEntity(isEntity.isSelected());
-        film.setMark(0);
+        film.setMark(film.getEntity() ? 0 : -1);
         film.setDuration(Film.Duration.of((int) duration.getValue()));
         film.setParent(parent);
         film.setCountries(selectedCountries);

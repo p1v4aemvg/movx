@@ -3,6 +3,7 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -10,28 +11,35 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="423.0" prefWidth="623.0" style="" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.DiagController">
-  <children>
-    <LineChart fx:id="bar" alternativeColumnFillVisible="false" alternativeRowFillVisible="true" focusTraversable="false" prefWidth="600.0" style="" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <xAxis>
-        <CategoryAxis side="BOTTOM" />
-      </xAxis>
-      <yAxis>
-        <NumberAxis side="LEFT" />
-      </yAxis>
-      <effect>
-        <ColorAdjust brightness="-0.01526717557251911" contrast="-0.04580152671755722" hue="0.748091603053435" saturation="0.07633587786259532" />
-      </effect>
-    </LineChart>
-    <ComboBox fx:id="customQuery" prefHeight="21.0" prefWidth="171.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ComboBox>
-    <Button mnemonicParsing="false" onAction="#query" text="◊◊◊" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="199.0" />
-  </children>
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="423.0" prefWidth="721.0" style="" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.by.movx.ui.DiagController">
+    <children>
+        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+            <content>
+                <LineChart fx:id="bar" rotate="0.0" alternativeColumnFillVisible="false" alternativeRowFillVisible="true" focusTraversable="false" legendVisible="false" prefHeight="-1.0" prefWidth="-1.0" style="" visible="false">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT" />
+                    </yAxis>
+                    <effect>
+                        <ColorAdjust brightness="-0.01526717557251911" contrast="-0.04580152671755722" hue="0.748091603053435" saturation="0.07633587786259532" />
+                    </effect>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                </LineChart>
+            </content>
+        </ScrollPane>
+        <ComboBox fx:id="customQuery" prefHeight="21.0" prefWidth="171.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Item 1" />
+                    <String fx:value="Item 2" />
+                    <String fx:value="Item 3" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+        <Button mnemonicParsing="false" onAction="#query" text="◊◊◊" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="199.0" />
+    </children>
 </AnchorPane>

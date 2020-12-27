@@ -3,7 +3,6 @@ package com.by.movx.repository;
 import com.by.movx.entity.Country;
 import com.by.movx.entity.Film;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,14 +15,6 @@ import java.util.List;
  */
 public interface FilmRepository extends CrudRepository<Film, Long> {
     List<Film> findByIdIn(List<Long> idList, Sort sort);
-
-    List<Film> findByYear (Integer year, Pageable pageable);
-
-    @Query(value = "select f from FilmActor fa " +
-            "left join fa.film as f " +
-            "left join fa.actor as a " +
-            "where a.name like  :actorName  ")
-    List<Film> findByActor(@Param(value = "actorName") String actorName);
 
     List<Film> findByYearBetween (int year1, int year2);
 
@@ -65,4 +56,7 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
             "   or (select max(ft.film_id) from film_tag ft where ft.tag_id = :tag_id) is null)", nativeQuery = true)
     List<Film> findByCumulativeTag(@Param(value = "tag_id") Long tagId);
 
+    @Query(value = "select f.* from film f " +
+            "where not exists (select fd.* from film_description fd where f.id = fd.film_id)", nativeQuery = true)
+    List<Film> findWithoutFD();
 }

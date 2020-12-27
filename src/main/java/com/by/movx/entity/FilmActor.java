@@ -1,9 +1,6 @@
 package com.by.movx.entity;
 
-import com.by.movx.utils.FilmUtils;
-
 import javax.persistence.*;
-import java.util.Arrays;
 
 /**
  * Created by movx
@@ -32,14 +29,18 @@ public class FilmActor {
     @Column(name = "part_name")
     String partName;
 
+    @Column(name = "absent")
+    Boolean absent;
+
     public FilmActor() {
     }
 
-    public FilmActor(Film film, Actor actor, Part part, String partName) {
+    public FilmActor(Film film, Actor actor, Part part, String partName, Boolean absent) {
         this.film = film;
         this.actor = actor;
         this.part = part;
         this.partName = partName;
+        this.absent = absent;
     }
 
     public Long getId() {
@@ -80,5 +81,13 @@ public class FilmActor {
 
     public void setPartName(String partName) {
         this.partName = partName;
+    }
+
+    public Boolean getAbsent() {
+        return absent;
+    }
+
+    public void setAbsent(Boolean absent) {
+        this.absent = absent;
     }
 }

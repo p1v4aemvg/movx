@@ -10,7 +10,6 @@ import com.by.movx.ui.common.FilmLangPanel;
 import com.by.movx.ui.common.ParentPanel;
 import com.by.movx.ui.common.TagsPanel;
 import com.by.movx.ui.utils.ControllerUtils;
-import com.by.movx.utils.CreatedDateCalculator;
 import com.by.movx.utils.FilmUtils;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
@@ -25,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +53,9 @@ public class FDController {
 
     @FXML
     Label markLabel, filmName, fileName;
+
+    @FXML
+    CheckBox absent;
 
     @Inject
     FilmRepository filmRepository;
@@ -118,10 +119,15 @@ public class FDController {
         filmName.setWrapText(true);
         filmName.setText(StringUtils.abbreviateMiddle(FilmUtils.name(film, Film::getName) + " " + film.getYear(), ".", 45));
 
-        mark.setValue(film.getMark());
+        if (film.getMark() >= 0) {
+            mark.setVisible(true);
+            mark.setValue(film.getMark());
+        } else {
+            mark.setVisible(false);
+        }
         markLabel.setText(film.getMark().toString());
 
-        new FilmActorsPanel(pane, film, faRepository).createLinks();
+        new FilmActorsPanel(pane, film, absent.isSelected(), faRepository).createLinks();
         new ParentPanel(parentPanel, film).createLinks();
         new TagsPanel(tagPanel, film, ftRepository).createLinks();
         new FilmLangPanel(langPanel, film, flRepository).createLinks();
@@ -137,8 +143,9 @@ public class FDController {
             a = new Actor(actor.getText());
             a = actorRepository.save(a);
         }
-        faRepository.save(new FilmActor(film, a, new Part((long) (int) part.getValue()), partName.getText()));
-        new FilmActorsPanel(pane, film, faRepository).createLinks();
+        faRepository.save(new FilmActor(film, a,
+                new Part((long) (int) part.getValue()), partName.getText(), absent.isSelected()));
+        new FilmActorsPanel(pane, film, absent.isSelected(), faRepository).createLinks();
     }
 
     @FXML
@@ -175,9 +182,9 @@ public class FDController {
                 boolean exist = faRepository.findTop1ByActorAndFilm(a, film) != null;
 
                 if (!exist) {
-                    faRepository.save(new FilmActor(
-                            film, a, new Part((long) (int) part.getValue()), partName.getText()));
-                    new FilmActorsPanel(pane, film, faRepository).createLinks();
+                    faRepository.save(new FilmActor(film, a,
+                            new Part((long) (int) part.getValue()), partName.getText(), absent.isSelected()));
+                    new FilmActorsPanel(pane, film, absent.isSelected(), faRepository).createLinks();
                 }
             }
 
@@ -218,6 +225,11 @@ public class FDController {
         filmRepository.save(film);
 
         ControllerUtils.startExplorer(film);
+    }
+
+    @FXML
+    public void setAbsent() {
+        new FilmActorsPanel(pane, film, absent.isSelected(), faRepository).createLinks();
     }
 
     private void autoSaveText() {

@@ -57,7 +57,6 @@ public class ActorFilmsPanel extends ActorTargetLinkPanel<FilmActor> {
     @Override
     protected EventHandler<ContextMenuEvent> onParentRight(FilmActor fa) {
         return event -> {};
-
     }
 
     @Override

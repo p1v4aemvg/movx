@@ -36,11 +36,6 @@
       </font>
     </Button>
     <CheckBox fx:id="specBox" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" onAction="#onSpec" text="" />
-    <Label fx:id="markLabel" layoutX="838.0" layoutY="332.0" prefWidth="167.0" text="">
-      <font>
-        <Font name="System Bold" size="20.0" />
-      </font>
-    </Label>
     <Button fx:id="year" layoutX="164.0" layoutY="16.0" mnemonicParsing="false" onAction="#onYear" prefWidth="50.0" text="Y" />
     <Button layoutX="846.0" layoutY="380.0" mnemonicParsing="false" onAction="#google" text="G" />
     <TextField fx:id="born" layoutX="886.0" layoutY="379.0" prefWidth="94.0" promptText="year" />

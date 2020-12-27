@@ -12,8 +12,10 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by movx
@@ -22,9 +24,11 @@ import java.util.List;
 public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
 
     private FilmActorRepository faRepository;
+    private boolean absent;
 
-    public FilmActorsPanel(AnchorPane pane, Film film, FilmActorRepository faRepository) {
+    public FilmActorsPanel(AnchorPane pane, Film film, boolean absent, FilmActorRepository faRepository) {
         super(pane, film);
+        this.absent = absent;
         this.faRepository = faRepository;
     }
 
@@ -80,5 +84,22 @@ public class FilmActorsPanel extends FilmTargetLinkPanel<FilmActor> {
 
     protected List<FilmActor> getItems(Film f) {
         return faRepository.findByFilm(f);
+    }
+
+    protected Predicate<FilmActor> primaryPredicate() {
+        return fa -> fa.getAbsent().equals(absent);
+    }
+
+    protected Predicate<FilmActor> parentPredicate(List<FilmActor> primaryItems) {
+        return fa -> !absent && !fa.getAbsent() &&
+                primaryItems.stream().noneMatch(pa -> pa.getAbsent() && pa.getActor().getId().equals(fa.getActor().getId()));
+    }
+
+    protected void sort(List<Hyperlink> links) {
+        links.sort((l1, l2) -> getRank(l1).compareTo(getRank(l2)));
+    }
+
+    private String getRank(Hyperlink hyperlink) {
+        return StringUtils.substringBetween(hyperlink.getId(), "*", "*");
     }
 }
