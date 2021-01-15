@@ -24,5 +24,8 @@ public interface TagRepository extends CrudRepository<Tag, Long> {
     @Query(value = "select t.* from tag t where t.tag_type_id = 8", nativeQuery = true)
     List<Tag> findCumulativeTags();
 
+    @Query(value = "select t.* from tag t where t.tag_type_id = 12", nativeQuery = true)
+    List<Tag> findTimeTags();
+
 
 }

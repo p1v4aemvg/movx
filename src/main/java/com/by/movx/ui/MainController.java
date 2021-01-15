@@ -674,6 +674,15 @@ public class MainController {
         setMark(5);
     }
 
+    @FXML
+    public void onTimeTag() {
+        List<Tag> tags = tagRepository.findTimeTags();
+        if(!CollectionUtils.isEmpty(tags)) {
+            tagCombo.setItems(FXCollections.observableArrayList(tags));
+            tagCombo.show();
+        }
+    }
+
     private void setMark(int mark){
        Film f = firstOrSelected();
         if(f == null){
