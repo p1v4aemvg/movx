@@ -73,6 +73,36 @@ public class FilmLang {
     }
 
     public enum Lang {
-        NO, RU, EN, BY, DE, FR, UA, GR, LT, LV, ES, SP, IT, PL, FN, CZ, NW, SW, PT, HR, DN
+        NO ("Not Set"),
+        RU("Russian"),
+        EN ("English"),
+        BY ("Belorussian"),
+        DE("German"),
+        FR("French"),
+        UA("Ukrainian"),
+        GR("Georgian"),
+        LT("Lithuanian"),
+        LV ("Latvian"),
+        ES("Estonian"),
+        SP("Spanish"),
+        IT("Italian"),
+        PL("Polish"),
+        FN("Finnish"),
+        CZ("Czesh"),
+        NW("Norwegian"),
+        SW("Swedish"),
+        PT ("Portugese"),
+        HR("Hungarian"),
+        DN("Danish");
+
+        private String name;
+
+        Lang(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

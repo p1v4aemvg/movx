@@ -85,7 +85,7 @@ public class Converters {
         return new StringConverter<FilmLang.Lang>() {
             @Override
             public String toString(FilmLang.Lang object) {
-                return object == null ? null : object.name();
+                return object == null ? null : String.format("%s (%s)", object.getName() , object.name());
             }
 
             @Override
